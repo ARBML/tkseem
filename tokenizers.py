@@ -5,6 +5,7 @@ import re
 from farasa.segmenter import FarasaSegmenter
 from pathlib import Path 
 import sentencepiece as spm
+import pickle 
 
 class BaseTokenizer:
     def __init__(self,  input_data = None,
@@ -170,11 +171,11 @@ class FrequencyTokenizer(BaseTokenizer):
                     groups_of_valid_subwords = self._split_word(word,i)
                     if groups_of_valid_subwords:
                         break
-                # in case the word is out of our vocabulary, we will replace it with a special keyword <UNKNOWN>?
+                # in case the word is out of our vocabulary, we will replace it with a special keyword <unknown>?
                 if len(groups_of_valid_subwords)==0:
                     output_tokens.append(self.unknown_token)
                 else:
-                    # sort these groups based on their frequency in our vocabulary. The total sum of the frequency of all subwords is the criteria here
+                    # sort these groups based on their frequency in our vocabulary. the total sum of the frequency of all subwords is the criteria here
                     # we may need to discuss this one here btw :>
                     sorted_groups_of_valid_subwords = sorted(groups_of_valid_subwords, key=lambda group: 
                                                                 sum(self.tokens_frequency[subword] for subword in group))
@@ -187,7 +188,6 @@ class FrequencyTokenizer(BaseTokenizer):
                             output_tokens.append(token)
         return output_tokens
     
-    @property
     def _tokens_list(self):
         return list(self.tokens_frequency.keys())
     
@@ -229,5 +229,58 @@ class SentencePieceTokenizer(BaseTokenizer):
     def detokenize(self, tokens):
         return ''.join(tokens).replace('▁', ' ')
 
+class AutoTokenizer:
+
+    def __init__(self, vocab = 'default_vocab.pl'):
+        self.vocab = pickle.load(vocab)
+        super().__init__(self)
+
+ 
+    def tokenize(self, text):
+        assert self.vocab
+        tokens = []
+        output_tokens = []
+        for word in text.split():
+            if word in self.vocab.keys():
+                output_tokens.append(word) #not sure we need this ? 
+            else:
+                for i in range(2,len(word)+1,1):
+                    groups_of_valid_subwords = self._split_word(word,i)
+                    if groups_of_valid_subwords:
+                        break
+                if len(groups_of_valid_subwords)==0:
+                    output_tokens.append(self.unknown_token)
+                else:
+                    sorted_groups_of_valid_subwords = sorted(groups_of_valid_subwords, key=lambda group: sum(self.vocab[subword] for subword in group))
+                    
+                    tokens += sorted_groups_of_valid_subwords[-1]
+                    for token in tokens:
+                        if ' '+token not in ' '+text:
+                            output_tokens.append(str('##'+token))
+                        else:
+                            output_tokens.append(token)
+        return output_tokens
+    
+    def _tokens_list(self):
+        return list(self.vocab.keys())
+    
+    def decode(self, encoded):
+        decoded = [self.tokens_list[id] for id in encoded]
+        return decoded
+    
+    def encode(self,text):
+        tokens = self.tokenize(text)
+        encoded = [self._tokens_list.index(token) for token in tokens]
+        return encoded
+    
+    def get_tokenid(self,token):
+        return self.tokens_list.index(token)
+    
+    def get_token_from_id(self,id):
+        return self.tokens_list[id]
+    
+    def detokenize(self, tokens):
+        detokenized = ''.join(tokens).replace('##','')
+        return detokenized
 
 
