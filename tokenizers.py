@@ -98,9 +98,9 @@ class BaseTokenizer:
          
         groups_of_subwords = _split(word,number_of_subwords)
         # if any of the subwords is not the vocabulray, filter out the whole group
-        filtered_groups_of_subwords = list(filter(lambda group : all(subword in self.clean_tokens_frequency.keys() for subword in group), groups_of_subwords))
-        return filtered_groups_of_subwords
-    
+        #filtered_groups_of_subwords = list(filter(lambda group : all(subword in self.clean_tokens_frequency.keys() for subword in group), groups_of_subwords))
+        #return filtered_groups_of_subwords
+        return groups_of_subwords
     def _normalize(self, text):
         # replace alef, ha and wow 
         text = re.sub(r"[ىأإآ]", "ا", text)
@@ -229,10 +229,12 @@ class SentencePieceTokenizer(BaseTokenizer):
     def detokenize(self, tokens):
         return ''.join(tokens).replace('▁', ' ')
 
-class AutoTokenizer:
+class AutoTokenizer(BaseTokenizer):
 
-    def __init__(self, vocab = 'default_vocab.pl'):
-        self.vocab = pickle.load(vocab)
+    def __init__(self, vocab = 'vocab.pl'):
+        print("loading vocab ...")
+        self.vocab = pickle.load(open(vocab, 'rb'))
+        print(self.vocab.most_common(5))
         super().__init__(self)
 
  
@@ -242,7 +244,8 @@ class AutoTokenizer:
         output_tokens = []
         for word in text.split():
             if word in self.vocab.keys():
-                output_tokens.append(word) #not sure we need this ? 
+                output_tokens.append(word)
+                print(word)
             else:
                 for i in range(2,len(word)+1,1):
                     groups_of_valid_subwords = self._split_word(word,i)
@@ -253,12 +256,10 @@ class AutoTokenizer:
                 else:
                     sorted_groups_of_valid_subwords = sorted(groups_of_valid_subwords, key=lambda group: sum(self.vocab[subword] for subword in group))
                     
-                    tokens += sorted_groups_of_valid_subwords[-1]
+                    tokens = sorted_groups_of_valid_subwords[-1]
+                    #print(tokens)
                     for token in tokens:
-                        if ' '+token not in ' '+text:
-                            output_tokens.append(str('##'+token))
-                        else:
-                            output_tokens.append(token)
+                        output_tokens.append(str(token))
         return output_tokens
     
     def _tokens_list(self):
@@ -282,5 +283,4 @@ class AutoTokenizer:
     def detokenize(self, tokens):
         detokenized = ''.join(tokens).replace('##','')
         return detokenized
-
 
