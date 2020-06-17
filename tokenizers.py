@@ -5,7 +5,9 @@ import re
 from farasa.segmenter import FarasaSegmenter
 from pathlib import Path 
 import sentencepiece as spm
-import pickle 
+import pickle
+import mmap
+import tqdm
 
 class BaseTokenizer:
     def __init__(self,  input_data = None,
@@ -58,6 +60,31 @@ class BaseTokenizer:
             self._write_data("data/test.txt",  self.test_text)
             del self.train_text, self.valid_text, self.test_text
             del self.corpus
+
+    def _get_tokens_frequency_quickly(self, file_path):
+       
+        encoding = "utf8"
+        with open(file_path, 'r', encoding=encoding, errors='ignore') as f:
+            with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as m:
+                m.read(0)
+                txt = ""
+                i = 0 
+                size_to_read = int(1e9)
+                freq = Counter([])
+                pbar = tqdm(total=int(m.size()/size_to_read))
+                while i < m.size():
+                    cur_txt = ""
+                    data = m.read(size_to_read)
+                    i+= size_to_read
+                    try:
+                        cur_txt= data.decode(encoding)
+                    except:
+                        cur_txt= (data + m.read(1)).decode(encoding) 
+                        i +=1 
+                    freq.update(cur_txt.split(' '))
+                    pbar.update(1)
+        return freq
+
 
     def _write_data(self, path, data):
         open(path, "w").write(data)
@@ -137,9 +164,7 @@ class FrequencyTokenizer(BaseTokenizer):
     tokens_frequency = None 
 
     def train(self):
-       # this preprocessing will produce connected words with hashtags from the first
        preprocessed_text = open('data/train.txt', 'r').read()
-       # populate tokens frequency dictionary
        sorted_tokens_frequency = {
                    k:v for k,v in sorted(
                            self._get_tokens_frequency(preprocessed_text).items(),
@@ -153,7 +178,6 @@ class FrequencyTokenizer(BaseTokenizer):
        limited_tokens_frequency[self.padding_token] = -1
        limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.max_tokens]})
        self.tokens_frequency = limited_tokens_frequency
-       # get the clean tokens frequency from the tokens frequency
        self.clean_tokens_frequency = {k:v for k,v in self.tokens_frequency.items() 
                                 if k is not self.unknown_token and k is not self.padding_token}
   
@@ -165,27 +189,9 @@ class FrequencyTokenizer(BaseTokenizer):
         output_tokens = []
         for word in text.split():
             if word in self.tokens_frequency.keys():
-                output_tokens.append(word) #not sure we need this ? 
-            else:
-                for i in range(2,len(word)+1,1):
-                    groups_of_valid_subwords = self._split_word(word,i)
-                    if groups_of_valid_subwords:
-                        break
-                # in case the word is out of our vocabulary, we will replace it with a special keyword <unknown>?
-                if len(groups_of_valid_subwords)==0:
-                    output_tokens.append(self.unknown_token)
-                else:
-                    # sort these groups based on their frequency in our vocabulary. the total sum of the frequency of all subwords is the criteria here
-                    # we may need to discuss this one here btw :>
-                    sorted_groups_of_valid_subwords = sorted(groups_of_valid_subwords, key=lambda group: 
-                                                                sum(self.tokens_frequency[subword] for subword in group))
-                    
-                    tokens += sorted_groups_of_valid_subwords[-1]
-                    for token in tokens:
-                        if ' '+token not in ' '+text:
-                            output_tokens.append(str('##'+token))
-                        else:
-                            output_tokens.append(token)
+                output_tokens.append(word) 
+            else:i
+                output_tokens.append(self.uknown_token)
         return output_tokens
     
     def _tokens_list(self):
@@ -234,7 +240,6 @@ class AutoTokenizer(BaseTokenizer):
     def __init__(self, vocab = 'vocab.pl'):
         print("loading vocab ...")
         self.vocab = pickle.load(open(vocab, 'rb'))
-        print(self.vocab.most_common(5))
         super().__init__(self)
 
  
@@ -257,7 +262,6 @@ class AutoTokenizer(BaseTokenizer):
                     sorted_groups_of_valid_subwords = sorted(groups_of_valid_subwords, key=lambda group: sum(self.vocab[subword] for subword in group))
                     
                     tokens = sorted_groups_of_valid_subwords[-1]
-                    #print(tokens)
                     for token in tokens:
                         output_tokens.append(str(token))
         return output_tokens
