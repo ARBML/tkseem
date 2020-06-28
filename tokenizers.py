@@ -1,5 +1,5 @@
 import io
-from collections import defaultdict
+from collections import defaultdict, Counter
 import pyarabic.araby as araby
 import re
 from farasa.segmenter import FarasaSegmenter
@@ -7,7 +7,7 @@ from pathlib import Path
 import sentencepiece as spm
 import pickle
 import mmap
-import tqdm
+from tqdm import tqdm
 
 class BaseTokenizer:
     def __init__(self,  input_data = None,
@@ -24,6 +24,7 @@ class BaseTokenizer:
         self.clean = clean
         self.normalize = normalize
         self.apply_split = apply_split
+        self.norm_dict = pickle.load(open("normalization_dictionary.pl", 'rb'))
 
     def read_data(self, input_data):
         
@@ -62,7 +63,6 @@ class BaseTokenizer:
             del self.corpus
 
     def _get_tokens_frequency_quickly(self, file_path):
-       
         encoding = "utf8"
         with open(file_path, 'r', encoding=encoding, errors='ignore') as f:
             with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as m:
@@ -85,10 +85,8 @@ class BaseTokenizer:
                     pbar.update(1)
         return freq
 
-
     def _write_data(self, path, data):
         open(path, "w").write(data)
-   
 
     def _split_corpus(self):
         # the criteris is the number of tokens
@@ -108,8 +106,6 @@ class BaseTokenizer:
             tokens_frequency[word]+=1
         return dict(tokens_frequency)
     
-      # you are ready to tokenize from the tokens frequency dictionary:)
-
     def _split_word(self,word, number_of_subwords): 
         assert number_of_subwords>1
         groups_of_subwords = [] 
@@ -128,12 +124,15 @@ class BaseTokenizer:
         #filtered_groups_of_subwords = list(filter(lambda group : all(subword in self.clean_tokens_frequency.keys() for subword in group), groups_of_subwords))
         #return filtered_groups_of_subwords
         return groups_of_subwords
+    
+    def _remove_tashkeel(self, text):
+        text = re.sub(r"[ ّ َ ً ُ ٌ ِ ٍ ~ ْ]", "", text)
+        return text
+
     def _normalize(self, text):
-        # replace alef, ha and wow 
-        text = re.sub(r"[ىأإآ]", "ا", text)
-        text = re.sub(r"ة","ت", text)
-        text = re.sub(r"ؤ", "و", text)
-        text = re.sub(r"ئ", "ي", text)
+        # use a mapping dictionary 
+        regex = re.compile("|".join(map(re.escape, self.norm_dict.keys())))
+        text  = regex.sub(lambda match: self.norm_dict[match.group(0)], text)
         return text 
 
     # https://github.com/google-research/bert/blob/master/tokenization.py
@@ -190,7 +189,7 @@ class FrequencyTokenizer(BaseTokenizer):
         for word in text.split():
             if word in self.tokens_frequency.keys():
                 output_tokens.append(word) 
-            else:i
+            else:
                 output_tokens.append(self.uknown_token)
         return output_tokens
     
