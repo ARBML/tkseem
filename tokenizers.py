@@ -8,6 +8,8 @@ import sentencepiece as spm
 import pickle
 import mmap
 from tqdm import tqdm
+import os
+import numpy as np
 
 class BaseTokenizer:
     def __init__(self,  input_data = None,
@@ -27,7 +29,7 @@ class BaseTokenizer:
         self.norm_dict = pickle.load(open("normalization_dictionary.pl", 'rb'))
 
     def read_data(self, input_data):
-        
+
         # take either file or raw text 
         if isinstance(input_data, io.IOBase):
             self.corpus = input_data.read()
@@ -54,11 +56,11 @@ class BaseTokenizer:
             self.corpus = self._normalize(self.corpus)
 
         if self.apply_split:
-            Path("data").mkdir(parents = True, exist_ok = True)
+            Path("data/raw").mkdir(parents = True, exist_ok = True)
             self.train_text, self.valid_text, self.test_text = self._split_corpus()
-            self._write_data("data/train.txt", self.train_text)
-            self._write_data("data/valid.txt", self.valid_text)
-            self._write_data("data/test.txt",  self.test_text)
+            self._write_data("data/raw/train.txt", self.train_text)
+            self._write_data("data/raw/valid.txt", self.valid_text)
+            self._write_data("data/raw/test.txt",  self.test_text)
             del self.train_text, self.valid_text, self.test_text
             del self.corpus
 
@@ -135,9 +137,14 @@ class BaseTokenizer:
         text  = regex.sub(lambda match: self.norm_dict[match.group(0)], text)
         return text 
 
+    def _remove_english_chars(self, text):
+        return re.sub('[a-zA-Z]', '', text)
+    
+    def _remove_digits(self, text):
+        return re.sub('[0-9]', '', text)
+
     # https://github.com/google-research/bert/blob/master/tokenization.py
     def _is_punctuation(self, char):
-        
         if char == self.segm_token:
             return False 
 
@@ -151,14 +158,31 @@ class BaseTokenizer:
 
     def _clean(self, text):
         # remove tashkeel and special chars
-        text = araby.strip_tashkeel(text)
+        text = self._remove_tashkeel(text)
         chars = set(text)
         all_puncts = [char for char in chars if self._is_punctuation(char)]
         all_puncts = ("").join(all_puncts)
         text = re.sub(r"[{all_puncts}]", "", text)
         return text 
- 
     
+    def encode(self, text):
+        return NotImplementedError
+    
+    def decode(self, encoded):
+        return NotImplementedError
+
+    def tokenize(self, text):
+        raise NotImplementedError
+
+    def detokenize(self, tokens):
+        raise NotImplementedError
+
+    def encode_and_save(self):
+        Path("data/encoded").mkdir(parents = True, exist_ok = True)
+        for file_path in os.listdir('data/raw/'):
+            ids = self.encode(open(f"data/raw/{file_path}", 'r').read())
+            np.save(f'data/encoded/{file_path[:-4]}.npy', ids)
+
 class FrequencyTokenizer(BaseTokenizer):
     tokens_frequency = None 
 
@@ -190,26 +214,26 @@ class FrequencyTokenizer(BaseTokenizer):
             if word in self.tokens_frequency.keys():
                 output_tokens.append(word) 
             else:
-                output_tokens.append(self.uknown_token)
+                output_tokens.append(self.unknown_token)
         return output_tokens
     
     def _tokens_list(self):
         return list(self.tokens_frequency.keys())
     
     def decode(self, encoded):
-        decoded = [self.tokens_list[id] for id in encoded]
+        decoded = [self.tokens_list()[id] for id in encoded]
         return decoded
     
     def encode(self,text):
         tokens = self.tokenize(text)
-        encoded = [self._tokens_list.index(token) for token in tokens]
+        encoded = [self._tokens_list().index(token) for token in tokens]
         return encoded
     
     def get_tokenid(self,token):
-        return self.tokens_list.index(token)
+        return self.tokens_list().index(token)
     
     def get_token_from_id(self,id):
-        return self.tokens_list[id]
+        return self.tokens_list()[id]
     
 
     def detokenize(self, tokens):
