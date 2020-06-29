@@ -1,61 +1,61 @@
 import io
-from collections import defaultdict, Counter
-import pyarabic.araby as araby
 import re
-from farasa.segmenter import FarasaSegmenter
-from pathlib import Path 
-import sentencepiece as spm
-import pickle
-import mmap
-from tqdm import tqdm
 import os
+import sys
+import mmap
+import pickle
 import numpy as np
+from utils import *
+from tqdm import tqdm
+from pathlib import Path
+import sentencepiece as spm
+from collections import defaultdict, Counter
+from farasa.segmenter import FarasaSegmenter
 
 class BaseTokenizer:
     def __init__(self,  input_data = None,
                         unknown_token = "<UNK>", padding_token = "<PAD>",
-                        apply_farasa = False, max_tokens = 10000,
-                        segm_token = '+', apply_split = True, 
+                        segment = False, max_tokens = 10000,
+                        segm_token = '+', split = True, 
                         clean = False, normalize = False):
         
         self.segm_token = segm_token
         self.max_tokens = max_tokens
         self.unknown_token = unknown_token
         self.padding_token = padding_token
-        self.apply_farasa = apply_farasa
+        self.segment = segment
         self.clean = clean
         self.normalize = normalize
-        self.apply_split = apply_split
+        self.split = split
         self.norm_dict = pickle.load(open("normalization_dictionary.pl", 'rb'))
+        
+        if self.segment:
+            text_trap = io.StringIO()
+            sys.stdout = text_trap
+            self.segmenter = FarasaSegmenter(interactive = True)
+            sys.stdout = sys.__stdout__
+            
+    def read_data(self, file_path):
 
-    def read_data(self, input_data):
-
-        # take either file or raw text 
-        if isinstance(input_data, io.IOBase):
-            self.corpus = input_data.read()
-        elif isinstance(input_data, str):
-            self.corpus = input_data
-        else:
-            raise("Error type not recognized !")
-            return 
+        with open(file_path, 'r') as f:
+            print("Reading the data ...")
+            self.corpus = f.read()
         
+        if self.segment:
+            print("Segmenting the data ...")
+            self.corpus = self.segmenter.segment(self.corpus)
+            self.corpus = re.sub(r"[+]", self.segm_token, self.corpus)
         
-        if self.apply_farasa:
-            print("applying farasa segmentation")
-            segmenter = FarasaSegmenter(interactive = True)
-            self.corpus = segmenter.segment(self.corpus)
-            self.corpus = re.sub(r"[+]", segm_token, self.corpus)
-            if self.segm_token is None:
-               self. segm_token = '+'
-        
-        # clean, normalize and then split 
         if self.clean:
-            self.corpus = self._clean(self.corpus)
+            print("Cleaning the data ...")
+            self.corpus = clean_data(self.corpus)
 
         if self.normalize:
-            self.corpus = self._normalize(self.corpus)
+            print("Normalizing the data ...")
+            self.corpus = normalize_data(self.corpus)
 
-        if self.apply_split:
+        if self.split:
+            print("Splitting the data ...")
             Path("data/raw").mkdir(parents = True, exist_ok = True)
             self.train_text, self.valid_text, self.test_text = self._split_corpus()
             self._write_data("data/raw/train.txt", self.train_text)
@@ -91,15 +91,10 @@ class BaseTokenizer:
         open(path, "w").write(data)
 
     def _split_corpus(self):
-        # the criteris is the number of tokens
-        corpus_tokens = self.corpus.split()
-        corpus_size = len(corpus_tokens)
-        split_length = int(len(corpus_tokens) * .8)
-        trainval_tokens, test_tokens = corpus_tokens[:split_length],corpus_tokens[split_length:]
-        split_length = int(len(trainval_tokens) * .8)
-        train_tokens,val_tokens = trainval_tokens[:split_length],trainval_tokens[split_length:]
-        joiner = lambda tokens: ' '.join(tokens)
-        train_text,val_text,test_text = joiner(train_tokens),joiner(val_tokens), joiner(test_tokens)
+        split_length = int(len(self.corpus) * .8)
+        trainval_text, test_text = self.corpus[:split_length], self.corpus[split_length:]
+        split_length = int(len(trainval_text) * .8)
+        train_text, val_text = trainval_text[:split_length], trainval_text[split_length:]
         return train_text, val_text, test_text
     
     def _get_tokens_frequency(self,preprocessed_text):
@@ -127,44 +122,6 @@ class BaseTokenizer:
         #return filtered_groups_of_subwords
         return groups_of_subwords
     
-    def _remove_tashkeel(self, text):
-        text = re.sub(r"[ ّ َ ً ُ ٌ ِ ٍ ~ ْ]", "", text)
-        return text
-
-    def _normalize(self, text):
-        # use a mapping dictionary 
-        regex = re.compile("|".join(map(re.escape, self.norm_dict.keys())))
-        text  = regex.sub(lambda match: self.norm_dict[match.group(0)], text)
-        return text 
-
-    def _remove_english_chars(self, text):
-        return re.sub('[a-zA-Z]', '', text)
-    
-    def _remove_digits(self, text):
-        return re.sub('[0-9]', '', text)
-
-    # https://github.com/google-research/bert/blob/master/tokenization.py
-    def _is_punctuation(self, char):
-        if char == self.segm_token:
-            return False 
-
-        cp = ord(char)
-        if cp == 1567:
-            return True
-        if cp in range(33, 48) or cp in range(58, 65) or cp in range(91, 97) or cp in range(123, 127):
-            return True
-        else:
-            return False 
-
-    def _clean(self, text):
-        # remove tashkeel and special chars
-        text = self._remove_tashkeel(text)
-        chars = set(text)
-        all_puncts = [char for char in chars if self._is_punctuation(char)]
-        all_puncts = ("").join(all_puncts)
-        text = re.sub(r"[{all_puncts}]", "", text)
-        return text 
-    
     def encode(self, text):
         return NotImplementedError
     
@@ -187,7 +144,7 @@ class FrequencyTokenizer(BaseTokenizer):
     tokens_frequency = None 
 
     def train(self):
-       preprocessed_text = open('data/train.txt', 'r').read()
+       preprocessed_text = open('data/raw/train.txt', 'r').read()
        sorted_tokens_frequency = {
                    k:v for k,v in sorted(
                            self._get_tokens_frequency(preprocessed_text).items(),
@@ -203,9 +160,7 @@ class FrequencyTokenizer(BaseTokenizer):
        self.tokens_frequency = limited_tokens_frequency
        self.clean_tokens_frequency = {k:v for k,v in self.tokens_frequency.items() 
                                 if k is not self.unknown_token and k is not self.padding_token}
-  
-       print(self.tokens_frequency)
-     
+       
     def tokenize(self, text):
         assert self.tokens_frequency
         tokens = []
@@ -243,7 +198,7 @@ class FrequencyTokenizer(BaseTokenizer):
 class SentencePieceTokenizer(BaseTokenizer):
 
     def train(self, model_type= "bpe"):
-        spm.SentencePieceTrainer.train(input= 'data/train.txt', model_prefix='m', vocab_size=self.max_tokens, model_type = model_type, character_coverage=1.0, normalization_rule_name='identity')
+        spm.SentencePieceTrainer.train(input= 'data/raw/train.txt', model_prefix='m', vocab_size=self.max_tokens, model_type = model_type, character_coverage=1.0, normalization_rule_name='identity')
         self.sp = spm.SentencePieceProcessor(model_file='m.model')
     
     def tokenize(self, text):
@@ -273,7 +228,6 @@ class AutoTokenizer(BaseTokenizer):
         for word in text.split():
             if word in self.vocab.keys():
                 output_tokens.append(word)
-                print(word)
             else:
                 for i in range(2,len(word)+1,1):
                     groups_of_valid_subwords = self._split_word(word,i)
