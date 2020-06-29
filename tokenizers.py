@@ -13,6 +13,9 @@ from collections import defaultdict, Counter
 from farasa.segmenter import FarasaSegmenter
 
 class BaseTokenizer:
+    """
+    Base Tokenizer that implements the basic functionalities of a tokenizer
+    """
     def __init__(self,  input_data = None,
                         unknown_token = "<UNK>", padding_token = "<PAD>",
                         segment = False, max_tokens = 10000,
@@ -36,7 +39,9 @@ class BaseTokenizer:
             sys.stdout = sys.__stdout__
             
     def read_data(self, file_path):
-
+        """
+        Read [Segment] [Clean] [Normalize] [Split]
+        """
         with open(file_path, 'r') as f:
             print("Reading the data ...")
             self.corpus = f.read()
@@ -65,6 +70,9 @@ class BaseTokenizer:
             del self.corpus
 
     def _get_tokens_frequency_quickly(self, file_path):
+        """
+        Get the tokens frequency quickly using memory mapping
+        """
         encoding = "utf8"
         with open(file_path, 'r', encoding=encoding, errors='ignore') as f:
             with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as m:
@@ -88,22 +96,34 @@ class BaseTokenizer:
         return freq
 
     def _write_data(self, path, data):
+        """
+        Write the string data to a path
+        """
         open(path, "w").write(data)
 
     def _split_corpus(self):
+        """
+        Split the data into train, valid and test
+        """
         split_length = int(len(self.corpus) * .8)
         trainval_text, test_text = self.corpus[:split_length], self.corpus[split_length:]
         split_length = int(len(trainval_text) * .8)
         train_text, val_text = trainval_text[:split_length], trainval_text[split_length:]
         return train_text, val_text, test_text
     
-    def _get_tokens_frequency(self,preprocessed_text):
+    def _get_tokens_frequency(self, text):
+        """
+        Get tokens frequency using a dictionary
+        """
         tokens_frequency = defaultdict(int)
-        for word in preprocessed_text.split(" "):
+        for word in text.split(" "):
             tokens_frequency[word]+=1
         return dict(tokens_frequency)
     
     def _split_word(self,word, number_of_subwords): 
+        """
+        Split a word into a specific number of sub-words
+        """
         assert number_of_subwords>1
         groups_of_subwords = [] 
         def _split(_word, _number_of_subwords): 
@@ -123,18 +143,33 @@ class BaseTokenizer:
         return groups_of_subwords
     
     def encode(self, text):
+        """
+        Convert text to ids 
+        """
         return NotImplementedError
     
     def decode(self, encoded):
+        """
+        Convert ids to ids
+        """
         return NotImplementedError
 
     def tokenize(self, text):
+        """
+        Convert text to tokens
+        """
         raise NotImplementedError
 
     def detokenize(self, tokens):
+        """
+        Convert tokens to text
+        """
         raise NotImplementedError
 
     def encode_and_save(self):
+        """
+        Encode all the files then save as numpy
+        """
         Path("data/encoded").mkdir(parents = True, exist_ok = True)
         for file_path in os.listdir('data/raw/'):
             ids = self.encode(open(f"data/raw/{file_path}", 'r').read())
