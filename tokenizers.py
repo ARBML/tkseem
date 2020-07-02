@@ -43,12 +43,15 @@ class BaseTokenizer:
         self.norm_dict = pickle.load(open("normalization_dictionary.pl", 'rb'))
         
         if self.segment:
-            text_trap = io.StringIO()
-            sys.stdout = text_trap
+            print('Initializing Farasa')
+            # suppress farasa stdout
+            old_stdout = sys.stdout
+            sys.stdout = open(os.devnull, "w")
             self.segmenter = FarasaSegmenter(interactive = True)
-            sys.stdout = sys.__stdout__
+            # resume farasa stdout
+            sys.stdout = old_stdout
             
-    def read_data(self, file_path):
+    def process_data(self, file_path):
         """ 
         Read, segment, clean, normalize and split
 
@@ -91,7 +94,7 @@ class BaseTokenizer:
             file_path (str): the directory of the data to read
         
         Returns:
-            freq (Dict): frequency based dictionary   
+            Dict: frequency based dictionary   
         """
         encoding = "utf8"
         with open(file_path, 'r', encoding=encoding, errors='ignore') as f:
@@ -122,8 +125,6 @@ class BaseTokenizer:
         Args:
             file_path (str): the directory of the data to read
         
-        Returns:
-            None 
         """
         open(path, "w").write(data)
 
@@ -132,7 +133,7 @@ class BaseTokenizer:
         Split the data into train, valid and test
 
         Returns:
-            data (Tuple): splitted data
+            Tuple: train, valid, test
         """
         split_length = int(len(self.corpus) * .8)
         trainval_text, test_text = self.corpus[:split_length], self.corpus[split_length:]
@@ -140,15 +141,16 @@ class BaseTokenizer:
         train_text, val_text = trainval_text[:split_length], trainval_text[split_length:]
         return train_text, val_text, test_text
     
-    def _get_tokens_frequency(self, text):
+    def _get_tokens_frequency(self, file_path):
         """
         Get tokens frequency using a dictionary
 
         Args:
-            text (str): data string 
+            file_path (str): file path to read
         Returns:
-            data (Tuple): splitted data
+            dict : dict containing frequency
         """
+        text = open('file_path', 'r').read()
         tokens_frequency = defaultdict(int)
         for word in text.split(" "):
             tokens_frequency[word]+=1
@@ -162,11 +164,11 @@ class BaseTokenizer:
             number_of_subwords (int): number of subtokens to generate from the word 
         
         Returns:
-            list : list of subwords 
+            list: list of subwords 
         """
         assert number_of_subwords>1
 
-        groups_of_subwords = [] 
+        # groups_of_subwords = [] 
         def _split(_word, _number_of_subwords): 
             groups = [] 
             if _number_of_subwords==1 or len(_word) == 1: 
@@ -174,7 +176,7 @@ class BaseTokenizer:
             else: 
                 for i in range(1, len(_word), 1): 
                     groups.extend((_word[:i], *group) for group in _split(_word[i:],_number_of_subwords-1) if len(group)==_number_of_subwords-1) 
-                groups_of_subwords = groups
+                # groups_of_subwords = groups
             return groups 
          
         groups_of_subwords = _split(word,number_of_subwords)
@@ -218,26 +220,51 @@ class FrequencyTokenizer(BaseTokenizer):
     """
     tokens_frequency = None 
 
-    def train(self):
-        """Training using frequency based approach 
+    def train(self, quickly = False):
+        """Train data using tokens' frequency
+
+        Args:
+            quickly (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.
         """
-        preprocessed_text = open('data/raw/train.txt', 'r').read()
-        sorted_tokens_frequency = {
+        if quickly:
+            sorted_tokens_frequency = {
                     k:v for k,v in sorted(
-                            self._get_tokens_frequency(preprocessed_text).items(),
+                            self._get_tokens_frequency_quickly('data/raw/train.txt').items(),
                             key=lambda x: x[1],
                             reverse=True
                             )
                         }
+        else:
+            sorted_tokens_frequency = {
+                        k:v for k,v in sorted(
+                                self._get_tokens_frequency('data/raw/train.txt').items(),
+                                key=lambda x: x[1],
+                                reverse=True
+                                )
+                            }
 
         limited_tokens_frequency = dict()
         limited_tokens_frequency[self.unknown_token] = -1
         limited_tokens_frequency[self.padding_token] = -1
         limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.max_tokens]})
         self.tokens_frequency = limited_tokens_frequency
-        self.clean_tokens_frequency = {k:v for k,v in self.tokens_frequency.items() 
-                                if k is not self.unknown_token and k is not self.padding_token}
-       
+
+    def load_model(self, file_path):
+        """Load a saved model as a frequency dictionary
+
+        Args:
+            file_path (str): file path of the dictionary
+        """
+        self.tokens_frequency = pickle.load(open(file_path, 'rb'))
+
+    def save_model(self, file_path):
+        """Save a model as a freqency dictionary
+
+        Args:
+            file_path (str): file path to save the model
+        """
+        pickle.dump(self.tokens_frequency, f'{file_path}.pl')
+
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
 
@@ -248,7 +275,6 @@ class FrequencyTokenizer(BaseTokenizer):
             list: generated tokens
         """
         assert self.tokens_frequency
-        tokens = []
         output_tokens = []
         for word in text.split():
             if word in self.tokens_frequency.keys():
@@ -264,7 +290,15 @@ class FrequencyTokenizer(BaseTokenizer):
             list: tokens 
         """
         return list(self.tokens_frequency.keys())
-    
+
+    def tokens_list(self):
+        """ tokens list
+
+        Returns:
+            list: list of tokens
+        """
+        return list(self.tokens_frequency.keys())
+
     def decode(self, encoded):
         """ Decode ids
 
@@ -311,8 +345,13 @@ class SentencePieceTokenizer(BaseTokenizer):
         Args:
             model_type (str, optional): train using sp. Defaults to "bpe".
         """
-        spm.SentencePieceTrainer.train(input= 'data/raw/train.txt', model_prefix='m', vocab_size=self.max_tokens, model_type = model_type, character_coverage=1.0, normalization_rule_name='identity')
-        self.sp = spm.SentencePieceProcessor(model_file='m.model')
+        self.model = io.BytesIO()
+        spm.SentencePieceTrainer.train(input= 'data/raw/train.txt', 
+                                        model_writer=self.model, vocab_size=self.max_tokens, 
+                                        model_type = model_type, character_coverage=1.0, 
+                                        normalization_rule_name='identity')
+        self.save_model("m.model")
+        self.sp = spm.SentencePieceProcessor(model_file = 'm.model')
     
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
@@ -324,6 +363,24 @@ class SentencePieceTokenizer(BaseTokenizer):
             list: generated tokens
         """
         return self.sp.encode(text, out_type = str)
+
+    def load_model(self, file_path):
+        """Load a saved sp model
+
+        Args:
+            file_path (str): file path of the trained model
+        """
+        sp = spm.SentencePieceProcessor()
+        self.sp = sp.Load(file_path)
+
+    def save_model(self, file_path):
+        """Save a model as a freqency dictionary
+
+        Args:
+            file_path (str): file path to save the model
+        """
+        with open(file_path, 'wb') as f:
+            f.write(self.model.getvalue())
 
     def encode(self, text):
         """ Convert string to a list of ids
@@ -345,7 +402,7 @@ class SentencePieceTokenizer(BaseTokenizer):
         Returns:
             list: tokens
         """
-        return self.sp.decode(encoded)
+        return self.sp.id_to_piece(encoded)
 
     def detokenize(self, tokens):
         """ Convert tokens to a string
@@ -359,14 +416,15 @@ class SentencePieceTokenizer(BaseTokenizer):
         return ''.join(tokens).replace('▁', ' ')
 
 class AutoTokenizer(BaseTokenizer):
-
+    """ Auto tokenization using a saved dictionary 
+    """
     def __init__(self, vocab = 'vocab.pl'):
         """Tokenize and segment without training
 
         Args:
             vocab (str, optional): pickled vocabulary for tokenization. Defaults to 'vocab.pl'.
         """
-        print("loading vocab ...")
+        print("loading default vocab ...")
         self.vocab = pickle.load(open(vocab, 'rb'))
         super().__init__(self)
 
@@ -418,7 +476,7 @@ class AutoTokenizer(BaseTokenizer):
         Returns:
             list: tokens
         """
-        decoded = [self.tokens_list[id] for id in encoded]
+        decoded = [self._tokens_list()[id] for id in encoded]
         return decoded
     
     def encode(self,text):
@@ -431,7 +489,7 @@ class AutoTokenizer(BaseTokenizer):
             list: list of ids
         """
         tokens = self.tokenize(text)
-        encoded = [self._tokens_list.index(token) for token in tokens]
+        encoded = [self._tokens_list().index(token) for token in tokens]
         return encoded
     
     def detokenize(self, tokens):
