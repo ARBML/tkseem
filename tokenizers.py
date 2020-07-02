@@ -5,7 +5,7 @@ import sys
 import mmap
 import pickle
 import numpy as np
-from utils import *
+from utils import clean_data, normalize_data
 from tqdm import tqdm
 from pathlib import Path
 import sentencepiece as spm
@@ -100,7 +100,6 @@ class BaseTokenizer:
         with open(file_path, 'r', encoding=encoding, errors='ignore') as f:
             with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as m:
                 m.read(0)
-                txt = ""
                 i = 0 
                 size_to_read = int(1e9)
                 freq = Counter([])
@@ -150,7 +149,7 @@ class BaseTokenizer:
         Returns:
             dict : dict containing frequency
         """
-        text = open('file_path', 'r').read()
+        text = open(file_path, 'r').read()
         tokens_frequency = defaultdict(int)
         for word in text.split(" "):
             tokens_frequency[word]+=1
@@ -220,13 +219,13 @@ class FrequencyTokenizer(BaseTokenizer):
     """
     tokens_frequency = None 
 
-    def train(self, quickly = False):
+    def train(self, large_file = False):
         """Train data using tokens' frequency
 
         Args:
             quickly (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.
         """
-        if quickly:
+        if large_file:
             sorted_tokens_frequency = {
                     k:v for k,v in sorted(
                             self._get_tokens_frequency_quickly('data/raw/train.txt').items(),
@@ -255,6 +254,7 @@ class FrequencyTokenizer(BaseTokenizer):
         Args:
             file_path (str): file path of the dictionary
         """
+        print('Loading as pickle file ...')
         self.tokens_frequency = pickle.load(open(file_path, 'rb'))
 
     def save_model(self, file_path):
@@ -263,7 +263,10 @@ class FrequencyTokenizer(BaseTokenizer):
         Args:
             file_path (str): file path to save the model
         """
-        pickle.dump(self.tokens_frequency, f'{file_path}.pl')
+        assert self.tokens_frequency
+        with open(f'{file_path}', 'wb') as pickle_file:
+            print('Saving as pickle file ...')
+            pickle.dump(self.tokens_frequency, pickle_file)
 
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
