@@ -189,10 +189,10 @@ class BaseTokenizer:
         def _split(_word, _number_of_subwords): 
             groups = [] 
             if _number_of_subwords==1: 
-                groups.append([_word+"##"]) 
+                groups.append(["##"+_word]) 
             else: 
                 for i in range(1, len(_word), 1): 
-                    groups.extend([_word[:i]+"##", *group] for group in _split(_word[i:],_number_of_subwords-1) if len(group)==_number_of_subwords-1) 
+                    groups.extend(["##"+_word[:i], *group] for group in _split(_word[i:],_number_of_subwords-1) if len(group)==_number_of_subwords-1) 
             return groups 
          
         groups_of_subwords = _split(word,number_of_subwords)
@@ -202,7 +202,7 @@ class BaseTokenizer:
             out_groups.append(group)
         return out_groups
     
-    def _tokenize_dict(self, text, freq_dict):
+    def _tokenize_from_dict(self, text, freq_dict):
         """Tokenize using the frequency dictionary 
 
         Args:
@@ -220,7 +220,6 @@ class BaseTokenizer:
             else:
                 for i in range(2,len(word)+1,1):
                     groups_of_subwords = self._split_word(word,i)
-
                     #filter out groups
                     groups_of_valid_subwords = list(filter(lambda group : all(subword in freq_dict.keys() for subword in group),
                                             groups_of_subwords)) 
@@ -235,11 +234,34 @@ class BaseTokenizer:
                         output_tokens.append(str(token))
         return output_tokens
     
+    def _truncate_dict(self, freq_dict):
+        """Truncate a frequency dictionary and add reserved tokens
+
+        Args:
+            freq_dict (dict): frequency dictionary
+
+        Returns:
+            dict: truncated dictionary based on the vocab size
+        """
+        sorted_tokens_frequency = {
+                                    k:v for k,v in sorted(
+                                    freq_dict.items(),
+                                    key=lambda x: x[1],
+                                    reverse=True
+                                    )
+                                  }
+                        
+        limited_tokens_frequency = dict()
+        limited_tokens_frequency[self.unknown_token] = -1
+        limited_tokens_frequency[self.padding_token] = -1
+        limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.max_tokens]})
+        return limited_tokens_frequency
+    
     def encode(self, text):
         """
         Convert text to ids 
         """
-        return NotImplementedError
+        raise NotImplementedError
 
     def decode(self, encoded):
         """
@@ -267,11 +289,6 @@ class BaseTokenizer:
             ids = self.encode(open(f"data/raw/{file_path}", "r").read())
             np.save(f"data/encoded/{file_path[:-4]}.npy", ids)
 
-
-# I am not sure we should call this FREQUENCY as we
-# are not using frequencies here. Its name is misleading.
-# The auto tokenizer should be named a frequency tokenizer because
-# it uses the frequency table. What do you think?
 class FrequencyTokenizer(BaseTokenizer):
     """ Frequency based tokenization 
     """
@@ -282,7 +299,7 @@ class FrequencyTokenizer(BaseTokenizer):
         """Train data using tokens' frequency
 
         Args:
-            quickly (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.
+            large_file (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.
         """
         if large_file:
             sorted_tokens_frequency = {
@@ -356,14 +373,6 @@ class FrequencyTokenizer(BaseTokenizer):
         """
         return list(self.vocab.keys())
 
-    def tokens_list(self):
-        """ tokens list
-
-        Returns:
-            list: list of tokens
-        """
-        return list(self.vocab.keys())
-
     def decode(self, encoded):
         """ Decode ids
 
@@ -373,7 +382,7 @@ class FrequencyTokenizer(BaseTokenizer):
         Returns:
             list: tokens
         """
-        decoded = [self.tokens_list()[id] for id in encoded]
+        decoded = [self._tokens_list()[id] for id in encoded]
         return decoded
 
     def encode(self, text):
@@ -491,18 +500,16 @@ class AutoTokenizer(BaseTokenizer):
     """ Auto tokenization using a saved dictionary 
     """
 
-    def __init__(self, vocab="vocab.pl"):
+    def __init__(self, vocab="vocab.pl", **kwds):
         """Tokenize and segment without training
 
         Args:
             vocab (str, optional): pickled vocabulary for tokenization. Defaults to 'vocab.pl'.
         """
+        super(AutoTokenizer, self).__init__(**kwds)
         print("loading default vocab ...")
-        # CHECKIT: maybe we need to allow the user to put another path?
-        # Otherwise, we should not put it in the constructor
         self.vocab = pickle.load(open(vocab, "rb"))
-        super().__init__(self)
-
+        
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
 
@@ -512,8 +519,7 @@ class AutoTokenizer(BaseTokenizer):
         Returns:
             list: generated tokens
         """
-        
-        output_tokens = self._tokenize_dict(text, self.vocab)
+        output_tokens = self._tokenize_from_dict(text, self.vocab)
         return output_tokens
     
     def _tokens_list(self):
@@ -569,19 +575,7 @@ class RandomTokenizer(BaseTokenizer):
         """
         print("Training ...")
         text = open('data/raw/train.txt', 'r').read()
-        sorted_tokens_frequency = {
-                                    k:v for k,v in sorted(
-                                    self._random_dict(text).items(),
-                                    key=lambda x: x[1],
-                                    reverse=True
-                                    )
-                                  }
-                        
-        limited_tokens_frequency = dict()
-        limited_tokens_frequency[self.unknown_token] = -1
-        limited_tokens_frequency[self.padding_token] = -1
-        limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.max_tokens]})
-        self.vocab = limited_tokens_frequency
+        self.vocab = self._truncate_dict(self._random_dict(text))
  
     def _random_dict(self, text):
         """Create dictionary based on random splitting
@@ -614,7 +608,7 @@ class RandomTokenizer(BaseTokenizer):
         Returns:
             list: generated tokens
         """
-        output_tokens = self._tokenize_dict(text, self.vocab)
+        output_tokens = self._tokenize_from_dict(text, self.vocab)
         return output_tokens
 
     def _tokens_list(self):
@@ -692,11 +686,8 @@ class SubWordsTokenizer(BaseTokenizer):
             self.vocabs.add(word.strip())
         return modified_text
 
-    def tokens_list(self):
-        return list(self.vocabs)
-
     def encode(self, text):
-        tokens_list = self.tokens_list()
+        tokens_list = self._tokens_list()
         return [
             tokens_list.index(word.strip())
             if word.strip() in self.vocabs
@@ -705,7 +696,7 @@ class SubWordsTokenizer(BaseTokenizer):
         ]
 
     def decode(self, ids):
-        tokens_list = self.tokens_list()
+        tokens_list = self._tokens_list()
         # this needs to be fixed. It should return the index of <UNK> and <PAD> tokens.
         return [tokens_list[id] if id < len(tokens_list) else "<UNK>" for id in ids]
 
