@@ -4,13 +4,15 @@ import os
 import sys
 import mmap
 import pickle
+import random
 import numpy as np
-from utils import clean_data, normalize_data
 from tqdm import tqdm
 from pathlib import Path
 import sentencepiece as spm
 from collections import defaultdict, Counter
 from farasa.segmenter import FarasaSegmenter
+from utils import clean_data, normalize_data
+
 
 class BaseTokenizer:
     """
@@ -165,22 +167,56 @@ class BaseTokenizer:
         Returns:
             list: list of subwords 
         """
-        assert number_of_subwords>1
+        assert number_of_subwords>0
 
-        # groups_of_subwords = [] 
         def _split(_word, _number_of_subwords): 
             groups = [] 
-            if _number_of_subwords==1 or len(_word) == 1: 
-                groups.append(["##"+_word]) 
+            if _number_of_subwords==1: 
+                groups.append([_word+"##"]) 
             else: 
                 for i in range(1, len(_word), 1): 
-                    groups.extend((_word[:i], *group) for group in _split(_word[i:],_number_of_subwords-1) if len(group)==_number_of_subwords-1) 
-                # groups_of_subwords = groups
+                    groups.extend([_word[:i]+"##", *group] for group in _split(_word[i:],_number_of_subwords-1) if len(group)==_number_of_subwords-1) 
             return groups 
          
         groups_of_subwords = _split(word,number_of_subwords)
-        
-        return groups_of_subwords
+        out_groups = []
+        for group in groups_of_subwords:
+            group[0] = group[0].replace("##","")
+            out_groups.append(group)
+        return out_groups
+    
+    def _tokenize_dict(self, text, freq_dict):
+        """Tokenize using the frequency dictionary 
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: generated tokens
+        """
+        assert freq_dict
+        tokens = []
+        output_tokens = []
+        for word in text.split():
+            if word in freq_dict:
+                output_tokens.append(word)
+            else:
+                for i in range(2,len(word)+1,1):
+                    groups_of_subwords = self._split_word(word,i)
+
+                    #filter out groups
+                    groups_of_valid_subwords = list(filter(lambda group : all(subword in freq_dict.keys() for subword in group),
+                                            groups_of_subwords)) 
+                    if groups_of_valid_subwords:
+                        break
+                if len(groups_of_valid_subwords)==0:
+                    output_tokens.append(self.unknown_token)
+                else:
+                    sorted_groups_of_valid_subwords = sorted(groups_of_valid_subwords, key=lambda group: sum(freq_dict[subword] for subword in group))
+                    tokens = sorted_groups_of_valid_subwords[-1]
+                    for token in tokens:
+                        output_tokens.append(str(token))
+        return output_tokens
     
     def encode(self, text):
         """
@@ -246,7 +282,7 @@ class FrequencyTokenizer(BaseTokenizer):
         limited_tokens_frequency[self.unknown_token] = -1
         limited_tokens_frequency[self.padding_token] = -1
         limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.max_tokens]})
-        self.tokens_frequency = limited_tokens_frequency
+        self.vocab = limited_tokens_frequency
 
     def load_model(self, file_path):
         """Load a saved model as a frequency dictionary
@@ -255,7 +291,7 @@ class FrequencyTokenizer(BaseTokenizer):
             file_path (str): file path of the dictionary
         """
         print('Loading as pickle file ...')
-        self.tokens_frequency = pickle.load(open(file_path, 'rb'))
+        self.vocab = pickle.load(open(file_path, 'rb'))
 
     def save_model(self, file_path):
         """Save a model as a freqency dictionary
@@ -263,10 +299,10 @@ class FrequencyTokenizer(BaseTokenizer):
         Args:
             file_path (str): file path to save the model
         """
-        assert self.tokens_frequency
+        assert self.vocab
         with open(f'{file_path}', 'wb') as pickle_file:
             print('Saving as pickle file ...')
-            pickle.dump(self.tokens_frequency, pickle_file)
+            pickle.dump(self.vocab, pickle_file)
 
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
@@ -277,10 +313,10 @@ class FrequencyTokenizer(BaseTokenizer):
         Returns:
             list: generated tokens
         """
-        assert self.tokens_frequency
+        assert self.vocab
         output_tokens = []
         for word in text.split():
-            if word in self.tokens_frequency.keys():
+            if word in self.vocab.keys():
                 output_tokens.append(word) 
             else:
                 output_tokens.append(self.unknown_token)
@@ -292,7 +328,7 @@ class FrequencyTokenizer(BaseTokenizer):
         Returns:
             list: tokens 
         """
-        return list(self.tokens_frequency.keys())
+        return list(self.vocab.keys())
 
     def tokens_list(self):
         """ tokens list
@@ -300,7 +336,7 @@ class FrequencyTokenizer(BaseTokenizer):
         Returns:
             list: list of tokens
         """
-        return list(self.tokens_frequency.keys())
+        return list(self.vocab.keys())
 
     def decode(self, encoded):
         """ Decode ids
@@ -441,25 +477,109 @@ class AutoTokenizer(BaseTokenizer):
         Returns:
             list: generated tokens
         """
-        assert self.vocab
-        tokens = []
-        output_tokens = []
-        for word in text.split():
-            if word in self.vocab.keys():
-                output_tokens.append(word)
-            else:
-                for i in range(2,len(word)+1,1):
-                    groups_of_valid_subwords = self._split_word(word,i)
-                    if groups_of_valid_subwords:
-                        break
-                if len(groups_of_valid_subwords)==0:
-                    output_tokens.append(self.unknown_token)
-                else:
-                    sorted_groups_of_valid_subwords = sorted(groups_of_valid_subwords, key=lambda group: sum(self.vocab[subword] for subword in group))
-                    
-                    tokens = sorted_groups_of_valid_subwords[-1]
-                    for token in tokens:
-                        output_tokens.append(str(token))
+        
+        output_tokens = self._tokenize_dict(text, self.vocab)
+        return output_tokens
+    
+    def _tokens_list(self):
+        """ Get tokens list
+
+        Returns:
+            list: list of tokens.
+        """
+        return list(self.vocab.keys())
+    
+    def decode(self, encoded):
+        """ Decode ids
+
+        Args:
+            encoded (list): list of ids to decode
+
+        Returns:
+            list: tokens
+        """
+        decoded = [self._tokens_list()[id] for id in encoded]
+        return decoded
+    
+    def encode(self,text):
+        """ Convert string to a list of ids
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: list of ids
+        """
+        tokens = self.tokenize(text)
+        encoded = [self._tokens_list().index(token) for token in tokens]
+        return encoded
+    
+    def detokenize(self, tokens):
+        """ Convert tokens to a string
+
+        Args:
+            tokens (list): list of tokens
+
+        Returns:
+            str: detokenized string
+        """
+        detokenized = ''.join(tokens).replace('##','')
+        return detokenized
+
+class RandomTokenizer(BaseTokenizer):
+    """ Randomized based tokenization 
+    """
+    def train(self):
+        """Train data using random tokens' frequency
+        """
+        print("Training ...")
+        text = open('data/raw/train.txt', 'r').read()
+        sorted_tokens_frequency = {
+                                    k:v for k,v in sorted(
+                                    self._random_dict(text).items(),
+                                    key=lambda x: x[1],
+                                    reverse=True
+                                    )
+                                  }
+                        
+        limited_tokens_frequency = dict()
+        limited_tokens_frequency[self.unknown_token] = -1
+        limited_tokens_frequency[self.padding_token] = -1
+        limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.max_tokens]})
+        self.vocab = limited_tokens_frequency
+ 
+    def _random_dict(self, text):
+        """Create dictionary based on random splitting
+
+        Args:
+            text (str): input text
+
+        Returns:
+            Dict: tokens frequency
+        """
+
+        tokens_frequency = defaultdict(int)
+        text = text.replace("\n", "")
+
+        for word in text.split(" "):
+            if word.strip() == "":
+                continue
+            groups = self._split_word(word.strip(), random.randint(1, len(word)))
+            for group in groups:
+                for sub_word in group:
+                    tokens_frequency[sub_word] += 1
+        return dict(tokens_frequency)
+
+    def tokenize(self, text):
+        """Tokenize using the frequency dictionary 
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: generated tokens
+        """
+        output_tokens = self._tokenize_dict(text, self.vocab)
         return output_tokens
     
     def _tokens_list(self):
