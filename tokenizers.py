@@ -184,7 +184,6 @@ class BaseTokenizer:
         Returns:
             list: list of subwords 
         """
-<<<<<<< HEAD
         assert number_of_subwords>0
 
         def _split(_word, _number_of_subwords): 
@@ -236,29 +235,6 @@ class BaseTokenizer:
                         output_tokens.append(str(token))
         return output_tokens
     
-=======
-        assert number_of_subwords > 1
-
-        # groups_of_subwords = []
-        def _split(_word, _number_of_subwords):
-            groups = []
-            if _number_of_subwords == 1 or len(_word) == 1:
-                groups.append(["##" + _word])
-            else:
-                for i in range(1, len(_word), 1):
-                    groups.extend(
-                        (_word[:i], *group)
-                        for group in _split(_word[i:], _number_of_subwords - 1)
-                        if len(group) == _number_of_subwords - 1
-                    )
-                # groups_of_subwords = groups
-            return groups
-
-        groups_of_subwords = _split(word, number_of_subwords)
-
-        return groups_of_subwords
-
->>>>>>> b7ed37663c86a5807bc0e25864e801b9e5d0531d
     def encode(self, text):
         """
         Convert text to ids 
@@ -330,15 +306,8 @@ class FrequencyTokenizer(BaseTokenizer):
         limited_tokens_frequency = dict()
         limited_tokens_frequency[self.unknown_token] = -1
         limited_tokens_frequency[self.padding_token] = -1
-<<<<<<< HEAD
         limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.max_tokens]})
         self.vocab = limited_tokens_frequency
-=======
-        limited_tokens_frequency.update(
-            {k: v for k, v in list(sorted_tokens_frequency.items())[: self.max_tokens]}
-        )
-        self.tokens_frequency = limited_tokens_frequency
->>>>>>> b7ed37663c86a5807bc0e25864e801b9e5d0531d
 
     def load_model(self, file_path):
         """Load a saved model as a frequency dictionary
@@ -346,13 +315,8 @@ class FrequencyTokenizer(BaseTokenizer):
         Args:
             file_path (str): file path of the dictionary
         """
-<<<<<<< HEAD
         print('Loading as pickle file ...')
         self.vocab = pickle.load(open(file_path, 'rb'))
-=======
-        print("Loading as pickle file ...")
-        self.tokens_frequency = pickle.load(open(file_path, "rb"))
->>>>>>> b7ed37663c86a5807bc0e25864e801b9e5d0531d
 
     def save_model(self, file_path):
         """Save a model as a freqency dictionary
@@ -360,17 +324,10 @@ class FrequencyTokenizer(BaseTokenizer):
         Args:
             file_path (str): file path to save the model
         """
-<<<<<<< HEAD
         assert self.vocab
         with open(f'{file_path}', 'wb') as pickle_file:
             print('Saving as pickle file ...')
             pickle.dump(self.vocab, pickle_file)
-=======
-        assert self.tokens_frequency
-        with open(f"{file_path}", "wb") as pickle_file:
-            print("Saving as pickle file ...")
-            pickle.dump(self.tokens_frequency, pickle_file)
->>>>>>> b7ed37663c86a5807bc0e25864e801b9e5d0531d
 
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
@@ -384,13 +341,8 @@ class FrequencyTokenizer(BaseTokenizer):
         assert self.vocab
         output_tokens = []
         for word in text.split():
-<<<<<<< HEAD
             if word in self.vocab.keys():
                 output_tokens.append(word) 
-=======
-            if word in self.tokens_frequency.keys():
-                output_tokens.append(word)
->>>>>>> b7ed37663c86a5807bc0e25864e801b9e5d0531d
             else:
                 output_tokens.append(self.unknown_token)
         return output_tokens
