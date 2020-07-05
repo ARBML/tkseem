@@ -12,8 +12,8 @@ import sentencepiece as spm
 from collections import defaultdict, Counter
 from farasa.segmenter import FarasaSegmenter
 from utils import clean_data, normalize_data
-
-
+import functools
+import operator
 
 class BaseTokenizer:
     """
@@ -301,6 +301,7 @@ class FrequencyTokenizer(BaseTokenizer):
         Args:
             large_file (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.
         """
+        print('Training FrequencyTokenizer...')
         if large_file:
             sorted_tokens_frequency = {
                 k: v
@@ -421,6 +422,7 @@ class SentencePieceTokenizer(BaseTokenizer):
         Args:
             model_type (str, optional): train using sp. Defaults to "bpe".
         """
+        print('Training SentencePiece...')
         self.model = io.BytesIO()
         spm.SentencePieceTrainer.train(
             input="data/raw/train.txt",
@@ -500,16 +502,11 @@ class AutoTokenizer(BaseTokenizer):
     """ Auto tokenization using a saved dictionary 
     """
 
-    def __init__(self, vocab="vocab.pl", **kwds):
-        """Tokenize and segment without training
+    def train(self, vocab_path = "vocab.pl"):
+        """Use a default dictionary for training"""
+        print("Training AutoTokenizer...")
+        self.vocab = self._truncate_dict(pickle.load(open(vocab_path, "rb")))
 
-        Args:
-            vocab (str, optional): pickled vocabulary for tokenization. Defaults to 'vocab.pl'.
-        """
-        super(AutoTokenizer, self).__init__(**kwds)
-        print("loading default vocab ...")
-        self.vocab = pickle.load(open(vocab, "rb"))
-        
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
 
@@ -573,7 +570,7 @@ class RandomTokenizer(BaseTokenizer):
     def train(self):
         """Train data using random tokens' frequency
         """
-        print("Training ...")
+        print("Training RandomTokenizer ...")
         text = open('data/raw/train.txt', 'r').read()
         self.vocab = self._truncate_dict(self._random_dict(text))
  
@@ -593,10 +590,12 @@ class RandomTokenizer(BaseTokenizer):
         for word in text.split(" "):
             if word.strip() == "":
                 continue
+            
             groups = self._split_word(word.strip(), random.randint(1, len(word)))
-            for group in groups:
-                for sub_word in group:
-                    tokens_frequency[sub_word] += 1
+            groups = functools.reduce(operator.iconcat, groups, [])
+
+            for sub_word in groups:
+                tokens_frequency[sub_word] += 1
         return dict(tokens_frequency)
 
     def tokenize(self, text):
