@@ -5,15 +5,15 @@ import sys
 import mmap
 import pickle
 import random
+import operator
+import functools
 import numpy as np
 from tqdm import tqdm
 from pathlib import Path
 import sentencepiece as spm
 from collections import defaultdict, Counter
 from farasa.segmenter import FarasaSegmenter
-from utils import clean_data, normalize_data
-import functools
-import operator
+from utils import clean_data, normalize_data, split_on_binary
 
 class BaseTokenizer:
     """
@@ -52,6 +52,7 @@ class BaseTokenizer:
         self.normalize = normalize
         self.split = split
         self.norm_dict = pickle.load(open("normalization_dictionary.pl", "rb"))
+        self.cached = pickle.load(open('cached.pl', 'rb'))
 
         if self.segment:
             print("Initializing Farasa")
@@ -201,7 +202,24 @@ class BaseTokenizer:
             group[0] = group[0].replace("##","")
             out_groups.append(group)
         return out_groups
-    
+
+    def _split_word_cached(self, word, number_of_subwords):
+        """Faster version of word splitting
+
+        Args:
+            word (word): word to be split
+            number_of_subwords (int): number of subwords to split the word to
+
+        Returns:
+            list: subwords
+        """
+        if k == 1:
+            return [[word]]
+        n = len(word) - 1
+        all_binaries = self.cached[n, number_of_subwords - 1]
+        return [split_on_binary(word, binary) for binary in all_binaries]
+
+
     def _tokenize_from_dict(self, text, freq_dict):
         """Tokenize using the frequency dictionary 
 
@@ -591,7 +609,11 @@ class RandomTokenizer(BaseTokenizer):
             if word.strip() == "":
                 continue
             
-            groups = self._split_word(word.strip(), random.randint(1, len(word)))
+            if len(word) >= 20:
+                continue
+
+            groups = self._split_word_cached(word.strip(), 
+                            random.randint(1, len(word)))
             groups = functools.reduce(operator.iconcat, groups, [])
 
             for sub_word in groups:
