@@ -62,15 +62,15 @@ def clean_data(text):
     text = remove_extra_spaces(text)
     return text 
 
-def split_on_binary(self, word, binary):
-        out = []
-        sub = word[0]
-        
-        for i, char in enumerate(word[1:]):
-            if binary[i]:
-                out.append(sub)
-                sub = "##"
-            sub += char
-        out.append(sub)
-        
-        return out
+def split_on_binary(word, binary):
+    out = []
+    sub = word[0]
+    
+    for i, char in enumerate(word[1:]):
+        if binary[i]:
+            out.append(sub)
+            sub = "##"
+        sub += char
+    out.append(sub)
+    
+    return out

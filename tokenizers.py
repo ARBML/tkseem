@@ -213,14 +213,14 @@ class BaseTokenizer:
         Returns:
             list: subwords
         """
-        if k == 1:
+        if number_of_subwords == 1:
             return [[word]]
         n = len(word) - 1
         all_binaries = self.cached[n, number_of_subwords - 1]
         return [split_on_binary(word, binary) for binary in all_binaries]
 
 
-    def _tokenize_from_dict(self, text, freq_dict):
+    def _tokenize_from_dict(self, text, freq_dict, cache = False):
         """Tokenize using the frequency dictionary 
 
         Args:
@@ -237,7 +237,11 @@ class BaseTokenizer:
                 output_tokens.append(word)
             else:
                 for i in range(2,len(word)+1,1):
-                    groups_of_subwords = self._split_word(word,i)
+                    if cache:
+                        groups_of_subwords = self._split_word_cached(word, i)
+                    else:
+                        groups_of_subwords = self._split_word(word, i)
+
                     #filter out groups
                     groups_of_valid_subwords = list(filter(lambda group : all(subword in freq_dict.keys() for subword in group),
                                             groups_of_subwords)) 
@@ -525,7 +529,7 @@ class AutoTokenizer(BaseTokenizer):
         print("Training AutoTokenizer...")
         self.vocab = self._truncate_dict(pickle.load(open(vocab_path, "rb")))
 
-    def tokenize(self, text):
+    def tokenize(self, text, cache = False):
         """Tokenize using the frequency dictionary 
 
         Args:
@@ -534,7 +538,7 @@ class AutoTokenizer(BaseTokenizer):
         Returns:
             list: generated tokens
         """
-        output_tokens = self._tokenize_from_dict(text, self.vocab)
+        output_tokens = self._tokenize_from_dict(text, self.vocab, cache)
         return output_tokens
     
     def _tokens_list(self):
@@ -609,9 +613,11 @@ class RandomTokenizer(BaseTokenizer):
             if word.strip() == "":
                 continue
             
+            # cached word splitting only accept words with max 20 length
             if len(word) >= 20:
                 continue
 
+            # random number of splits
             groups = self._split_word_cached(word.strip(), 
                             random.randint(1, len(word)))
             groups = functools.reduce(operator.iconcat, groups, [])
