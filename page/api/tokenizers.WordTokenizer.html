@@ -1,0 +1,387 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>WordTokenizer &mdash; tkseem 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="SentencePieceTokenizer" href="tokenizers.SentencePieceTokenizer.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> tkseem
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Tutorial.html">Docs</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#module-tokenizers">tokenizers Module</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#classes">Classes</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="tokenizers.AutoTokenizer.html">AutoTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tokenizers.BaseTokenizer.html">BaseTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tokenizers.DisjointLetterTokenizer.html">DisjointLetterTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tokenizers.RandomTokenizer.html">RandomTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tokenizers.SentencePieceTokenizer.html">SentencePieceTokenizer</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">WordTokenizer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#class-inheritance-diagram">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">tkseem</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../api.html">API</a> &raquo;</li>
+        
+      <li>WordTokenizer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/api/tokenizers.WordTokenizer.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="wordtokenizer">
+<h1>WordTokenizer<a class="headerlink" href="#wordtokenizer" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="tokenizers.WordTokenizer">
+<em class="property">class </em><code class="sig-prename descclassname">tokenizers.</code><code class="sig-name descname">WordTokenizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unknown_token</span><span class="o">=</span><span class="default_value">'&lt;UNK&gt;'</span></em>, <em class="sig-param"><span class="n">padding_token</span><span class="o">=</span><span class="default_value">'&lt;PAD&gt;'</span></em>, <em class="sig-param"><span class="n">segment</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_tokens</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">segm_token</span><span class="o">=</span><span class="default_value">'+'</span></em>, <em class="sig-param"><span class="n">split</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="tokenizers.BaseTokenizer.html#tokenizers.BaseTokenizer" title="tokenizers.BaseTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">tokenizers.BaseTokenizer</span></code></a></p>
+<p>White space based tokenization</p>
+<p class="rubric">Attributes Summary</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.tokens_frequency" title="tokenizers.WordTokenizer.tokens_frequency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens_frequency</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.decode" title="tokenizers.WordTokenizer.decode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decode</span></code></a>(encoded)</p></td>
+<td><p>Decode ids</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.detokenize" title="tokenizers.WordTokenizer.detokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detokenize</span></code></a>(tokens)</p></td>
+<td><p>Convert tokens to a string</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.encode" title="tokenizers.WordTokenizer.encode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">encode</span></code></a>(text)</p></td>
+<td><p>Convert string to a list of ids</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.load_model" title="tokenizers.WordTokenizer.load_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_model</span></code></a>(file_path)</p></td>
+<td><p>Load a saved model as a frequency dictionary</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.save_model" title="tokenizers.WordTokenizer.save_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_model</span></code></a>(file_path)</p></td>
+<td><p>Save a model as a freqency dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.tokenize" title="tokenizers.WordTokenizer.tokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokenize</span></code></a>(text)</p></td>
+<td><p>Tokenize using the frequency dictionary</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.train" title="tokenizers.WordTokenizer.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a>([large_file])</p></td>
+<td><p>Train data using tokens’ frequency</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="py attribute">
+<dt id="tokenizers.WordTokenizer.tokens_frequency">
+<code class="sig-name descname">tokens_frequency</code><em class="property"> = None</em><a class="headerlink" href="#tokenizers.WordTokenizer.tokens_frequency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt id="tokenizers.WordTokenizer.decode">
+<code class="sig-name descname">decode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">encoded</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode ids</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>encoded (list): list of ids to decode</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: tokens</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tokenizers.WordTokenizer.detokenize">
+<code class="sig-name descname">detokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.detokenize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert tokens to a string</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>tokens (list): list of tokens</p>
+</dd>
+<dt>Returns:</dt><dd><p>str: detokenized string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tokenizers.WordTokenizer.encode">
+<code class="sig-name descname">encode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert string to a list of ids</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text (str): input string</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: list of ids</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tokenizers.WordTokenizer.load_model">
+<code class="sig-name descname">load_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.load_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a saved model as a frequency dictionary</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>file_path (str): file path of the dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tokenizers.WordTokenizer.save_model">
+<code class="sig-name descname">save_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.save_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save a model as a freqency dictionary</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>file_path (str): file path to save the model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tokenizers.WordTokenizer.tokenize">
+<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tokenize using the frequency dictionary</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text (str): input string</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: generated tokens</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="tokenizers.WordTokenizer.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">large_file</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train data using tokens’ frequency</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>large_file (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="tokenizers.SentencePieceTokenizer.html" class="btn btn-neutral float-left" title="SentencePieceTokenizer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Zaid
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

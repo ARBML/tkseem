@@ -1,0 +1,305 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API &mdash; tkseem 1.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="AutoTokenizer" href="api/tokenizers.AutoTokenizer.html" />
+    <link rel="prev" title="Docs" href="Tutorial.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> tkseem
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Tutorial.html">Docs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-tokenizers">tokenizers Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/tokenizers.AutoTokenizer.html">AutoTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tokenizers.BaseTokenizer.html">BaseTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tokenizers.DisjointLetterTokenizer.html">DisjointLetterTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tokenizers.RandomTokenizer.html">RandomTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tokenizers.SentencePieceTokenizer.html">SentencePieceTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tokenizers.WordTokenizer.html">WordTokenizer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inheritance-diagram">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tkseem</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="api">
+<h1>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-tokenizers">
+<span id="tokenizers-module"></span><h2>tokenizers Module<a class="headerlink" href="#module-tokenizers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.AutoTokenizer.html#tokenizers.AutoTokenizer" title="tokenizers.AutoTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AutoTokenizer</span></code></a>([unknown_token, …])</p></td>
+<td><p>Auto tokenization using a saved dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tokenizers.BaseTokenizer.html#tokenizers.BaseTokenizer" title="tokenizers.BaseTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseTokenizer</span></code></a>([unknown_token, …])</p></td>
+<td><p>Base Tokenizer that implements the basic functionalities of a tokenizer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.DisjointLetterTokenizer.html#tokenizers.DisjointLetterTokenizer" title="tokenizers.DisjointLetterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DisjointLetterTokenizer</span></code></a>([unknown_token, …])</p></td>
+<td><p>Disjoint Letters based tokenization</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tokenizers.RandomTokenizer.html#tokenizers.RandomTokenizer" title="tokenizers.RandomTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomTokenizer</span></code></a>([unknown_token, …])</p></td>
+<td><p>Randomized based tokenization</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.SentencePieceTokenizer.html#tokenizers.SentencePieceTokenizer" title="tokenizers.SentencePieceTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SentencePieceTokenizer</span></code></a>([unknown_token, …])</p></td>
+<td><p>Sentencepiece based tokenization.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tokenizers.WordTokenizer.html#tokenizers.WordTokenizer" title="tokenizers.WordTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WordTokenizer</span></code></a>([unknown_token, …])</p></td>
+<td><p>White space based tokenization</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="class-inheritance-diagram">
+<h3>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this headline">¶</a></h3>
+digraph inheritance9a2c7ba959 {
+bgcolor=transparent;
+rankdir=LR;
+size=&quot;8.0, 12.0&quot;;
+  &quot;AutoTokenizer&quot; [URL=&quot;api/tokenizers.AutoTokenizer.html#tokenizers.AutoTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Auto tokenization using a saved dictionary&quot;];
+  &quot;BaseTokenizer&quot; -&gt; &quot;AutoTokenizer&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;BaseTokenizer&quot; [URL=&quot;api/tokenizers.BaseTokenizer.html#tokenizers.BaseTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base Tokenizer that implements the basic functionalities of a tokenizer&quot;];
+  &quot;DisjointLetterTokenizer&quot; [URL=&quot;api/tokenizers.DisjointLetterTokenizer.html#tokenizers.DisjointLetterTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Disjoint Letters based tokenization&quot;];
+  &quot;BaseTokenizer&quot; -&gt; &quot;DisjointLetterTokenizer&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;RandomTokenizer&quot; [URL=&quot;api/tokenizers.RandomTokenizer.html#tokenizers.RandomTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Randomized based tokenization&quot;];
+  &quot;BaseTokenizer&quot; -&gt; &quot;RandomTokenizer&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;SentencePieceTokenizer&quot; [URL=&quot;api/tokenizers.SentencePieceTokenizer.html#tokenizers.SentencePieceTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Sentencepiece based tokenization.&quot;];
+  &quot;BaseTokenizer&quot; -&gt; &quot;SentencePieceTokenizer&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+  &quot;WordTokenizer&quot; [URL=&quot;api/tokenizers.WordTokenizer.html#tokenizers.WordTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;White space based tokenization&quot;];
+  &quot;BaseTokenizer&quot; -&gt; &quot;WordTokenizer&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
+}
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api/tokenizers.AutoTokenizer.html" class="btn btn-neutral float-right" title="AutoTokenizer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Tutorial.html" class="btn btn-neutral float-left" title="Docs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Zaid
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
