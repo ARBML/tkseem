@@ -92,4 +92,4 @@ running_times['Disjoint'] = calc_time(tk.DisjointLetterTokenizer)
 We encourage contributions to this repository. 
 
 ## License
-MIT license. 
+[MIT](LICENSE) license. 
