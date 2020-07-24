@@ -22,10 +22,10 @@ class BaseTokenizer:
 
     def __init__(
         self,
-        unknown_token="<UNK>",
-        padding_token="<PAD>",
+        unk_token="<UNK>",
+        pad_token="<PAD>",
         segment=False,
-        max_tokens=10000,
+        vocab_size=10000,
         segm_token="+",
         split=True,
         clean=False,
@@ -34,8 +34,8 @@ class BaseTokenizer:
         """Constructor
 
         Args:
-            unknown_token (str, optional): reserved token for unknowns. Defaults to "<UNK>".
-            padding_token (str, optional): reserved token for padding. Defaults to "<PAD>".
+            unk_token (str, optional): reserved token for unknowns. Defaults to "<UNK>".
+            pad_token (str, optional): reserved token for padding. Defaults to "<PAD>".
             segment (bool, optional): segment using farasa. Defaults to False.
             max_tokens (int, optional): max number of vocabulary. Defaults to 10000.
             segm_token (str, optional): reserved token for segmentation. Defaults to '+'.
@@ -44,9 +44,9 @@ class BaseTokenizer:
             normalize (bool, optional): normalize chars. Defaults to False.
         """
         self.segm_token = segm_token
-        self.max_tokens = max_tokens
-        self.unknown_token = unknown_token
-        self.padding_token = padding_token
+        self.vocab_size = vocab_size
+        self.unk_token = unk_token
+        self.pad_token = pad_token
         self.segment = segment
         self.clean = clean
         self.normalize = normalize
@@ -92,11 +92,11 @@ class BaseTokenizer:
         if self.split:
             print("Splitting the data ...")
             Path("data/raw").mkdir(parents=True, exist_ok=True)
-            self.train_text, self.valid_text, self.test_text = self._split_corpus()
-            self._write_data("data/raw/train.txt", self.train_text)
-            self._write_data("data/raw/valid.txt", self.valid_text)
-            self._write_data("data/raw/test.txt", self.test_text)
-            del self.train_text, self.valid_text, self.test_text
+            # self.train_text, self.valid_text, self.test_text = self._split_corpus()
+            self._write_data("data/raw/train.txt", self.corpus)
+            # self._write_data("data/raw/valid.txt", self.valid_text)
+            # self._write_data("data/raw/test.txt", self.test_text)
+            # del self.train_text, self.valid_text, self.test_text
             del self.corpus
 
     def _get_tokens_frequency_quickly(self, file_path):
@@ -248,7 +248,7 @@ class BaseTokenizer:
                     if groups_of_valid_subwords:
                         break
                 if len(groups_of_valid_subwords)==0:
-                    output_tokens.append(self.unknown_token)
+                    output_tokens.append(self.unk_token)
                 else:
                     sorted_groups_of_valid_subwords = sorted(groups_of_valid_subwords, key=lambda group: sum(freq_dict[subword] for subword in group))
                     tokens = sorted_groups_of_valid_subwords[-1]
@@ -274,9 +274,9 @@ class BaseTokenizer:
                                   }
                         
         limited_tokens_frequency = dict()
-        limited_tokens_frequency[self.unknown_token] = -1
-        limited_tokens_frequency[self.padding_token] = -1
-        limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.max_tokens]})
+        limited_tokens_frequency[self.unk_token] = -1
+        limited_tokens_frequency[self.pad_token] = -1
+        limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.vocab_size]})
         return limited_tokens_frequency
     
     def encode(self, text):
@@ -311,6 +311,29 @@ class BaseTokenizer:
             ids = self.encode(open(f"data/raw/{file_path}", "r").read())
             np.save(f"data/encoded/{file_path[:-4]}.npy", ids)
 
+    def encode_sentences(self, sentences, max_length = 20):
+        """Encode a list of sentences using the trained model
+
+        Args:
+            sentences (list): list of sentences
+            max_length (int, optional): specify the max length of encodings. Defaults to 100.
+
+        Returns:
+            [np.array]: numpy array of encodings
+        """
+        encodings = []
+        for sent in sentences:
+            tokens = self.tokenize(sent)
+            encoded = []
+            for i in range(max_length):
+                if i < len(tokens):
+                    current_token = tokens[i]
+                else:
+                    current_token = self.pad_token
+                encoded.append(self._tokens_list().index(current_token))
+            encodings.append(encoded)
+        return np.array(encodings)
+
 class WordTokenizer(BaseTokenizer):
     """ White space based tokenization 
     """
@@ -344,11 +367,10 @@ class WordTokenizer(BaseTokenizer):
             }
 
         limited_tokens_frequency = dict()
-        limited_tokens_frequency[self.unknown_token] = -1
-        limited_tokens_frequency[self.padding_token] = -1
-        limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.max_tokens]})
+        limited_tokens_frequency[self.unk_token] = -1
+        limited_tokens_frequency[self.pad_token] = -1
+        limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.vocab_size]})
         self.vocab = limited_tokens_frequency
-
     def load_model(self, file_path):
         """Load a saved model as a frequency dictionary
 
@@ -384,7 +406,7 @@ class WordTokenizer(BaseTokenizer):
             if word in self.vocab.keys():
                 output_tokens.append(word) 
             else:
-                output_tokens.append(self.unknown_token)
+                output_tokens.append(self.unk_token)
         return output_tokens
 
     # Why do we have two versions of this method?
@@ -449,13 +471,17 @@ class SentencePieceTokenizer(BaseTokenizer):
         spm.SentencePieceTrainer.train(
             input="data/raw/train.txt",
             model_writer=self.model,
-            vocab_size=self.max_tokens,
+            vocab_size=self.vocab_size,
             model_type=model_type,
             character_coverage=1.0,
+            unk_id=0,
+            pad_id=1,
+            bos_id=-1,
+            eos_id=-1,
             normalization_rule_name="identity",
         )
         self.save_model("m.model")
-        self.sp = spm.SentencePieceProcessor(model_file="m.model")
+        self.sp = spm.SentencePieceProcessor(model_file="m.model") 
 
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
@@ -518,7 +544,28 @@ class SentencePieceTokenizer(BaseTokenizer):
             str: detokenized string
         """
         return "".join(tokens).replace("▁", " ")
+    
+    def encode_sentences(self, sentences, max_length = 20):
+        """Encode a list of sentences using the trained model
 
+        Args:
+            sentences (list): list of sentences
+            max_length (int, optional): specify the max length of encodings. Defaults to 100.
+
+        Returns:
+            [np.array]: list of encoded sentences
+        """
+        sparse_encodings = self.sp.encode(sentences, out_type=int)
+        encodings = []
+        for encoding in sparse_encodings:
+            curr_encoding = []
+            for i in range(max_length):
+                if i >= len(encoding):
+                    curr_encoding.append(self.sp.pad_id())
+                else:
+                    curr_encoding.append(encoding[i])
+            encodings.append(curr_encoding)
+        return np.array(encodings)
 
 class AutoTokenizer(BaseTokenizer):
     """ Auto tokenization using a saved dictionary 
@@ -723,6 +770,102 @@ class DisjointLetterTokenizer(BaseTokenizer):
 
         self.vocab = self._truncate_dict(dict(tokens_frequency))
 
+    def tokenize(self, text):
+        """Tokenize using the frequency dictionary 
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: generated tokens
+        """
+        output_tokens = self._tokenize_from_dict(text, self.vocab)
+        return output_tokens
+
+    def load_model(self, file_path):
+        """Load a saved model as a frequency dictionary
+
+        Args:
+            file_path (str): file path of the dictionary
+        """
+        print('Loading as pickle file ...')
+        self.vocab = pickle.load(open(file_path, 'rb'))
+
+    def save_model(self, file_path):
+        """Save a model as a freqency dictionary
+
+        Args:
+            file_path (str): file path to save the model
+        """
+        assert self.vocab
+        with open(f'{file_path}', 'wb') as pickle_file:
+            print('Saving as pickle file ...')
+            pickle.dump(self.vocab, pickle_file)
+
+    def _tokens_list(self):
+        """ Get tokens list
+
+        Returns:
+            list: list of tokens.
+        """
+        return list(self.vocab.keys())
+
+    def decode(self, encoded):
+        """ Decode ids
+
+        Args:
+            encoded (list): list of ids to decode
+
+        Returns:
+            list: tokens
+        """
+        decoded = [self._tokens_list()[id] for id in encoded]
+        return decoded
+
+    def encode(self, text):
+        """ Convert string to a list of ids
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: list of ids
+        """
+        tokens = self.tokenize(text)
+        encoded = [self._tokens_list().index(token) for token in tokens]
+        return encoded
+
+    def detokenize(self, tokens):
+        """ Convert tokens to a string
+
+        Args:
+            tokens (list): list of tokens
+
+        Returns:
+            str: detokenized string
+        """
+        detokenized = "".join(tokens).replace("##", "")
+        return detokenized
+
+class CharacterTokenizer(BaseTokenizer):
+    """ Character based tokenization 
+    """
+    def train(self):
+        """Train data using characters 
+        """
+        print("Training CharacterTokenizer ...")
+        rx = re.compile(r'\B(.)')
+
+        text = open('data/raw/train.txt', 'r').read()
+        text = rx.sub(r' ##\1', text)
+
+        tokens_frequency = defaultdict(int)
+        for word in text.split(" "):
+            tokens_frequency[word] += 1
+
+        self.vocab = self._truncate_dict(dict(tokens_frequency))
+
+    ##TODO we can optimize
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
 

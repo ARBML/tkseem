@@ -91,6 +91,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#classes">Classes</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="tokenizers.AutoTokenizer.html">AutoTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tokenizers.BaseTokenizer.html">BaseTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tokenizers.CharacterTokenizer.html">CharacterTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tokenizers.DisjointLetterTokenizer.html">DisjointLetterTokenizer</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">RandomTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tokenizers.SentencePieceTokenizer.html">SentencePieceTokenizer</a></li>
@@ -102,6 +103,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../Sentiment_Analysis.html">Sentiment_Analysis</a></li>
 </ul>
 
             
@@ -197,7 +199,7 @@
 <h1>RandomTokenizer<a class="headerlink" href="#randomtokenizer" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="tokenizers.RandomTokenizer">
-<em class="property">class </em><code class="sig-prename descclassname">tokenizers.</code><code class="sig-name descname">RandomTokenizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unknown_token</span><span class="o">=</span><span class="default_value">'&lt;UNK&gt;'</span></em>, <em class="sig-param"><span class="n">padding_token</span><span class="o">=</span><span class="default_value">'&lt;PAD&gt;'</span></em>, <em class="sig-param"><span class="n">segment</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_tokens</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">segm_token</span><span class="o">=</span><span class="default_value">'+'</span></em>, <em class="sig-param"><span class="n">split</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.RandomTokenizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tokenizers.</code><code class="sig-name descname">RandomTokenizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unk_token</span><span class="o">=</span><span class="default_value">'&lt;UNK&gt;'</span></em>, <em class="sig-param"><span class="n">pad_token</span><span class="o">=</span><span class="default_value">'&lt;PAD&gt;'</span></em>, <em class="sig-param"><span class="n">segment</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vocab_size</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">segm_token</span><span class="o">=</span><span class="default_value">'+'</span></em>, <em class="sig-param"><span class="n">split</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.RandomTokenizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="tokenizers.BaseTokenizer.html#tokenizers.BaseTokenizer" title="tokenizers.BaseTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">tokenizers.BaseTokenizer</span></code></a></p>
 <p>Randomized based tokenization</p>
 <p class="rubric">Methods Summary</p>

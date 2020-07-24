@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>WordTokenizer &mdash; tkseem 1.0 documentation</title>
+  <title>CharacterTokenizer &mdash; tkseem 1.0 documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Sentiment_Analysis" href="../Sentiment_Analysis.html" />
-    <link rel="prev" title="SentencePieceTokenizer" href="tokenizers.SentencePieceTokenizer.html" /> 
+    <link rel="next" title="DisjointLetterTokenizer" href="tokenizers.DisjointLetterTokenizer.html" />
+    <link rel="prev" title="BaseTokenizer" href="tokenizers.BaseTokenizer.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -91,11 +91,11 @@
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#classes">Classes</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="tokenizers.AutoTokenizer.html">AutoTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tokenizers.BaseTokenizer.html">BaseTokenizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="tokenizers.CharacterTokenizer.html">CharacterTokenizer</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">CharacterTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tokenizers.DisjointLetterTokenizer.html">DisjointLetterTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tokenizers.RandomTokenizer.html">RandomTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="tokenizers.SentencePieceTokenizer.html">SentencePieceTokenizer</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">WordTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tokenizers.WordTokenizer.html">WordTokenizer</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#class-inheritance-diagram">Class Inheritance Diagram</a></li>
@@ -152,13 +152,13 @@
         
           <li><a href="../api.html">API</a> &raquo;</li>
         
-      <li>WordTokenizer</li>
+      <li>CharacterTokenizer</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/api/tokenizers.WordTokenizer.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/api/tokenizers.CharacterTokenizer.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -195,25 +195,13 @@
     text-align: unset;
 }
 </style>
-<div class="section" id="wordtokenizer">
-<h1>WordTokenizer<a class="headerlink" href="#wordtokenizer" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="charactertokenizer">
+<h1>CharacterTokenizer<a class="headerlink" href="#charactertokenizer" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="tokenizers.WordTokenizer">
-<em class="property">class </em><code class="sig-prename descclassname">tokenizers.</code><code class="sig-name descname">WordTokenizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unk_token</span><span class="o">=</span><span class="default_value">'&lt;UNK&gt;'</span></em>, <em class="sig-param"><span class="n">pad_token</span><span class="o">=</span><span class="default_value">'&lt;PAD&gt;'</span></em>, <em class="sig-param"><span class="n">segment</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vocab_size</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">segm_token</span><span class="o">=</span><span class="default_value">'+'</span></em>, <em class="sig-param"><span class="n">split</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer" title="Permalink to this definition">¶</a></dt>
+<dt id="tokenizers.CharacterTokenizer">
+<em class="property">class </em><code class="sig-prename descclassname">tokenizers.</code><code class="sig-name descname">CharacterTokenizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unk_token</span><span class="o">=</span><span class="default_value">'&lt;UNK&gt;'</span></em>, <em class="sig-param"><span class="n">pad_token</span><span class="o">=</span><span class="default_value">'&lt;PAD&gt;'</span></em>, <em class="sig-param"><span class="n">segment</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vocab_size</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">segm_token</span><span class="o">=</span><span class="default_value">'+'</span></em>, <em class="sig-param"><span class="n">split</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.CharacterTokenizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="tokenizers.BaseTokenizer.html#tokenizers.BaseTokenizer" title="tokenizers.BaseTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">tokenizers.BaseTokenizer</span></code></a></p>
-<p>White space based tokenization</p>
-<p class="rubric">Attributes Summary</p>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.tokens_frequency" title="tokenizers.WordTokenizer.tokens_frequency"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokens_frequency</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
+<p>Character based tokenization</p>
 <p class="rubric">Methods Summary</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -221,39 +209,33 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.decode" title="tokenizers.WordTokenizer.decode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decode</span></code></a>(encoded)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.CharacterTokenizer.decode" title="tokenizers.CharacterTokenizer.decode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">decode</span></code></a>(encoded)</p></td>
 <td><p>Decode ids</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.detokenize" title="tokenizers.WordTokenizer.detokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detokenize</span></code></a>(tokens)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tokenizers.CharacterTokenizer.detokenize" title="tokenizers.CharacterTokenizer.detokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detokenize</span></code></a>(tokens)</p></td>
 <td><p>Convert tokens to a string</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.encode" title="tokenizers.WordTokenizer.encode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">encode</span></code></a>(text)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.CharacterTokenizer.encode" title="tokenizers.CharacterTokenizer.encode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">encode</span></code></a>(text)</p></td>
 <td><p>Convert string to a list of ids</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.load_model" title="tokenizers.WordTokenizer.load_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_model</span></code></a>(file_path)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tokenizers.CharacterTokenizer.load_model" title="tokenizers.CharacterTokenizer.load_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_model</span></code></a>(file_path)</p></td>
 <td><p>Load a saved model as a frequency dictionary</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.save_model" title="tokenizers.WordTokenizer.save_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_model</span></code></a>(file_path)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.CharacterTokenizer.save_model" title="tokenizers.CharacterTokenizer.save_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_model</span></code></a>(file_path)</p></td>
 <td><p>Save a model as a freqency dictionary</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.tokenize" title="tokenizers.WordTokenizer.tokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokenize</span></code></a>(text)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tokenizers.CharacterTokenizer.tokenize" title="tokenizers.CharacterTokenizer.tokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokenize</span></code></a>(text)</p></td>
 <td><p>Tokenize using the frequency dictionary</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.WordTokenizer.train" title="tokenizers.WordTokenizer.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a>([large_file])</p></td>
-<td><p>Train data using tokens’ frequency</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tokenizers.CharacterTokenizer.train" title="tokenizers.CharacterTokenizer.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a>()</p></td>
+<td><p>Train data using characters</p></td>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Attributes Documentation</p>
-<dl class="py attribute">
-<dt id="tokenizers.WordTokenizer.tokens_frequency">
-<code class="sig-name descname">tokens_frequency</code><em class="property"> = None</em><a class="headerlink" href="#tokenizers.WordTokenizer.tokens_frequency" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <p class="rubric">Methods Documentation</p>
 <dl class="py method">
-<dt id="tokenizers.WordTokenizer.decode">
-<code class="sig-name descname">decode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">encoded</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.decode" title="Permalink to this definition">¶</a></dt>
+<dt id="tokenizers.CharacterTokenizer.decode">
+<code class="sig-name descname">decode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">encoded</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.CharacterTokenizer.decode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decode ids</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>encoded (list): list of ids to decode</p>
@@ -264,8 +246,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="tokenizers.WordTokenizer.detokenize">
-<code class="sig-name descname">detokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.detokenize" title="Permalink to this definition">¶</a></dt>
+<dt id="tokenizers.CharacterTokenizer.detokenize">
+<code class="sig-name descname">detokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tokens</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.CharacterTokenizer.detokenize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert tokens to a string</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>tokens (list): list of tokens</p>
@@ -276,8 +258,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="tokenizers.WordTokenizer.encode">
-<code class="sig-name descname">encode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.encode" title="Permalink to this definition">¶</a></dt>
+<dt id="tokenizers.CharacterTokenizer.encode">
+<code class="sig-name descname">encode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.CharacterTokenizer.encode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert string to a list of ids</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>text (str): input string</p>
@@ -288,8 +270,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="tokenizers.WordTokenizer.load_model">
-<code class="sig-name descname">load_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.load_model" title="Permalink to this definition">¶</a></dt>
+<dt id="tokenizers.CharacterTokenizer.load_model">
+<code class="sig-name descname">load_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.CharacterTokenizer.load_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a saved model as a frequency dictionary</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>file_path (str): file path of the dictionary</p>
@@ -298,8 +280,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="tokenizers.WordTokenizer.save_model">
-<code class="sig-name descname">save_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.save_model" title="Permalink to this definition">¶</a></dt>
+<dt id="tokenizers.CharacterTokenizer.save_model">
+<code class="sig-name descname">save_model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.CharacterTokenizer.save_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save a model as a freqency dictionary</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>file_path (str): file path to save the model</p>
@@ -308,8 +290,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="tokenizers.WordTokenizer.tokenize">
-<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
+<dt id="tokenizers.CharacterTokenizer.tokenize">
+<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.CharacterTokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tokenize using the frequency dictionary</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>text (str): input string</p>
@@ -320,13 +302,9 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="tokenizers.WordTokenizer.train">
-<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">large_file</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.WordTokenizer.train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Train data using tokens’ frequency</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>large_file (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.</p>
-</dd>
-</dl>
+<dt id="tokenizers.CharacterTokenizer.train">
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tokenizers.CharacterTokenizer.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Train data using characters</p>
 </dd></dl>
 
 </dd></dl>
@@ -341,10 +319,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../Sentiment_Analysis.html" class="btn btn-neutral float-right" title="Sentiment_Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="tokenizers.DisjointLetterTokenizer.html" class="btn btn-neutral float-right" title="DisjointLetterTokenizer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="tokenizers.SentencePieceTokenizer.html" class="btn btn-neutral float-left" title="SentencePieceTokenizer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="tokenizers.BaseTokenizer.html" class="btn btn-neutral float-left" title="BaseTokenizer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -91,6 +91,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="api/tokenizers.AutoTokenizer.html">AutoTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/tokenizers.BaseTokenizer.html">BaseTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tokenizers.CharacterTokenizer.html">CharacterTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/tokenizers.DisjointLetterTokenizer.html">DisjointLetterTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/tokenizers.RandomTokenizer.html">RandomTokenizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="api/tokenizers.SentencePieceTokenizer.html">SentencePieceTokenizer</a></li>
@@ -102,6 +103,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="Sentiment_Analysis.html">Sentiment_Analysis</a></li>
 </ul>
 
             
@@ -203,22 +205,25 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.AutoTokenizer.html#tokenizers.AutoTokenizer" title="tokenizers.AutoTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AutoTokenizer</span></code></a>([unknown_token, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.AutoTokenizer.html#tokenizers.AutoTokenizer" title="tokenizers.AutoTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AutoTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
 <td><p>Auto tokenization using a saved dictionary</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/tokenizers.BaseTokenizer.html#tokenizers.BaseTokenizer" title="tokenizers.BaseTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseTokenizer</span></code></a>([unknown_token, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tokenizers.BaseTokenizer.html#tokenizers.BaseTokenizer" title="tokenizers.BaseTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
 <td><p>Base Tokenizer that implements the basic functionalities of a tokenizer</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.DisjointLetterTokenizer.html#tokenizers.DisjointLetterTokenizer" title="tokenizers.DisjointLetterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DisjointLetterTokenizer</span></code></a>([unknown_token, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.CharacterTokenizer.html#tokenizers.CharacterTokenizer" title="tokenizers.CharacterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CharacterTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
+<td><p>Character based tokenization</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tokenizers.DisjointLetterTokenizer.html#tokenizers.DisjointLetterTokenizer" title="tokenizers.DisjointLetterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DisjointLetterTokenizer</span></code></a>([unk_token, …])</p></td>
 <td><p>Disjoint Letters based tokenization</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/tokenizers.RandomTokenizer.html#tokenizers.RandomTokenizer" title="tokenizers.RandomTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomTokenizer</span></code></a>([unknown_token, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.RandomTokenizer.html#tokenizers.RandomTokenizer" title="tokenizers.RandomTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
 <td><p>Randomized based tokenization</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.SentencePieceTokenizer.html#tokenizers.SentencePieceTokenizer" title="tokenizers.SentencePieceTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SentencePieceTokenizer</span></code></a>([unknown_token, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tokenizers.SentencePieceTokenizer.html#tokenizers.SentencePieceTokenizer" title="tokenizers.SentencePieceTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SentencePieceTokenizer</span></code></a>([unk_token, …])</p></td>
 <td><p>Sentencepiece based tokenization.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/tokenizers.WordTokenizer.html#tokenizers.WordTokenizer" title="tokenizers.WordTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WordTokenizer</span></code></a>([unknown_token, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tokenizers.WordTokenizer.html#tokenizers.WordTokenizer" title="tokenizers.WordTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WordTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
 <td><p>White space based tokenization</p></td>
 </tr>
 </tbody>
@@ -226,13 +231,15 @@
 </div>
 <div class="section" id="class-inheritance-diagram">
 <h3>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this headline">¶</a></h3>
-digraph inheritance9a2c7ba959 {
+digraph inheritancef26af0d161 {
 bgcolor=transparent;
 rankdir=LR;
 size=&quot;8.0, 12.0&quot;;
   &quot;AutoTokenizer&quot; [URL=&quot;api/tokenizers.AutoTokenizer.html#tokenizers.AutoTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Auto tokenization using a saved dictionary&quot;];
   &quot;BaseTokenizer&quot; -&gt; &quot;AutoTokenizer&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
   &quot;BaseTokenizer&quot; [URL=&quot;api/tokenizers.BaseTokenizer.html#tokenizers.BaseTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Base Tokenizer that implements the basic functionalities of a tokenizer&quot;];
+  &quot;CharacterTokenizer&quot; [URL=&quot;api/tokenizers.CharacterTokenizer.html#tokenizers.CharacterTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Character based tokenization&quot;];
+  &quot;BaseTokenizer&quot; -&gt; &quot;CharacterTokenizer&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
   &quot;DisjointLetterTokenizer&quot; [URL=&quot;api/tokenizers.DisjointLetterTokenizer.html#tokenizers.DisjointLetterTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Disjoint Letters based tokenization&quot;];
   &quot;BaseTokenizer&quot; -&gt; &quot;DisjointLetterTokenizer&quot; [arrowsize=0.5,style=&quot;setlinewidth(0.5)&quot;];
   &quot;RandomTokenizer&quot; [URL=&quot;api/tokenizers.RandomTokenizer.html#tokenizers.RandomTokenizer&quot;,fillcolor=white,fontname=&quot;Vera Sans, DejaVu Sans, Liberation Sans, Arial, Helvetica, sans&quot;,fontsize=10,height=0.25,shape=box,style=&quot;setlinewidth(0.5),filled&quot;,target=&quot;_top&quot;,tooltip=&quot;Randomized based tokenization&quot;];
