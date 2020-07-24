@@ -643,6 +643,7 @@ class RandomTokenizer(BaseTokenizer):
         text = open('data/raw/train.txt', 'r').read()
         self.vocab = self._truncate_dict(self._random_dict(text))
  
+    ##TODO too slow we need to speed up
     def _random_dict(self, text):
         """Create dictionary based on random splitting
 
