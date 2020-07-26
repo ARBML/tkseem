@@ -52,13 +52,14 @@ def remove_extra_spaces(text):
     text = re.sub(" +", " ", text)
     return text
 
+#TODO add spaces to special characters
 def clean_data(text):
     # remove tashkeel and special chars
     text = remove_tashkeel(text)
-    chars = set(text)
-    all_puncts = [char for char in chars if is_punctuation(char)]
-    all_puncts = ("").join(all_puncts)
-    text = re.sub(r"[{all_puncts}]", "", text)
+
+    # add space to all special characters 
+    text = re.compile('([^\n\u0621-\u064A0-9])').sub(r' \1 ', text)
+
     text = remove_extra_spaces(text)
     return text 
 

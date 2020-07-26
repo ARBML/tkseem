@@ -371,6 +371,7 @@ class WordTokenizer(BaseTokenizer):
         limited_tokens_frequency[self.pad_token] = -1
         limited_tokens_frequency.update({k:v for k,v in list(sorted_tokens_frequency.items())[:self.vocab_size]})
         self.vocab = limited_tokens_frequency
+        self.vocab_size = len(self.vocab)
     def load_model(self, file_path):
         """Load a saved model as a frequency dictionary
 
@@ -482,7 +483,7 @@ class SentencePieceTokenizer(BaseTokenizer):
         )
         self.save_model("m.model")
         self.sp = spm.SentencePieceProcessor(model_file="m.model") 
-
+        self.vocab_size = len(self.sp.vocab_size)
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
 
@@ -642,6 +643,7 @@ class RandomTokenizer(BaseTokenizer):
         print("Training RandomTokenizer ...")
         text = open('data/raw/train.txt', 'r').read()
         self.vocab = self._truncate_dict(self._random_dict(text))
+        self.vocab_size = len(self.vocab)
  
     ##TODO too slow we need to speed up
     def _random_dict(self, text):
@@ -770,6 +772,7 @@ class DisjointLetterTokenizer(BaseTokenizer):
             tokens_frequency[word] += 1
 
         self.vocab = self._truncate_dict(dict(tokens_frequency))
+        self.vocab_size = len(self.vocab)
 
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
@@ -865,8 +868,8 @@ class CharacterTokenizer(BaseTokenizer):
             tokens_frequency[word] += 1
 
         self.vocab = self._truncate_dict(dict(tokens_frequency))
+        self.vocab_size = len(self.vocab)
 
-    ##TODO we can optimize
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
 
@@ -876,7 +879,15 @@ class CharacterTokenizer(BaseTokenizer):
         Returns:
             list: generated tokens
         """
-        output_tokens = self._tokenize_from_dict(text, self.vocab)
+        rx = re.compile(r'\B(.)')
+        text = rx.sub(r' ##\1', text)
+        output_tokens = []
+
+        for token in text.split():
+            if token in self.vocab:
+               output_tokens.append(token)
+            else:
+                output_tokens.append(self.pad_token) 
         return output_tokens
 
     def load_model(self, file_path):
