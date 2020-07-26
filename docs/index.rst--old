@@ -2,4 +2,5 @@
 .. toctree::
    Tutorial
    api
-   Sentiment_Analysis
+   Sentiment Analysis
+   Poetry Classification
