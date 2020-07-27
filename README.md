@@ -83,10 +83,11 @@ def calc_time(fun):
 running_times = {}
 
 running_times['Word'] = calc_time(tk.WordTokenizer)
-running_times['SentencePiece'] = calc_time(tk.SentencePieceTokenizer)
+running_times['SP'] = calc_time(tk.SentencePieceTokenizer)
 running_times['Random'] = calc_time(tk.RandomTokenizer)
 running_times['Auto'] = calc_time(tk.AutoTokenizer)
 running_times['Disjoint'] = calc_time(tk.DisjointLetterTokenizer)
+running_times['Char'] = calc_time(tk.DisjointLetterTokenizer)
 ```
 ## Contribution 
 We encourage contributions to this repository. 
