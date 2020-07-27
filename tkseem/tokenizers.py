@@ -52,8 +52,8 @@ class BaseTokenizer:
         self.clean = clean
         self.normalize = normalize
         self.split = split
-        self.norm_dict = pickle.load(open("normalization_dictionary.pl", "rb"))
-        self.cached = pickle.load(open("cached.pl", "rb"))
+        self.norm_dict = pickle.load(open("dictionaries/normalization_dictionary.pl", "rb"))
+        self.cached = pickle.load(open("dictionaries/cached.pl", "rb"))
 
         if self.segment:
             print("Initializing Farasa")
@@ -593,7 +593,7 @@ class AutoTokenizer(BaseTokenizer):
     """ Auto tokenization using a saved dictionary 
     """
 
-    def train(self, vocab_path="vocab.pl"):
+    def train(self, vocab_path="dictionaries/vocab.pl"):
         """Use a default dictionary for training"""
         print("Training AutoTokenizer...")
         self.vocab = self._truncate_dict(pickle.load(open(vocab_path, "rb")))
