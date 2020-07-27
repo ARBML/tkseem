@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tokenizers &mdash; tkseem  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="AutoTokenizer" href="api/tkseem.tokenizers.AutoTokenizer.html" />
+    <link rel="prev" title="Welcome to tkseem’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> tkseem
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tokenizers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-tkseem.tokenizers">tkseem.tokenizers Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.AutoTokenizer.html">AutoTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.BaseTokenizer.html">BaseTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.CharacterTokenizer.html">CharacterTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.DisjointLetterTokenizer.html">DisjointLetterTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.RandomTokenizer.html">RandomTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.SentencePieceTokenizer.html">SentencePieceTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.WordTokenizer.html">WordTokenizer</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#class-inheritance-diagram">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sentiment analysis.html">Sentiment Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meter classification.html">Poetry Classification</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tkseem</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>tokenizers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/tokenizers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="tokenizers">
+<h1>tokenizers<a class="headerlink" href="#tokenizers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-tkseem.tokenizers">
+<span id="tkseem-tokenizers-module"></span><h2>tkseem.tokenizers Module<a class="headerlink" href="#module-tkseem.tokenizers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.tokenizers.AutoTokenizer.html#tkseem.tokenizers.AutoTokenizer" title="tkseem.tokenizers.AutoTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AutoTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
+<td><p>Auto tokenization using a saved dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tkseem.tokenizers.BaseTokenizer.html#tkseem.tokenizers.BaseTokenizer" title="tkseem.tokenizers.BaseTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
+<td><p>Base Tokenizer that implements the basic functionalities of a tokenizer</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.tokenizers.CharacterTokenizer.html#tkseem.tokenizers.CharacterTokenizer" title="tkseem.tokenizers.CharacterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CharacterTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
+<td><p>Character based tokenization</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tkseem.tokenizers.DisjointLetterTokenizer.html#tkseem.tokenizers.DisjointLetterTokenizer" title="tkseem.tokenizers.DisjointLetterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DisjointLetterTokenizer</span></code></a>([unk_token, …])</p></td>
+<td><p>Disjoint Letters based tokenization</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.tokenizers.RandomTokenizer.html#tkseem.tokenizers.RandomTokenizer" title="tkseem.tokenizers.RandomTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
+<td><p>Randomized based tokenization</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tkseem.tokenizers.SentencePieceTokenizer.html#tkseem.tokenizers.SentencePieceTokenizer" title="tkseem.tokenizers.SentencePieceTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SentencePieceTokenizer</span></code></a>([unk_token, …])</p></td>
+<td><p>Sentencepiece based tokenization.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.tokenizers.WordTokenizer.html#tkseem.tokenizers.WordTokenizer" title="tkseem.tokenizers.WordTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WordTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
+<td><p>White space based tokenization</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="class-inheritance-diagram">
+<h3>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this headline">¶</a></h3>
+<div class="graphviz"><img src="_images/inheritance-f0c661184a79f0c41de5891328e75e197286894b.png" alt="Inheritance diagram of tkseem.tokenizers.AutoTokenizer, tkseem.tokenizers.BaseTokenizer, tkseem.tokenizers.CharacterTokenizer, tkseem.tokenizers.DisjointLetterTokenizer, tkseem.tokenizers.RandomTokenizer, tkseem.tokenizers.SentencePieceTokenizer, tkseem.tokenizers.WordTokenizer" usemap="#inheritancef45b840721" class="inheritance graphviz" /></div>
+<map id="inheritancef45b840721" name="inheritancef45b840721">
+<area shape="rect" id="node1" href="api/tkseem.tokenizers.AutoTokenizer.html#tkseem.tokenizers.AutoTokenizer" target="_top" title="Auto tokenization using a saved dictionary" alt="" coords="201,5,314,31"/>
+<area shape="rect" id="node2" href="api/tkseem.tokenizers.BaseTokenizer.html#tkseem.tokenizers.BaseTokenizer" target="_top" title="Base Tokenizer that implements the basic functionalities of a tokenizer" alt="" coords="5,129,120,155"/>
+<area shape="rect" id="node3" href="api/tkseem.tokenizers.CharacterTokenizer.html#tkseem.tokenizers.CharacterTokenizer" target="_top" title="Character based tokenization" alt="" coords="184,55,331,80"/>
+<area shape="rect" id="node4" href="api/tkseem.tokenizers.DisjointLetterTokenizer.html#tkseem.tokenizers.DisjointLetterTokenizer" target="_top" title="Disjoint Letters based tokenization" alt="" coords="172,104,343,129"/>
+<area shape="rect" id="node5" href="api/tkseem.tokenizers.RandomTokenizer.html#tkseem.tokenizers.RandomTokenizer" target="_top" title="Randomized based tokenization" alt="" coords="189,153,326,179"/>
+<area shape="rect" id="node6" href="api/tkseem.tokenizers.SentencePieceTokenizer.html#tkseem.tokenizers.SentencePieceTokenizer" target="_top" title="Sentencepiece based tokenization." alt="" coords="168,203,347,228"/>
+<area shape="rect" id="node7" href="api/tkseem.tokenizers.WordTokenizer.html#tkseem.tokenizers.WordTokenizer" target="_top" title="White space based tokenization" alt="" coords="199,252,315,277"/>
+</map></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="api/tkseem.tokenizers.AutoTokenizer.html" class="btn btn-neutral float-right" title="AutoTokenizer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to tkseem’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Zaid Alyafei, Maged Saeed
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

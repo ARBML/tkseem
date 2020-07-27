@@ -13,7 +13,7 @@ from pathlib import Path
 import sentencepiece as spm
 from collections import defaultdict, Counter
 from farasa.segmenter import FarasaSegmenter
-from utils import clean_data, normalize_data, split_on_binary
+from .util import clean_data, normalize_data, split_on_binary
 
 
 class BaseTokenizer:
@@ -389,11 +389,8 @@ class WordTokenizer(BaseTokenizer):
             {k: v for k, v in list(sorted_tokens_frequency.items())[: self.vocab_size]}
         )
         self.vocab = limited_tokens_frequency
-<<<<<<< HEAD:tkseem/tokenizers.py
-
-=======
         self.vocab_size = len(self.vocab)
->>>>>>> refs/remotes/origin/master:tokenizers.py
+
     def load_model(self, file_path):
         """Load a saved model as a frequency dictionary
 
@@ -504,13 +501,9 @@ class SentencePieceTokenizer(BaseTokenizer):
             normalization_rule_name="identity",
         )
         self.save_model("m.model")
-<<<<<<< HEAD:tkseem/tokenizers.py
-        self.sp = spm.SentencePieceProcessor(model_file="m.model")
-
-=======
         self.sp = spm.SentencePieceProcessor(model_file="m.model") 
         self.vocab_size = len(self.sp.vocab_size)
->>>>>>> refs/remotes/origin/master:tokenizers.py
+
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
 
@@ -673,12 +666,9 @@ class RandomTokenizer(BaseTokenizer):
         print("Training RandomTokenizer ...")
         text = open("data/raw/train.txt", "r").read()
         self.vocab = self._truncate_dict(self._random_dict(text))
-<<<<<<< HEAD:tkseem/tokenizers.py
-
-=======
         self.vocab_size = len(self.vocab)
  
->>>>>>> refs/remotes/origin/master:tokenizers.py
+
     ##TODO too slow we need to speed up
     def _random_dict(self, text):
         """Create dictionary based on random splitting
