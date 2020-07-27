@@ -122,6 +122,18 @@ We show how to use `tkseem` to train some nlp models.
   </tr>
 <table>
 
+## Citation
+```
+@misc{tkseem2020,
+  author = {Zaid Alyafeai and Maged Saeed},
+  title = {tkseem: A Tokenization Library for Arabic.},
+  year = {2020},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/}}
+}
+```
+
 ## Contribution 
 This is an open source project where we encourage contributions from the community. 
 
