@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'tkseem'
-copyright = '2020, Zaid Alyafei, Maged Saeed'
+copyright = '2020, Zaid Alyafeai, Maged Saeed'
 author = 'Zaid Alyafeai, Maged Saeed'
 
 # The short X.Y version
@@ -144,7 +144,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'tkseem.tex', 'tkseem Documentation',
-     'Zaid Alyafei, Maged Saeed', 'manual'),
+     'Zaid Alyafeai, Maged Saeed', 'manual'),
 ]
 
 
