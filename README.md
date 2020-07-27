@@ -88,12 +88,21 @@ running_times['Auto'] = calc_time(tk.AutoTokenizer)
 running_times['Disjoint'] = calc_time(tk.DisjointLetterTokenizer)
 running_times['Char'] = calc_time(tk.CharacterTokenizer)
 ```
-## Tasks 
+## Notebooks 
+We show how to use `tkseem` to train some nlp models. 
 <table class="tg">
+
   <tr>
     <th class="tg-yw4l"><b>Name</b></th>
     <th class="tg-yw4l"><b>Description</b></th>
     <th class="tg-yw4l"><b>Notebook</b></th>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">Demo</td>
+    <td class="tg-yw4l">All tokenizers</td>
+    <td class="tg-yw4l"><a href="https://colab.research.google.com/github/tasks/ Demo.ipynb">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" height = '20px' >
+    </a></td>
   </tr>
   <tr>
     <td class="tg-yw4l">Sentiment Classification</td>
@@ -106,7 +115,7 @@ running_times['Char'] = calc_time(tk.CharacterTokenizer)
 
   <tr>
     <td class="tg-yw4l">Meter Classification</td>
-    <td class="tg-yw4l">CharacterTokenization</td>
+    <td class="tg-yw4l">CharacterTokenizer</td>
     <td class="tg-yw4l"><a href="https://colab.research.google.com/github/tasks/meter_classification/Poetry Classification.ipynb">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" height = '20px' >
     </a></td>
