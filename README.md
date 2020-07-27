@@ -2,7 +2,6 @@
 
 ## Features
 * Cleaning
-* Preprocessing
 * Normalization
 * Segmentation
 * Tokenization
@@ -61,11 +60,11 @@ tokenizer.process_data('samples/data.txt')
 tokenizer.train()
 
 # save the model
-tokenizer.save_model('freq.pl')
+tokenizer.save_model('vocab.pl')
 
 # load the model
 tokenizer = tk.WordTokenizer()
-tokenizer.load_model('freq.pl')
+tokenizer.load_model('vocab.pl')
 ```
 
 ### Model Agnostic
@@ -89,8 +88,33 @@ running_times['Auto'] = calc_time(tk.AutoTokenizer)
 running_times['Disjoint'] = calc_time(tk.DisjointLetterTokenizer)
 running_times['Char'] = calc_time(tk.CharacterTokenizer)
 ```
+## Tasks 
+<table class="tg">
+  <tr>
+    <th class="tg-yw4l"><b>Name</b></th>
+    <th class="tg-yw4l"><b>Description</b></th>
+    <th class="tg-yw4l"><b>Notebook</b></th>
+  </tr>
+  <tr>
+    <td class="tg-yw4l">Sentiment Classification</td>
+    <td class="tg-yw4l"> WordTokenizer</td>
+    <td class="tg-yw4l"><a href="https://colab.research.google.com/tasks/sentiment_analysis/Sentiment Analysis.ipynb">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" height = '20px' >
+    </a></td>
+
+  </tr>
+
+  <tr>
+    <td class="tg-yw4l">Meter Classification</td>
+    <td class="tg-yw4l">CharacterTokenization</td>
+    <td class="tg-yw4l"><a href="https://colab.research.google.com/github/tasks/meter_classification/Poetry Classification.ipynb">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" height = '20px' >
+    </a></td>
+  </tr>
+<table>
+
 ## Contribution 
-We encourage contributions to this repository. 
+This is an open source project where we encourage contributions from the community. 
 
 ## License
 [MIT](LICENSE) license. 
