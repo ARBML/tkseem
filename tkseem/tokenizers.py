@@ -88,7 +88,7 @@ class BaseTokenizer:
 
         if self.normalize:
             print("Normalizing the data ...")
-            self.corpus = normalize_data(self.corpus)
+            self.corpus = normalize_data(self.corpus, self.norm_dict)
 
         if self.split:
             print("Splitting the data ...")

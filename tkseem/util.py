@@ -27,10 +27,10 @@ def remove_tashkeel(text):
     text = re.sub(r"[ًٌٍَََُِّْ]", "", text)
     return text
 
-def normalize_data(text):
+def normalize_data(text, norm_dict):
     # use a mapping dictionary 
-    regex = re.compile("|".join(map(re.escape, self.norm_dict.keys())))
-    text  = regex.sub(lambda match: self.norm_dict[match.group(0)], text)
+    regex = re.compile("|".join(map(re.escape, norm_dict.keys())))
+    text  = regex.sub(lambda match: norm_dict[match.group(0)], text)
     return text 
 
 def remove_english_chars(text):
