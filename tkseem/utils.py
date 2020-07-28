@@ -1,6 +1,7 @@
 import re
 import math
 
+# https://gist.github.com/kevinwuhoo/2424597
 def generate_binary(n):
   # 2^(n-1)  2^n - 1 inclusive
   bin_arr = range(0, int(math.pow(2,n)))
@@ -52,7 +53,6 @@ def remove_extra_spaces(text):
     text = re.sub(" +", " ", text)
     return text
 
-#TODO add spaces to special characters
 def clean_data(text):
     # remove tashkeel and special chars
     text = remove_tashkeel(text)
