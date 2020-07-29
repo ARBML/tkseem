@@ -13,4 +13,5 @@ setup(name='tkseem',
       license='MIT',
       packages=['tkseem'],
       install_requires=required,
+      include_package_data=True,
       zip_safe=False)
