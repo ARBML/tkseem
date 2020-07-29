@@ -28,7 +28,6 @@ class BaseTokenizer:
         segment=False,
         vocab_size=10000,
         segm_token="+",
-        split=True,
         clean=False,
         normalize=False,
     ):
@@ -40,7 +39,6 @@ class BaseTokenizer:
             segment (bool, optional): segment using farasa. Defaults to False.
             max_tokens (int, optional): max number of vocabulary. Defaults to 10000.
             segm_token (str, optional): reserved token for segmentation. Defaults to '+'.
-            split (bool, optional): split data. Defaults to True.
             clean (bool, optional): remove tashkeel, english and special chars. Defaults to False.
             normalize (bool, optional): normalize chars. Defaults to False.
         """
@@ -51,7 +49,6 @@ class BaseTokenizer:
         self.segment = segment
         self.clean = clean
         self.normalize = normalize
-        self.split = split
 
         # relative path
         self.rel_path = os.path.dirname(__file__)
@@ -95,15 +92,13 @@ class BaseTokenizer:
             print("Normalizing the data ...")
             self.corpus = normalize_data(self.corpus, self.norm_dict)
 
-        if self.split:
-            print("Splitting the data ...")
-            Path("data/raw").mkdir(parents=True, exist_ok=True)
-            # self.train_text, self.valid_text, self.test_text = self._split_corpus()
-            self._write_data("data/raw/train.txt", self.corpus)
-            # self._write_data("data/raw/valid.txt", self.valid_text)
-            # self._write_data("data/raw/test.txt", self.test_text)
-            # del self.train_text, self.valid_text, self.test_text
-            del self.corpus
+        Path("data/raw").mkdir(parents=True, exist_ok=True)
+        # self.train_text, self.valid_text, self.test_text = self._split_corpus()
+        self._write_data("data/raw/train.txt", self.corpus)
+        # self._write_data("data/raw/valid.txt", self.valid_text)
+        # self._write_data("data/raw/test.txt", self.test_text)
+        # del self.train_text, self.valid_text, self.test_text
+        del self.corpus
 
     def _get_tokens_frequency_quickly(self, file_path):
         """
@@ -367,7 +362,7 @@ class WordTokenizer(BaseTokenizer):
         Args:
             large_file (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.
         """
-        print("Training FrequencyTokenizer...")
+        print("Training WordTokenizer...")
         if large_file:
             sorted_tokens_frequency = {
                 k: v
@@ -792,11 +787,12 @@ class DisjointLetterTokenizer(BaseTokenizer):
         """Train data using disjoint letters
         """
         print("Training DisjointLetterTokenizer ...")
-        rx = re.compile(r"\B([اأإآءؤﻵﻹﻷدذرزوةى])")
+        rx = re.compile(r"([اأإآءؤﻵﻹﻷدذرزو])")
 
         text = open("data/raw/train.txt", "r").read()
-        text = rx.sub(r" ##\1", text)
-
+        text = rx.sub(r"\1## ", text)
+        text = text.replace("## ", " ##")
+        
         tokens_frequency = defaultdict(int)
         for word in text.split(" "):
             tokens_frequency[word] += 1

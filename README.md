@@ -100,14 +100,14 @@ We show how to use `tkseem` to train some nlp models.
   <tr>
     <td class="tg-yw4l">Demo</td>
     <td class="tg-yw4l">Explain the syntax of all tokenizers. </td>
-    <td class="tg-yw4l"><a href="https://colab.research.google.com/github/tasks/ Demo.ipynb">
+    <td class="tg-yw4l"><a href="https://colab.research.google.com/github/ARBML/tkseem/blob/master/tasks/demo.ipynb">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" height = '30px' >
     </a></td>
   </tr>
   <tr>
     <td class="tg-yw4l">Sentiment Classification</td>
     <td class="tg-yw4l"> WordTokenizer for processing sentences and then train a classifier for sentiment classification. </td>
-    <td class="tg-yw4l"><a href="https://colab.research.google.com/tasks/sentiment_analysis/Sentiment Analysis.ipynb">
+    <td class="tg-yw4l"><a href="https://colab.research.google.com/github/ARBML/tkseem/blob/master/tasks/sentiment_analysis/Sentiment%20Analysis.ipynb">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" height = '30px' >
     </a></td>
 
@@ -116,7 +116,7 @@ We show how to use `tkseem` to train some nlp models.
   <tr>
     <td class="tg-yw4l">Meter Classification</td>
     <td class="tg-yw4l">CharacterTokenizer for meter classification using bidirectional GRUs. </td>
-    <td class="tg-yw4l"><a href="https://colab.research.google.com/github/tasks/meter_classification/Poetry Classification.ipynb">
+    <td class="tg-yw4l"><a href="https://colab.research.google.com/github/ARBML/tkseem/blob/master/tasks/meter_classification/Poetry%20Classification.ipynb">
     <img src="https://colab.research.google.com/assets/colab-badge.svg" height = '30px' >
     </a></td>
   </tr>
