@@ -1,0 +1,4 @@
+sentencepiece
+farasapy
+tqdm
+numpy

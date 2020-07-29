@@ -1,5 +1,4 @@
-import tokenizers
-from utils import *
+from .util import remove_tashkeel
 import unittest
 
 class TestUnit(unittest.TestCase):

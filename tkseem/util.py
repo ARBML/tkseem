@@ -1,6 +1,7 @@
 import re
 import math
 
+# https://gist.github.com/kevinwuhoo/2424597
 def generate_binary(n):
   # 2^(n-1)  2^n - 1 inclusive
   bin_arr = range(0, int(math.pow(2,n)))
@@ -26,10 +27,10 @@ def remove_tashkeel(text):
     text = re.sub(r"[ًٌٍَََُِّْ]", "", text)
     return text
 
-def normalize_data(text):
+def normalize_data(text, norm_dict):
     # use a mapping dictionary 
-    regex = re.compile("|".join(map(re.escape, self.norm_dict.keys())))
-    text  = regex.sub(lambda match: self.norm_dict[match.group(0)], text)
+    regex = re.compile("|".join(map(re.escape, norm_dict.keys())))
+    text  = regex.sub(lambda match: norm_dict[match.group(0)], text)
     return text 
 
 def remove_english_chars(text):
@@ -52,7 +53,6 @@ def remove_extra_spaces(text):
     text = re.sub(" +", " ", text)
     return text
 
-#TODO add spaces to special characters
 def clean_data(text):
     # remove tashkeel and special chars
     text = remove_tashkeel(text)
