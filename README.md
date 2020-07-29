@@ -130,7 +130,7 @@ We show how to use `tkseem` to train some nlp models.
   year = {2020},
   publisher = {GitHub},
   journal = {GitHub repository},
-  howpublished = {\url{https://github.com/}}
+  howpublished = {\url{https://github.com/ARBML/tkseem}}
 }
 ```
 
