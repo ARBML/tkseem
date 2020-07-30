@@ -27,7 +27,7 @@ tokenizer.process_data('samples/data.txt', clean = True, segment = True, normali
 
 ### Tokenization
 <p align="center"> 
- <img src = "logo_tokenizers.png" width = "200px"/>
+ <img src = "logo_tokenizers.png"/>
  </p>
 
 ```python
