@@ -85,6 +85,7 @@
             
             
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tokenizers.html">Tokenizers</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Demo</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Frequency-Tokenizer">Frequency Tokenizer</a></li>
@@ -430,7 +431,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">tokenizers</span> <span class="k">as</span> <span class="nn">tk</span>
+<span></span><span class="kn">import</span> <span class="nn">tkseem</span> <span class="k">as</span> <span class="nn">tk</span>
 </pre></div>
 </div>
 </div>
@@ -441,7 +442,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">WordTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -452,8 +453,7 @@ div.rendered_html tbody tr:hover {
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Reading the data ...
-Splitting the data ...
-Training FrequencyTokenizer...
+Training WordTokenizer...
 </pre></div></div>
 </div>
 <p>Tokenize</p>
@@ -481,17 +481,17 @@ Training FrequencyTokenizer...
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;السلام عليكم&quot;</span><span class="p">)</span>
+<span></span><span class="n">encoded</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;السلام عليكم&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[536, 829]
+[557, 798]
 </pre></div></div>
 </div>
 <p>Decode back to tokens</p>
@@ -500,17 +500,35 @@ Training FrequencyTokenizer...
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">([</span><span class="mi">536</span><span class="p">,</span> <span class="mi">829</span><span class="p">])</span>
+<span></span><span class="n">decoded</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 [&#39;السلام&#39;, &#39;عليكم&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">detokenized</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">detokenize</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">detokenized</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+السلام عليكم
 </pre></div></div>
 </div>
 </div>
@@ -518,12 +536,12 @@ Training FrequencyTokenizer...
 <h2>SentencePiece Tokenizer<a class="headerlink" href="#SentencePiece-Tokenizer" title="Permalink to this headline">¶</a></h2>
 <p>Read, preprocess then train</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">SentencePieceTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -534,13 +552,12 @@ Training FrequencyTokenizer...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Reading the data ...
-Splitting the data ...
 Training SentencePiece...
 </pre></div></div>
 </div>
 <p>Tokenize</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -549,7 +566,7 @@ Training SentencePiece...
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -559,40 +576,58 @@ Training SentencePiece...
 </div>
 <p>Encode as ids</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;صباح الخير يا أصدقاء&quot;</span><span class="p">)</span>
+<span></span><span class="n">encoded</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;السلام عليكم&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[3777, 1424, 78, 423, 9962, 560]
+[1799, 2741]
 </pre></div></div>
 </div>
 <p>Decode back to tokens</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">([</span><span class="mi">3777</span><span class="p">,</span> <span class="mi">1424</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">423</span><span class="p">,</span> <span class="mi">9962</span><span class="p">,</span> <span class="mi">560</span><span class="p">])</span>
+<span></span><span class="n">decoded</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;▁صباح&#39;, &#39;▁الخير&#39;, &#39;▁يا&#39;, &#39;▁أص&#39;, &#39;د&#39;, &#39;قاء&#39;]
+[&#39;▁السلام&#39;, &#39;▁عليكم&#39;]
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">detokenized</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">detokenize</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">detokenized</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+ السلام عليكم
 </pre></div></div>
 </div>
 </div>
@@ -600,13 +635,12 @@ Training SentencePiece...
 <h2>Auto Tokenizer<a class="headerlink" href="#Auto-Tokenizer" title="Permalink to this headline">¶</a></h2>
 <p>Read, preprocess then train</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">tokenizers</span> <span class="k">as</span> <span class="nn">tk</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">AutoTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">AutoTokenizer</span><span class="p">()</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -617,13 +651,12 @@ Training SentencePiece...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Reading the data ...
-Splitting the data ...
 Training AutoTokenizer...
 </pre></div></div>
 </div>
 <p>Tokenize</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -632,7 +665,7 @@ Training AutoTokenizer...
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -642,17 +675,17 @@ Training AutoTokenizer...
 </div>
 <p>Encode as ids</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;السلام عليكم&quot;</span><span class="p">)</span>
+<span></span><span class="n">encoded</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;السلام عليكم&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -661,17 +694,17 @@ Training AutoTokenizer...
 </div>
 <p>Decode back to tokens</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">367</span><span class="p">,</span> <span class="mi">764</span><span class="p">,</span> <span class="mi">184</span><span class="p">])</span>
+<span></span><span class="n">decoded</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
@@ -682,13 +715,12 @@ Training AutoTokenizer...
 <div class="section" id="Random-Tokenizer">
 <h2>Random Tokenizer<a class="headerlink" href="#Random-Tokenizer" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">tokenizers</span> <span class="k">as</span> <span class="nn">tk</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">RandomTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">RandomTokenizer</span><span class="p">()</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -699,12 +731,11 @@ Training AutoTokenizer...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Reading the data ...
-Splitting the data ...
 Training RandomTokenizer ...
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -713,25 +744,24 @@ Training RandomTokenizer ...
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;ا&#39;, &#39;##لسلام&#39;, &#39;علي&#39;, &#39;##كم&#39;, &#39;أي&#39;, &#39;##ها&#39;, &#39;الأص&#39;, &#39;##دقاء&#39;]
+[&#39;السلا&#39;, &#39;##م&#39;, &#39;علي&#39;, &#39;##كم&#39;, &#39;أ&#39;, &#39;##يها&#39;, &#39;ال&#39;, &#39;##أصد&#39;, &#39;##قاء&#39;]
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Disjoint-Letter-Tokenizer">
 <h2>Disjoint Letter Tokenizer<a class="headerlink" href="#Disjoint-Letter-Tokenizer" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">tokenizers</span> <span class="k">as</span> <span class="nn">tk</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">DisjointLetterTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">DisjointLetterTokenizer</span><span class="p">()</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -742,39 +772,36 @@ Training RandomTokenizer ...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Reading the data ...
-Splitting the data ...
 Training DisjointLetterTokenizer ...
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="s2">&quot;السلام عليكم أيها الأصدقاء&quot;</span><span class="p">)</span>
+<span></span><span class="nb">print</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="s2">&quot;السلام عليكم أيها الأصدقاء&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
-</pre></div>
+<div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-[&#39;السل&#39;, &#39;##ام&#39;, &#39;عليكم&#39;, &#39;أيه&#39;, &#39;##ا&#39;, &#39;ال&#39;, &#39;##أص&#39;, &#39;##دق&#39;, &#39;##ا&#39;, &#39;##ء&#39;]
+[&#39;ا&#39;, &#39;##لسلا&#39;, &#39;##م&#39;, &#39;عليكم&#39;, &#39;أ&#39;, &#39;##يها&#39;, &#39;ا&#39;, &#39;##لأ&#39;, &#39;##صد&#39;, &#39;##قا&#39;, &#39;##ء&#39;]
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Character-Tokenizer">
 <h2>Character Tokenizer<a class="headerlink" href="#Character-Tokenizer" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">tokenizers</span> <span class="k">as</span> <span class="nn">tk</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">CharacterTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">CharacterTokenizer</span><span class="p">()</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -785,12 +812,11 @@ Training DisjointLetterTokenizer ...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Reading the data ...
-Splitting the data ...
 Training CharacterTokenizer ...
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -799,7 +825,7 @@ Training CharacterTokenizer ...
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
@@ -812,15 +838,13 @@ Training CharacterTokenizer ...
 <h2>Large Files<a class="headerlink" href="#Large-Files" title="Permalink to this headline">¶</a></h2>
 <p>We can use memory mapping to extract token’s frequency for large files. It uses <code class="docutils literal notranslate"><span class="pre">mmap</span></code> to process chunks of the data at each iteration step.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">tokenizers</span> <span class="k">as</span> <span class="nn">tk</span>
-
-<span class="c1"># initialize</span>
+<span></span><span class="c1"># initialize</span>
 <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">WordTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 
 <span class="c1"># training</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">large_file</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
@@ -841,8 +865,7 @@ Training CharacterTokenizer ...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Reading the data ...
-Splitting the data ...
-Training FrequencyTokenizer...
+Training WordTokenizer...
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -850,7 +873,7 @@ Training FrequencyTokenizer...
 </div>
 <div class="output_area stderr docutils container">
 <div class="highlight"><pre>
-1it [00:00,  5.40it/s]
+1it [00:00,  2.79it/s]
 </pre></div></div>
 </div>
 </div>
@@ -858,15 +881,14 @@ Training FrequencyTokenizer...
 <h2>Tokenization vs Segmentation<a class="headerlink" href="#Tokenization-vs-Segmentation" title="Permalink to this headline">¶</a></h2>
 <p>We can use tokenization to segment words using a pretrained dictionary. This makes segmentation very fast as compared to using libraries like <code class="docutils literal notranslate"><span class="pre">farasa</span></code>.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">tokenizers</span> <span class="k">as</span> <span class="nn">tk</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
 
 <span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">AutoTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 
 <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -882,19 +904,18 @@ Training FrequencyTokenizer...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Reading the data ...
-Splitting the data ...
 Training AutoTokenizer...
-25.84449815750122
+37.64352488517761
 </pre></div></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">WordTokenizer</span><span class="p">(</span><span class="n">segment</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
 </pre></div>
@@ -924,8 +945,7 @@ Initializing Farasa
 <div class="highlight"><pre>
 Reading the data ...
 Segmenting the data ...
-Splitting the data ...
-47.383551836013794
+50.82935118675232
 </pre></div></div>
 </div>
 </div>
@@ -933,12 +953,12 @@ Splitting the data ...
 <h2>Export Models<a class="headerlink" href="#Export-Models" title="Permalink to this headline">¶</a></h2>
 <p>Models can be saved for deployment and reloading.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">WordTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="s1">&#39;freq.pl&#39;</span><span class="p">)</span>
 </pre></div>
@@ -950,19 +970,17 @@ Splitting the data ...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Reading the data ...
-Splitting the data ...
-Training FrequencyTokenizer...
+Training WordTokenizer...
 Saving as pickle file ...
 </pre></div></div>
 </div>
 <p>load model without pretraining</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">WordTokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;samples/data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">load_model</span><span class="p">(</span><span class="s1">&#39;freq.pl&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -972,22 +990,36 @@ Saving as pickle file ...
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Reading the data ...
-Splitting the data ...
 Loading as pickle file ...
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="s1">&#39;السلام عليكم&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;السلام&#39;, &#39;عليكم&#39;]
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Benchmarking">
 <h2>Benchmarking<a class="headerlink" href="#Benchmarking" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">tokenizers</span> <span class="k">as</span> <span class="nn">tk</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="k">def</span> <span class="nf">calc_time</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
@@ -1003,16 +1035,15 @@ Loading as pickle file ...
 <span class="n">running_times</span><span class="p">[</span><span class="s1">&#39;Auto&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_time</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">AutoTokenizer</span><span class="p">)</span>
 <span class="n">running_times</span><span class="p">[</span><span class="s1">&#39;Disjoint&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_time</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">DisjointLetterTokenizer</span><span class="p">)</span>
 <span class="n">running_times</span><span class="p">[</span><span class="s1">&#39;Character&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">calc_time</span><span class="p">(</span><span class="n">tk</span><span class="o">.</span><span class="n">CharacterTokenizer</span><span class="p">)</span>
-<span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span><span class="n">running_times</span><span class="p">]))</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Training FrequencyTokenizer...
+Training WordTokenizer...
 Training SentencePiece...
 Training RandomTokenizer ...
 Training AutoTokenizer...
@@ -1020,20 +1051,29 @@ Training DisjointLetterTokenizer ...
 Training CharacterTokenizer ...
 </pre></div></div>
 </div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span><span class="n">running_times</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
 <div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;matplotlib.axes._subplots.AxesSubplot at 0x7f74eefd5880&gt;
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x7efff11ede50&gt;
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/demo_51_2.png" src="_images/demo_51_2.png" />
+<img alt="_images/demo_55_1.png" src="_images/demo_55_1.png" />
 </div>
 </div>
 </div>

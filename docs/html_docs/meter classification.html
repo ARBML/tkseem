@@ -84,6 +84,7 @@
             
             
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tokenizers.html">Tokenizers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="demo.html">Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sentiment analysis.html">Sentiment Analysis</a></li>
@@ -417,6 +418,16 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="Poetry-Classification">
 <h1>Poetry Classification<a class="headerlink" href="#Poetry-Classification" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>wget https://raw.githubusercontent.com/ARBML/tkseem/master/tasks/meter_classification/meters/data.txt
+<span class="o">!</span>wget https://raw.githubusercontent.com/ARBML/tkseem/master/tasks/meter_classification/meters/labels.txt
+</pre></div>
+</div>
+</div>
 <div class="section" id="Imports">
 <h2>Imports<a class="headerlink" href="#Imports" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
@@ -425,7 +436,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">import</span> <span class="nn">tokenizers</span> <span class="k">as</span> <span class="nn">tk</span>
+<span class="kn">import</span> <span class="nn">tkseem</span> <span class="k">as</span> <span class="nn">tk</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">GRU</span><span class="p">,</span> <span class="n">Embedding</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">Bidirectional</span><span class="p">,</span> <span class="n">BatchNormalization</span><span class="p">,</span> <span class="n">Flatten</span><span class="p">,</span> <span class="n">Reshape</span>
 <span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
@@ -442,7 +453,7 @@ div.rendered_html tbody tr:hover {
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">CharacterTokenizer</span><span class="p">(</span><span class="n">clean</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;meters/data.txt&#39;</span><span class="p">)</span>
+<span class="n">tokenizer</span><span class="o">.</span><span class="n">process_data</span><span class="p">(</span><span class="s1">&#39;data.txt&#39;</span><span class="p">)</span>
 <span class="n">tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -454,7 +465,6 @@ div.rendered_html tbody tr:hover {
 <div class="highlight"><pre>
 Reading the data ...
 Cleaning the data ...
-Splitting the data ...
 Training CharacterTokenizer ...
 </pre></div></div>
 </div>
@@ -467,7 +477,7 @@ Training CharacterTokenizer ...
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">sentences</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;data/raw/train.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;meters/labels.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;labels.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
 
 <span class="n">max_length</span> <span class="o">=</span> <span class="mi">100</span>
 
@@ -500,7 +510,7 @@ Training CharacterTokenizer ...
 <div class="section" id="Model">
 <h2>Model<a class="headerlink" href="#Model" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -518,11 +528,11 @@ Training CharacterTokenizer ...
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">validation_split</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">epochs</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span> <span class="mi">128</span><span class="p">,</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">validation_split</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">epochs</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">shuffle</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -532,51 +542,51 @@ Training CharacterTokenizer ...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Epoch 1/10
-222/222 [==============================] - 410s 2s/step - loss: 2.1945 - accuracy: 0.2110 - val_loss: 1.8659 - val_accuracy: 0.3056
+111/111 [==============================] - 464s 4s/step - loss: 2.2710 - accuracy: 0.1868 - val_loss: 1.9023 - val_accuracy: 0.2929
 Epoch 2/10
-222/222 [==============================] - 397s 2s/step - loss: 1.6794 - accuracy: 0.3894 - val_loss: 1.4048 - val_accuracy: 0.4934
+111/111 [==============================] - 465s 4s/step - loss: 1.8318 - accuracy: 0.3188 - val_loss: 1.6296 - val_accuracy: 0.3949
 Epoch 3/10
-222/222 [==============================] - 393s 2s/step - loss: 1.1040 - accuracy: 0.6277 - val_loss: 0.8356 - val_accuracy: 0.7255
+111/111 [==============================] - 453s 4s/step - loss: 1.5879 - accuracy: 0.4187 - val_loss: 1.4511 - val_accuracy: 0.4842
 Epoch 4/10
-222/222 [==============================] - 422s 2s/step - loss: 0.6844 - accuracy: 0.7844 - val_loss: 0.5612 - val_accuracy: 0.8255
+111/111 [==============================] - 400s 4s/step - loss: 1.3652 - accuracy: 0.5193 - val_loss: 1.2189 - val_accuracy: 0.5754
 Epoch 5/10
-222/222 [==============================] - 433s 2s/step - loss: 0.5033 - accuracy: 0.8510 - val_loss: 0.5096 - val_accuracy: 0.8521
+111/111 [==============================] - 393s 4s/step - loss: 1.0705 - accuracy: 0.6416 - val_loss: 0.9010 - val_accuracy: 0.6979
 Epoch 6/10
-222/222 [==============================] - 408s 2s/step - loss: 0.3962 - accuracy: 0.8850 - val_loss: 0.4341 - val_accuracy: 0.8686
+111/111 [==============================] - 393s 4s/step - loss: 0.7646 - accuracy: 0.7536 - val_loss: 0.6613 - val_accuracy: 0.7840
 Epoch 7/10
-222/222 [==============================] - 368s 2s/step - loss: 0.3194 - accuracy: 0.9081 - val_loss: 0.3918 - val_accuracy: 0.8908
+111/111 [==============================] - 389s 4s/step - loss: 0.5865 - accuracy: 0.8191 - val_loss: 0.5526 - val_accuracy: 0.8325
 Epoch 8/10
-222/222 [==============================] - 378s 2s/step - loss: 0.2633 - accuracy: 0.9247 - val_loss: 0.3940 - val_accuracy: 0.8882
+111/111 [==============================] - 391s 4s/step - loss: 0.4667 - accuracy: 0.8586 - val_loss: 0.5148 - val_accuracy: 0.8420
 Epoch 9/10
-222/222 [==============================] - 375s 2s/step - loss: 0.2258 - accuracy: 0.9368 - val_loss: 0.3932 - val_accuracy: 0.8977
+111/111 [==============================] - 396s 4s/step - loss: 0.3812 - accuracy: 0.8873 - val_loss: 0.4854 - val_accuracy: 0.8528
 Epoch 10/10
-222/222 [==============================] - 379s 2s/step - loss: 0.1979 - accuracy: 0.9438 - val_loss: 0.4124 - val_accuracy: 0.8923
+111/111 [==============================] - 426s 4s/step - loss: 0.3139 - accuracy: 0.9091 - val_loss: 0.4280 - val_accuracy: 0.8749
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;tensorflow.python.keras.callbacks.History at 0x7f1dc72935b0&gt;
+&lt;tensorflow.python.keras.callbacks.History at 0x7f8d88ed4910&gt;
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Test">
 <h2>Test<a class="headerlink" href="#Test" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">label2name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;saree&#39;</span><span class="p">,</span> <span class="s1">&#39;kamel&#39;</span><span class="p">,</span> <span class="s1">&#39;mutakareb&#39;</span><span class="p">,</span> <span class="s1">&#39;mutadarak&#39;</span><span class="p">,</span> <span class="s1">&#39;munsareh&#39;</span><span class="p">,</span> <span class="s1">&#39;madeed&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;mujtath&#39;</span><span class="p">,</span> <span class="s1">&#39;ramal&#39;</span><span class="p">,</span> <span class="s1">&#39;baseet&#39;</span><span class="p">,</span> <span class="s1">&#39;khafeef&#39;</span><span class="p">,</span> <span class="s1">&#39;taweel&#39;</span><span class="p">,</span> <span class="s1">&#39;wafer&#39;</span><span class="p">,</span> <span class="s1">&#39;hazaj&#39;</span><span class="p">,</span> <span class="s1">&#39;rajaz&#39;</span><span class="p">]</span>
+<span></span><span class="n">label2name</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;السريع&#39;</span><span class="p">,</span> <span class="s1">&#39;الكامل&#39;</span><span class="p">,</span> <span class="s1">&#39;المتقارب&#39;</span><span class="p">,</span> <span class="s1">&#39;المتدارك&#39;</span><span class="p">,</span> <span class="s1">&#39;المنسرح&#39;</span><span class="p">,</span> <span class="s1">&#39;المديد&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;المجتث&#39;</span><span class="p">,</span> <span class="s1">&#39;الرمل&#39;</span><span class="p">,</span> <span class="s1">&#39;البسيط&#39;</span><span class="p">,</span> <span class="s1">&#39;الخفيف&#39;</span><span class="p">,</span> <span class="s1">&#39;الطويل&#39;</span><span class="p">,</span> <span class="s1">&#39;الوافر&#39;</span><span class="p">,</span> <span class="s1">&#39;الهزج&#39;</span><span class="p">,</span> <span class="s1">&#39;الرجز&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -588,28 +598,7 @@ Epoch 10/10
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">classify</span><span class="p">(</span><span class="s2">&quot;ما تردون على هذا المحب # دائبا يشكو إليكم في الكتب&quot;</span><span class="p">)</span>
-<span class="n">classify</span><span class="p">(</span><span class="s2">&quot;ولد الهدى فالكائنات ضياء # وفم الزمان تبسم وسناء&quot;</span><span class="p">)</span>
-<span class="n">classify</span><span class="p">(</span><span class="s2">&quot; لك يا منازل في القلوب منازل # أقفرت أنت وهن منك أواهل&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-ramal 0.99864715
-kamel 0.9625275
-kamel 0.99522
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -631,16 +620,16 @@ kamel 0.99522
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-ramal 0.99864715
-kamel 0.9625275
-kamel 0.99522
-taweel 0.99869907
-munsareh 0.35370013
-madeed 0.51401275
-hazaj 0.98468786
-saree 0.9669881
-mutadarak 0.9865726
-mutadarak 0.99643195
+الرمل 0.99949336
+الكامل 0.9249198
+الكامل 0.9218475
+الطويل 0.9974923
+المجتث 0.6107578
+المديد 0.9062244
+الهزج 0.9060462
+السريع 0.832686
+المتدارك 0.6292933
+المتدارك 0.60360384
 </pre></div></div>
 </div>
 </div>

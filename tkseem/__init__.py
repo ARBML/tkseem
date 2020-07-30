@@ -1,2 +1,2 @@
 from tkseem.tokenizers import WordTokenizer, CharacterTokenizer, AutoTokenizer,\
- CharacterTokenizer, DisjointLetterTokenizer, RandomTokenizer
+ CharacterTokenizer, DisjointLetterTokenizer, RandomTokenizer, SentencePieceTokenizer

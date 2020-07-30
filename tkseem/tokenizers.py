@@ -472,7 +472,7 @@ class WordTokenizer(BaseTokenizer):
         Returns:
             str: detokenized string
         """
-        detokenized = "".join(tokens).replace("", "")
+        detokenized = " ".join(tokens)
         return detokenized
 
 
@@ -502,7 +502,7 @@ class SentencePieceTokenizer(BaseTokenizer):
         )
         self.save_model("m.model")
         self.sp = spm.SentencePieceProcessor(model_file="m.model") 
-        self.vocab_size = len(self.sp.vocab_size)
+        self.vocab_size = self.sp.vocab_size()
 
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
