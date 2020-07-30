@@ -83,6 +83,7 @@
             
             
               <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tokenizers.html">Tokenizers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../demo.html">Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../sentiment analysis.html">Sentiment Analysis</a></li>
@@ -181,7 +182,6 @@
         <span class="n">segment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">vocab_size</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
         <span class="n">segm_token</span><span class="o">=</span><span class="s2">&quot;+&quot;</span><span class="p">,</span>
-        <span class="n">split</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">clean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
@@ -193,7 +193,6 @@
 <span class="sd">            segment (bool, optional): segment using farasa. Defaults to False.</span>
 <span class="sd">            max_tokens (int, optional): max number of vocabulary. Defaults to 10000.</span>
 <span class="sd">            segm_token (str, optional): reserved token for segmentation. Defaults to &#39;+&#39;.</span>
-<span class="sd">            split (bool, optional): split data. Defaults to True.</span>
 <span class="sd">            clean (bool, optional): remove tashkeel, english and special chars. Defaults to False.</span>
 <span class="sd">            normalize (bool, optional): normalize chars. Defaults to False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -204,9 +203,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">segment</span> <span class="o">=</span> <span class="n">segment</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clean</span> <span class="o">=</span> <span class="n">clean</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span> <span class="o">=</span> <span class="n">normalize</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">split</span> <span class="o">=</span> <span class="n">split</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">norm_dict</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;dictionaries/normalization_dictionary.pl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;dictionaries/cached.pl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+
+        <span class="c1"># relative path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+        <span class="n">norm_dict_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rel_path</span><span class="p">,</span> <span class="s1">&#39;dictionaries/normalization_dictionary.pl&#39;</span><span class="p">)</span>
+        <span class="n">cach_dict_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rel_path</span><span class="p">,</span> <span class="s1">&#39;dictionaries/cached.pl&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_dict</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">norm_dict_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">cach_dict_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">segment</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initializing Farasa&quot;</span><span class="p">)</span>
@@ -241,17 +244,15 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalize</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Normalizing the data ...&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span> <span class="o">=</span> <span class="n">normalize_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span> <span class="o">=</span> <span class="n">normalize_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm_dict</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">split</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Splitting the data ...&quot;</span><span class="p">)</span>
-            <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data/raw&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="c1"># self.train_text, self.valid_text, self.test_text = self._split_corpus()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_write_data</span><span class="p">(</span><span class="s2">&quot;data/raw/train.txt&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">)</span>
-            <span class="c1"># self._write_data(&quot;data/raw/valid.txt&quot;, self.valid_text)</span>
-            <span class="c1"># self._write_data(&quot;data/raw/test.txt&quot;, self.test_text)</span>
-            <span class="c1"># del self.train_text, self.valid_text, self.test_text</span>
-            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span></div>
+        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data/raw&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># self.train_text, self.valid_text, self.test_text = self._split_corpus()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_data</span><span class="p">(</span><span class="s2">&quot;data/raw/train.txt&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span><span class="p">)</span>
+        <span class="c1"># self._write_data(&quot;data/raw/valid.txt&quot;, self.valid_text)</span>
+        <span class="c1"># self._write_data(&quot;data/raw/test.txt&quot;, self.test_text)</span>
+        <span class="c1"># del self.train_text, self.valid_text, self.test_text</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">corpus</span></div>
 
     <span class="k">def</span> <span class="nf">_get_tokens_frequency_quickly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -515,7 +516,7 @@
 <span class="sd">        Args:</span>
 <span class="sd">            large_file (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training FrequencyTokenizer...&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training WordTokenizer...&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">large_file</span><span class="p">:</span>
             <span class="n">sorted_tokens_frequency</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
@@ -625,7 +626,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            str: detokenized string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">detokenized</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">detokenized</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">detokenized</span></div></div>
 
 
@@ -655,7 +656,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_model</span><span class="p">(</span><span class="s2">&quot;m.model&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sp</span> <span class="o">=</span> <span class="n">spm</span><span class="o">.</span><span class="n">SentencePieceProcessor</span><span class="p">(</span><span class="n">model_file</span><span class="o">=</span><span class="s2">&quot;m.model&quot;</span><span class="p">)</span> 
-        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sp</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sp</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SentencePieceTokenizer.tokenize"><a class="viewcode-back" href="../../api/tkseem.tokenizers.SentencePieceTokenizer.html#tkseem.tokenizers.SentencePieceTokenizer.tokenize">[docs]</a>    <span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tokenize using the frequency dictionary </span>
@@ -746,9 +747,10 @@
     <span class="sd">&quot;&quot;&quot; Auto tokenization using a saved dictionary </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AutoTokenizer.train"><a class="viewcode-back" href="../../api/tkseem.tokenizers.AutoTokenizer.html#tkseem.tokenizers.AutoTokenizer.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_path</span><span class="o">=</span><span class="s2">&quot;dictionaries/vocab.pl&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="AutoTokenizer.train"><a class="viewcode-back" href="../../api/tkseem.tokenizers.AutoTokenizer.html#tkseem.tokenizers.AutoTokenizer.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Use a default dictionary for training&quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training AutoTokenizer...&quot;</span><span class="p">)</span>
+        <span class="n">vocab_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rel_path</span><span class="p">,</span> <span class="s1">&#39;dictionaries/vocab.pl&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_truncate_dict</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">vocab_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="AutoTokenizer.tokenize"><a class="viewcode-back" href="../../api/tkseem.tokenizers.AutoTokenizer.html#tkseem.tokenizers.AutoTokenizer.tokenize">[docs]</a>    <span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -939,11 +941,12 @@
         <span class="sd">&quot;&quot;&quot;Train data using disjoint letters</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training DisjointLetterTokenizer ...&quot;</span><span class="p">)</span>
-        <span class="n">rx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\B([اأإآءؤﻵﻹﻷدذرزوةى])&quot;</span><span class="p">)</span>
+        <span class="n">rx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([اأإآءؤﻵﻹﻷدذرزو])&quot;</span><span class="p">)</span>
 
         <span class="n">text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/raw/train.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">rx</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot; ##\1&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-
+        <span class="n">text</span> <span class="o">=</span> <span class="n">rx</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\1## &quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;## &quot;</span><span class="p">,</span> <span class="s2">&quot; ##&quot;</span><span class="p">)</span>
+        
         <span class="n">tokens_frequency</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">):</span>
             <span class="n">tokens_frequency</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>

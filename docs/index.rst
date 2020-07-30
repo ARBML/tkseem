@@ -7,6 +7,7 @@ Welcome to tkseem's documentation!
 ==================================
 
 .. toctree::
+   install 
    Tokenizers <tokenizers>
    Demo <demo>
    sentiment analysis

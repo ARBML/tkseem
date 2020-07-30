@@ -85,6 +85,7 @@
             
             
               <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tokenizers.html">Tokenizers</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../tokenizers.html#module-tkseem.tokenizers">tkseem.tokenizers Module</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../tokenizers.html#classes">Classes</a><ul class="current">
@@ -200,7 +201,7 @@
 <h1>AutoTokenizer<a class="headerlink" href="#autotokenizer" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="tkseem.tokenizers.AutoTokenizer">
-<em class="property">class </em><code class="sig-prename descclassname">tkseem.tokenizers.</code><code class="sig-name descname">AutoTokenizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unk_token</span><span class="o">=</span><span class="default_value">'&lt;UNK&gt;'</span></em>, <em class="sig-param"><span class="n">pad_token</span><span class="o">=</span><span class="default_value">'&lt;PAD&gt;'</span></em>, <em class="sig-param"><span class="n">segment</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vocab_size</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">segm_token</span><span class="o">=</span><span class="default_value">'+'</span></em>, <em class="sig-param"><span class="n">split</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">clean</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tkseem/tokenizers.html#AutoTokenizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tkseem.tokenizers.AutoTokenizer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tkseem.tokenizers.</code><code class="sig-name descname">AutoTokenizer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">unk_token</span><span class="o">=</span><span class="default_value">'&lt;UNK&gt;'</span></em>, <em class="sig-param"><span class="n">pad_token</span><span class="o">=</span><span class="default_value">'&lt;PAD&gt;'</span></em>, <em class="sig-param"><span class="n">segment</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">vocab_size</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">segm_token</span><span class="o">=</span><span class="default_value">'+'</span></em>, <em class="sig-param"><span class="n">clean</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">normalize</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tkseem/tokenizers.html#AutoTokenizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tkseem.tokenizers.AutoTokenizer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="tkseem.tokenizers.BaseTokenizer.html#tkseem.tokenizers.BaseTokenizer" title="tkseem.tokenizers.BaseTokenizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">tkseem.tokenizers.BaseTokenizer</span></code></a></p>
 <p>Auto tokenization using a saved dictionary</p>
 <p class="rubric">Methods Summary</p>
@@ -222,7 +223,7 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#tkseem.tokenizers.AutoTokenizer.tokenize" title="tkseem.tokenizers.AutoTokenizer.tokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokenize</span></code></a>(text[, cache])</p></td>
 <td><p>Tokenize using the frequency dictionary</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#tkseem.tokenizers.AutoTokenizer.train" title="tkseem.tokenizers.AutoTokenizer.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a>([vocab_path])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#tkseem.tokenizers.AutoTokenizer.train" title="tkseem.tokenizers.AutoTokenizer.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a>()</p></td>
 <td><p>Use a default dictionary for training</p></td>
 </tr>
 </tbody>
@@ -278,7 +279,7 @@
 
 <dl class="py method">
 <dt id="tkseem.tokenizers.AutoTokenizer.train">
-<code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">vocab_path</span><span class="o">=</span><span class="default_value">'dictionaries/vocab.pl'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tkseem/tokenizers.html#AutoTokenizer.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tkseem.tokenizers.AutoTokenizer.train" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">train</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tkseem/tokenizers.html#AutoTokenizer.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tkseem.tokenizers.AutoTokenizer.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use a default dictionary for training</p>
 </dd></dl>
 

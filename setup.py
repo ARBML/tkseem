@@ -4,22 +4,21 @@ from setuptools import setup
 with open('requirements.txt') as f:
     required = f.read().splitlines()
 
-def readme():
-    with open('README.md', encoding="utf8") as f:
-        return f.read()
+with open('README.md') as readme_file:
+    readme = readme_file.read()
 
 setup(name='tkseem',
-      version='0.0.2',
-      description='Arabic Tokenization Library',
-      long_description_content_type='text/markdown',
-      long_description=readme(),
+      version='0.0.1',
       url='https://github.com/MagedSaeed/tkseem',
+      discription="Arabic Tokenization Library",
+      long_description=readme,
+      long_description_content_type='text/markdown',
       author='Zaid Alyafeai, Maged Saeed',
-      author_email='alyafey22@gmail.com, mageedsaeed1@gmail.com',
+      author_email='arabicmachinelearning@gmail.com',
       license='MIT',
       packages=['tkseem'],
       install_requires=required,
       python_requires=">=3.6",
       include_package_data=True,
-      zip_safe=False
+      zip_safe=False,
       )
