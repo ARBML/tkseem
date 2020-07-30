@@ -1,3 +1,7 @@
 sphinx_automodapi
 nbsphinx
 nbsphinx_link
+sentencepiece
+farasapy
+tqdm
+numpy
