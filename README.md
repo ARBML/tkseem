@@ -1,4 +1,7 @@
-**Tkseem (تقسيم)** is a tokenization library that encapsulates different approaches for tokenization and preprocessing of Arabic text. We provide different preprocessing, cleaning, normalization and tokenization algorithms for Arabic text. 
+ <p align="center"> 
+ <img src = "logo.png" width = "200px"/>
+ </p>
+**tkseem (تقسيم)** is a tokenization library that encapsulates different approaches for tokenization and preprocessing of Arabic text. We provide different preprocessing, cleaning, normalization and tokenization algorithms for Arabic text. 
 
 ## Features
 * Cleaning
