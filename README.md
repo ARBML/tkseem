@@ -10,6 +10,9 @@
 * Segmentation
 * Tokenization
 
+## Documentation 
+Please visit [readthedocs](https://tkseem.readthedocs.io/en/latest/index.html) for the full documentation. 
+
 ## Installation
 ```
 pip install tkseem
@@ -43,7 +46,7 @@ tokenizer.decode([536, 829])
 
 ### Large Files
 ```python
-import tokenizers as tk
+import tkseem as tk
 
 # initialize
 tokenizer = tk.WordTokenizer()
@@ -77,7 +80,7 @@ tokenizer.load_model('vocab.pl')
 
 ### Model Agnostic
 ```python
-import tokenizers as tk
+import tkseem as tk
 import time 
 import seaborn as sns
 import pandas as pd
