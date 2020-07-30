@@ -9,7 +9,7 @@ def readme():
         return f.read()
 
 setup(name='tkseem',
-      version='0.0.1',
+      version='0.0.2',
       description='Arabic Tokenization Library',
       long_description_content_type='text/markdown',
       long_description=readme(),
@@ -20,4 +20,6 @@ setup(name='tkseem',
       packages=['tkseem'],
       install_requires=required,
       python_requires=">=3.6",
-      zip_safe=False)
+      include_package_data=True,
+      zip_safe=False
+      )
