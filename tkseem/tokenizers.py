@@ -52,8 +52,10 @@ class BaseTokenizer:
 
         # relative path
         self.rel_path = os.path.dirname(__file__)
-        norm_dict_path = os.path.join(self.rel_path, 'dictionaries/normalization_dictionary.pl')
-        cach_dict_path = os.path.join(self.rel_path, 'dictionaries/cached.pl')
+        norm_dict_path = os.path.join(
+            self.rel_path, "dictionaries/normalization_dictionary.pl"
+        )
+        cach_dict_path = os.path.join(self.rel_path, "dictionaries/cached.pl")
         self.norm_dict = pickle.load(open(norm_dict_path, "rb"))
         self.cached = pickle.load(open(cach_dict_path, "rb"))
 
@@ -501,7 +503,7 @@ class SentencePieceTokenizer(BaseTokenizer):
             normalization_rule_name="identity",
         )
         self.save_model("m.model")
-        self.sp = spm.SentencePieceProcessor(model_file="m.model") 
+        self.sp = spm.SentencePieceProcessor(model_file="m.model")
         self.vocab_size = self.sp.vocab_size()
 
     def tokenize(self, text):
@@ -596,7 +598,7 @@ class AutoTokenizer(BaseTokenizer):
     def train(self):
         """Use a default dictionary for training"""
         print("Training AutoTokenizer...")
-        vocab_path = os.path.join(self.rel_path, 'dictionaries/vocab.pl')
+        vocab_path = os.path.join(self.rel_path, "dictionaries/vocab.pl")
         self.vocab = self._truncate_dict(pickle.load(open(vocab_path, "rb")))
 
     def tokenize(self, text, cache=False):
@@ -668,7 +670,6 @@ class RandomTokenizer(BaseTokenizer):
         text = open("data/raw/train.txt", "r").read()
         self.vocab = self._truncate_dict(self._random_dict(text))
         self.vocab_size = len(self.vocab)
- 
 
     ##TODO too slow we need to speed up
     def _random_dict(self, text):
@@ -792,7 +793,7 @@ class DisjointLetterTokenizer(BaseTokenizer):
         text = open("data/raw/train.txt", "r").read()
         text = rx.sub(r"\1## ", text)
         text = text.replace("## ", " ##")
-        
+
         tokens_frequency = defaultdict(int)
         for word in text.split(" "):
             tokens_frequency[word] += 1
@@ -907,15 +908,15 @@ class CharacterTokenizer(BaseTokenizer):
         Returns:
             list: generated tokens
         """
-        rx = re.compile(r'\B(.)')
-        text = rx.sub(r' ##\1', text)
+        rx = re.compile(r"\B(.)")
+        text = rx.sub(r" ##\1", text)
         output_tokens = []
 
         for token in text.split():
             if token in self.vocab:
-               output_tokens.append(token)
+                output_tokens.append(token)
             else:
-                output_tokens.append(self.pad_token) 
+                output_tokens.append(self.pad_token)
         return output_tokens
 
     def load_model(self, file_path):
