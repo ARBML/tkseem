@@ -1,3 +1,5 @@
+import os
+import pickle
 from .__base import BaseTokenizer
 
 
@@ -16,6 +18,7 @@ class WordTokenizer(BaseTokenizer):
             large_file (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.
         """
         print("Training WordTokenizer...")
+        self._check_train_data_path()
         if large_file:
             sorted_tokens_frequency = {
                 k: v
@@ -44,26 +47,6 @@ class WordTokenizer(BaseTokenizer):
         self.vocab = limited_tokens_frequency
         self.vocab_size = len(self.vocab)
 
-    def load_model(self, file_path):
-        """Load a saved model as a frequency dictionary
-
-        Args:
-            file_path (str): file path of the dictionary
-        """
-        print("Loading as pickle file ...")
-        self.vocab = pickle.load(open(file_path, "rb"))
-
-    def save_model(self, file_path):
-        """Save a model as a freqency dictionary
-
-        Args:
-            file_path (str): file path to save the model
-        """
-        assert self.vocab
-        with open(f"{file_path}", "wb") as pickle_file:
-            print("Saving as pickle file ...")
-            pickle.dump(self.vocab, pickle_file)
-
     def tokenize(self, text):
         """Tokenize using the frequency dictionary 
 
@@ -81,40 +64,6 @@ class WordTokenizer(BaseTokenizer):
             else:
                 output_tokens.append(self.unk_token)
         return output_tokens
-
-    # Why do we have two versions of this method?
-    def _tokens_list(self):
-        """ Get tokens list
-
-        Returns:
-            list: tokens 
-        """
-        return list(self.vocab.keys())
-
-    def decode(self, encoded):
-        """ Decode ids
-
-        Args:
-            encoded (list): list of ids to decode
-
-        Returns:
-            list: tokens
-        """
-        decoded = [self._tokens_list()[id] for id in encoded]
-        return decoded
-
-    def encode(self, text):
-        """ Convert string to a list of ids
-
-        Args:
-            text (str): input string
-
-        Returns:
-            list: list of ids
-        """
-        tokens = self.tokenize(text)
-        encoded = [self._tokens_list().index(token) for token in tokens]
-        return encoded
 
     def detokenize(self, tokens):
         """ Convert tokens to a string
