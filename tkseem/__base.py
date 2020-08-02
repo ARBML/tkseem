@@ -49,6 +49,7 @@ class BaseTokenizer:
         self.segment = segment
         self.clean = clean
         self.normalize = normalize
+        self.vocab = None  # to be filled by child classes
 
         # relative path
         self.rel_path = os.path.dirname(__file__)
@@ -94,13 +95,35 @@ class BaseTokenizer:
             print("Normalizing the data ...")
             self.corpus = normalize_data(self.corpus, self.norm_dict)
 
-        Path("data/raw").mkdir(parents=True, exist_ok=True)
+        Path(f"data/raw").mkdir(parents=True, exist_ok=True)
         # self.train_text, self.valid_text, self.test_text = self._split_corpus()
-        self._write_data("data/raw/train.txt", self.corpus)
+        self._write_data(f"data/raw/train.txt", self.corpus)
         # self._write_data("data/raw/valid.txt", self.valid_text)
         # self._write_data("data/raw/test.txt", self.test_text)
         # del self.train_text, self.valid_text, self.test_text
         del self.corpus
+
+    def _check_train_data_path(self):
+        try:
+            os.path.exists("data/raw/train.txt")
+        except Exception as e:
+            print("data file is not there. You may use train() first.")
+            raise e
+
+    def _get_tokens_frequency(self, file_path):
+        """
+        Get tokens frequency using a dictionary
+
+        Args:
+            file_path (str): file path to read
+        Returns:
+            dict : dict containing frequency
+        """
+        text = open(file_path, "r").read()
+        tokens_frequency = defaultdict(int)
+        for word in text.split(" "):
+            tokens_frequency[word] += 1
+        return dict(tokens_frequency)
 
     def _get_tokens_frequency_quickly(self, file_path):
         """
@@ -141,9 +164,9 @@ class BaseTokenizer:
             file_path (str): the directory of the data to read
         
         """
-        # TOCHECK: I think this code will break if the path does not exist.
-        open(path, "w").write(data)
+        return open(path, "w").write(data)
 
+    # NOTE: this is depricated. Maybe we should delete it?
     def _split_corpus(self):
         """
         Split the data into train, valid and test
@@ -163,21 +186,7 @@ class BaseTokenizer:
         )
         return train_text, val_text, test_text
 
-    def _get_tokens_frequency(self, file_path):
-        """
-        Get tokens frequency using a dictionary
-
-        Args:
-            file_path (str): file path to read
-        Returns:
-            dict : dict containing frequency
-        """
-        text = open(file_path, "r").read()
-        tokens_frequency = defaultdict(int)
-        for word in text.split(" "):
-            tokens_frequency[word] += 1
-        return dict(tokens_frequency)
-
+    # I think these two functions should be in the util.
     def _split_word(self, word, number_of_subwords):
         """Split a word into a specific number of sub-words
 
@@ -345,6 +354,6 @@ class BaseTokenizer:
                     current_token = tokens[i]
                 else:
                     current_token = self.pad_token
-                encoded.append(self._tokens_list().index(current_token))
+                encoded.append(self.tokens_list.index(current_token))
             encodings.append(encoded)
         return np.array(encodings)
