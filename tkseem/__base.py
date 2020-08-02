@@ -301,38 +301,103 @@ class BaseTokenizer:
         )
         return limited_tokens_frequency
 
-    def encode(self, text):
-        """
-        Convert text to ids 
-        """
-        raise NotImplementedError
-
-    def decode(self, encoded):
-        """
-        Convert ids to string
-        """
-        return NotImplementedError
-
     def tokenize(self, text):
+        """Tokenize using the frequency dictionary 
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: generated tokens
         """
-        Convert text to tokens
-        """
-        raise NotImplementedError
+        output_tokens = self._tokenize_from_dict(text, self.vocab)
+        return output_tokens
 
     def detokenize(self, tokens):
-        """
-        Convert tokens to text
-        """
-        raise NotImplementedError
+        """ Convert tokens to a string
 
-    def encode_and_save(self):
+        Args:
+            tokens (list): list of tokens
+
+        Returns:
+            str: detokenized string
         """
-        Encode all the files then save as numpy
+        detokenized = "".join(tokens).replace("##", "")
+        return detokenized
+
+    def load_model(self, file_path):
+        """Load a saved model as a frequency dictionary
+
+        Args:
+            file_path (str): file path of the dictionary
         """
-        Path("data/encoded").mkdir(parents=True, exist_ok=True)
-        for file_path in os.listdir("data/raw/"):
-            ids = self.encode(open(f"data/raw/{file_path}", "r").read())
-            np.save(f"data/encoded/{file_path[:-4]}.npy", ids)
+        print("Loading as pickle file ...")
+        self.vocab = pickle.load(open(file_path, "rb"))
+
+    def save_model(self, file_path):
+        """Save a model as a freqency dictionary
+
+        Args:
+            file_path (str): file path to save the model
+        """
+        assert self.vocab
+        with open(f"{file_path}", "wb") as pickle_file:
+            print("Saving as pickle file ...")
+            pickle.dump(self.vocab, pickle_file)
+
+    @property
+    def tokens_list(self):
+        """
+        Get tokens list
+
+        Returns:
+            list: tokens 
+        """
+        if not self.vocab:
+            raise NotImplementedError("Please train first to build the vocab list")
+        return list(self.vocab.keys())
+
+    def encode(self, text):
+        """ Convert string to a list of ids
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: list of ids
+        """
+        tokens = self.tokenize(text)
+        encoded = [self.tokens_list.index(token) for token in tokens]
+        return encoded
+
+    def decode(self, encoded):
+        """ Decode ids
+
+        Args:
+            encoded (list): list of ids to decode
+
+        Returns:
+            list: tokens
+        """
+        decoded = [self.tokens_list[id] for id in encoded]
+        return decoded
+
+    def encode_and_save(self, output_directory="data/encoded"):
+        """
+        Encode all the files then save as numpy.
+
+        Args:
+            output_directory (str): frequency dictionary. The output directory will be created if it is not there.
+
+        Returns:
+            str: output directory path
+        """
+        output_directory = output_directory.strip("/")
+        Path(output_directory).mkdir(parents=True, exist_ok=True)
+        for file_path in os.listdir(output_directory):
+            ids = self.encode(open(f"{output_directory}/{file_path}", "r").read())
+            np.save(f"{output_directory}/{file_path[:-4]}.npy", ids)
+        return output_directory
 
     def encode_sentences(self, sentences, max_length=20):
         """
