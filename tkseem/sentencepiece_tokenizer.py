@@ -1,3 +1,6 @@
+import io
+import numpy as np
+import sentencepiece as spm
 from .__base import BaseTokenizer
 
 
@@ -12,6 +15,7 @@ class SentencePieceTokenizer(BaseTokenizer):
             model_type (str, optional): train using sp. Defaults to "bpe".
         """
         print("Training SentencePiece...")
+        self._check_train_data_path()
         self.model = io.BytesIO()
         spm.SentencePieceTrainer.train(
             input="data/raw/train.txt",
