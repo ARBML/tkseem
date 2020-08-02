@@ -322,6 +322,7 @@ class BaseTokenizer:
         Returns:
             str: detokenized string
         """
+        # this is the common behaviour along all tokenizers
         detokenized = "".join(tokens).replace("##", "")
         return detokenized
 
