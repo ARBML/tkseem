@@ -242,6 +242,7 @@ class BaseTokenizer:
             if word in freq_dict:
                 output_tokens.append(word)
             else:
+                groups_of_valid_subwords = []
                 for i in range(2, len(word) + 1, 1):
                     if cache:
                         groups_of_subwords = self._split_word_cached(word, i)
@@ -288,7 +289,7 @@ class BaseTokenizer:
         limited_tokens_frequency[self.unk_token] = -1
         limited_tokens_frequency[self.pad_token] = -1
         limited_tokens_frequency.update(
-            {k: v for k, v in list(sorted_tokens_frequency.items())[: self.vocab_size]}
+            {k: v for k, v in list(sorted_tokens_frequency.items())[: self.vocab_size-2]}
         )
         return limited_tokens_frequency
 
