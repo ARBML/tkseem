@@ -14,7 +14,7 @@ import sentencepiece as spm
 from collections import defaultdict, Counter
 from farasa.segmenter import FarasaSegmenter
 from .util import clean_data, normalize_data, split_on_binary
-
+import itertools
 
 class BaseTokenizer:
     """
@@ -36,19 +36,12 @@ class BaseTokenizer:
         Args:
             unk_token (str, optional): reserved token for unknowns. Defaults to "<UNK>".
             pad_token (str, optional): reserved token for padding. Defaults to "<PAD>".
-            segment (bool, optional): segment using farasa. Defaults to False.
             max_tokens (int, optional): max number of vocabulary. Defaults to 10000.
             segm_token (str, optional): reserved token for segmentation. Defaults to '+'.
-            clean (bool, optional): remove tashkeel, english and special chars. Defaults to False.
-            normalize (bool, optional): normalize chars. Defaults to False.
         """
-        self.segm_token = segm_token
         self.vocab_size = vocab_size
         self.unk_token = unk_token
         self.pad_token = pad_token
-        self.segment = segment
-        self.clean = clean
-        self.normalize = normalize
 
         # relative path
         self.rel_path = os.path.dirname(__file__)
@@ -58,49 +51,6 @@ class BaseTokenizer:
         cach_dict_path = os.path.join(self.rel_path, "dictionaries/cached.pl")
         self.norm_dict = pickle.load(open(norm_dict_path, "rb"))
         self.cached = pickle.load(open(cach_dict_path, "rb"))
-
-        if self.segment:
-            print("Initializing Farasa")
-            # suppress farasa stdout
-            # WARNING: this is LINUX ONLY command!
-            old_stdout = sys.stdout
-            sys.stdout = open(os.devnull, "w")
-            self.segmenter = FarasaSegmenter(interactive=True)
-            # resume farasa stdout
-            sys.stdout = old_stdout
-
-    def process_data(self, file_path):
-        """ 
-        Read, segment, clean, normalize and split
-
-        Args:
-            file_path (str): the directory of the data to read
-        
-        """
-        with open(file_path, "r") as f:
-            print("Reading the data ...")
-            self.corpus = f.read()
-
-        if self.segment:
-            print("Segmenting the data ...")
-            self.corpus = self.segmenter.segment(self.corpus)
-            self.corpus = re.sub(r"[+]", self.segm_token, self.corpus)
-
-        if self.clean:
-            print("Cleaning the data ...")
-            self.corpus = clean_data(self.corpus)
-
-        if self.normalize:
-            print("Normalizing the data ...")
-            self.corpus = normalize_data(self.corpus, self.norm_dict)
-
-        Path("data/raw").mkdir(parents=True, exist_ok=True)
-        # self.train_text, self.valid_text, self.test_text = self._split_corpus()
-        self._write_data("data/raw/train.txt", self.corpus)
-        # self._write_data("data/raw/valid.txt", self.valid_text)
-        # self._write_data("data/raw/test.txt", self.test_text)
-        # del self.train_text, self.valid_text, self.test_text
-        del self.corpus
 
     def _get_tokens_frequency_quickly(self, file_path):
         """
@@ -143,25 +93,6 @@ class BaseTokenizer:
         """
         # TOCHECK: I think this code will break if the path does not exist.
         open(path, "w").write(data)
-
-    def _split_corpus(self):
-        """
-        Split the data into train, valid and test
-
-        Returns:
-            Tuple: train, valid, test
-        """
-        split_length = int(len(self.corpus) * 0.8)
-        trainval_text, test_text = (
-            self.corpus[:split_length],
-            self.corpus[split_length:],
-        )
-        split_length = int(len(trainval_text) * 0.8)
-        train_text, val_text = (
-            trainval_text[:split_length],
-            trainval_text[split_length:],
-        )
-        return train_text, val_text, test_text
 
     def _get_tokens_frequency(self, file_path):
         """
@@ -326,7 +257,7 @@ class BaseTokenizer:
             ids = self.encode(open(f"data/raw/{file_path}", "r").read())
             np.save(f"data/encoded/{file_path[:-4]}.npy", ids)
 
-    def encode_sentences(self, sentences, max_length=20):
+    def encode_sentences(self, sentences, max_length=None):
         """
         Encode a list of sentences using the trained model
 
@@ -340,15 +271,17 @@ class BaseTokenizer:
         encodings = []
         for sent in sentences:
             tokens = self.tokenize(sent)
+            print(tokens)
             encoded = []
-            for i in range(max_length):
-                if i < len(tokens):
-                    current_token = tokens[i]
-                else:
-                    current_token = self.pad_token
-                encoded.append(self._tokens_list().index(current_token))
+            for i in range(len(tokens)):
+                encoded.append(self._tokens_list().index(tokens[i]))
             encodings.append(encoded)
-        return np.array(encodings)
+        
+        pad_id = self._tokens_list().index(self.pad_token)
+        #https://stackoverflow.com/a/38619333
+        encodings = np.array(list(itertools.zip_longest(*encodings, fillvalue=pad_id))).T
+        encodings = encodings[..., :max_length]
+        return encodings
 
 
 class WordTokenizer(BaseTokenizer):
@@ -358,19 +291,19 @@ class WordTokenizer(BaseTokenizer):
 
     tokens_frequency = None
 
-    def train(self, large_file=False):
+    def train(self, file_path, large_file=False):
         """
         Train data using tokens' frequency
 
         Args:
             large_file (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.
         """
-        print("Training WordTokenizer...")
+        print("Training WordTokenizer ...")
         if large_file:
             sorted_tokens_frequency = {
                 k: v
                 for k, v in sorted(
-                    self._get_tokens_frequency_quickly("data/raw/train.txt").items(),
+                    self._get_tokens_frequency_quickly(file_path).items(),
                     key=lambda x: x[1],
                     reverse=True,
                 )
@@ -379,7 +312,7 @@ class WordTokenizer(BaseTokenizer):
             sorted_tokens_frequency = {
                 k: v
                 for k, v in sorted(
-                    self._get_tokens_frequency("data/raw/train.txt").items(),
+                    self._get_tokens_frequency(file_path).items(),
                     key=lambda x: x[1],
                     reverse=True,
                 )
@@ -483,16 +416,16 @@ class SentencePieceTokenizer(BaseTokenizer):
     """ Sentencepiece based tokenization. 
     """
 
-    def train(self, model_type="bpe"):
+    def train(self, file_path, model_type="bpe"):
         """ Train using sentence piece
 
         Args:
             model_type (str, optional): train using sp. Defaults to "bpe".
         """
-        print("Training SentencePiece...")
+        print("Training SentencePiece ...")
         self.model = io.BytesIO()
         spm.SentencePieceTrainer.train(
-            input="data/raw/train.txt",
+            input=file_path,
             model_writer=self.model,
             vocab_size=self.vocab_size,
             model_type=model_type,
@@ -596,9 +529,9 @@ class AutoTokenizer(BaseTokenizer):
     """ Auto tokenization using a saved dictionary 
     """
 
-    def train(self):
+    def train(self, file_path):
         """Use a default dictionary for training"""
-        print("Training AutoTokenizer...")
+        print("Training AutoTokenizer ...")
         vocab_path = os.path.join(self.rel_path, "dictionaries/vocab.pl")
         self.vocab = self._truncate_dict(pickle.load(open(vocab_path, "rb")))
 
@@ -664,11 +597,11 @@ class RandomTokenizer(BaseTokenizer):
     """ Randomized based tokenization 
     """
 
-    def train(self):
+    def train(self, file_path):
         """Train data using randomly splitted subwords 
         """
         print("Training RandomTokenizer ...")
-        text = open("data/raw/train.txt", "r").read()
+        text = open(file_path, "r").read()
         self.vocab = self._truncate_dict(self._random_dict(text))
         self.vocab_size = len(self.vocab)
 
@@ -785,13 +718,13 @@ class DisjointLetterTokenizer(BaseTokenizer):
     """ Disjoint Letters based tokenization 
     """
 
-    def train(self):
+    def train(self, file_path):
         """Train data using disjoint letters
         """
         print("Training DisjointLetterTokenizer ...")
         rx = re.compile(r"([اأإآءؤﻵﻹﻷدذرزو])")
 
-        text = open("data/raw/train.txt", "r").read()
+        text = open(file_path, "r").read()
         text = rx.sub(r"\1## ", text)
         text = text.replace("## ", " ##")
 
@@ -884,13 +817,13 @@ class CharacterTokenizer(BaseTokenizer):
     """ Character based tokenization 
     """
 
-    def train(self):
+    def train(self, file_path):
         """Train data using characters 
         """
         print("Training CharacterTokenizer ...")
         rx = re.compile(r"\B(.)")
 
-        text = open("data/raw/train.txt", "r").read()
+        text = open(file_path, "r").read()
         text = rx.sub(r" ##\1", text)
 
         tokens_frequency = defaultdict(int)
@@ -917,7 +850,7 @@ class CharacterTokenizer(BaseTokenizer):
             if token in self.vocab:
                 output_tokens.append(token)
             else:
-                output_tokens.append(self.pad_token)
+                output_tokens.append(self.unk_token)
         return output_tokens
 
     def load_model(self, file_path):
