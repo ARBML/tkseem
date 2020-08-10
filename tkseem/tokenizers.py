@@ -271,7 +271,6 @@ class BaseTokenizer:
         encodings = []
         for sent in sentences:
             tokens = self.tokenize(sent)
-            print(tokens)
             encoded = []
             for i in range(len(tokens)):
                 encoded.append(self._tokens_list().index(tokens[i]))
