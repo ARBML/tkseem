@@ -157,19 +157,26 @@ class BaseTokenizer:
         all_binaries = self.cached[n, number_of_subwords - 1]
         return [split_on_binary(word, binary) for binary in all_binaries]
 
-    def _tokenize_from_dict(self, text, freq_dict, cache=False):
-        """Tokenize using the frequency dictionary 
+    def _tokenize_from_dict(self, text, freq_dict, cache=False, max_size=20):
+        """Tokenize using frequency based approach given a dictionary
 
         Args:
             text (str): input string
+            freq_dict (dict): frequency dictionary
+            cache (bool, optional): faster approach. Defaults to False.
+            max_size (int, optional): maximum word size. Defaults to 20.
 
         Returns:
-            list: generated tokens
+            [type]: [description]
         """
         assert freq_dict
         tokens = []
         output_tokens = []
         for word in text.split():
+            if len(word) >= max_size:
+                print(f'{word} is too long ...')
+                output_tokens.append(self.unk_token)
+                continue
             if word in freq_dict:
                 output_tokens.append(word)
             else:
