@@ -25,11 +25,8 @@ class BaseTokenizer:
         self,
         unk_token="<UNK>",
         pad_token="<PAD>",
-        segment=False,
         vocab_size=10000,
-        segm_token="+",
-        clean=False,
-        normalize=False,
+        special_tokens = [],
     ):
         """Constructor
 
@@ -37,19 +34,14 @@ class BaseTokenizer:
             unk_token (str, optional): reserved token for unknowns. Defaults to "<UNK>".
             pad_token (str, optional): reserved token for padding. Defaults to "<PAD>".
             max_tokens (int, optional): max number of vocabulary. Defaults to 10000.
-            segm_token (str, optional): reserved token for segmentation. Defaults to '+'.
         """
         self.vocab_size = vocab_size
         self.unk_token = unk_token
         self.pad_token = pad_token
+        self.special_tokens = special_tokens
 
-        # relative path
         self.rel_path = os.path.dirname(__file__)
-        norm_dict_path = os.path.join(
-            self.rel_path, "dictionaries/normalization_dictionary.pl"
-        )
         cach_dict_path = os.path.join(self.rel_path, "dictionaries/cached.pl")
-        self.norm_dict = pickle.load(open(norm_dict_path, "rb"))
         self.cached = pickle.load(open(cach_dict_path, "rb"))
 
     def _get_tokens_frequency_quickly(self, file_path):
@@ -226,8 +218,11 @@ class BaseTokenizer:
         limited_tokens_frequency = dict()
         limited_tokens_frequency[self.unk_token] = -1
         limited_tokens_frequency[self.pad_token] = -1
+        for token in self.special_tokens:
+            limited_tokens_frequency[token] = -1    
         limited_tokens_frequency.update(
-            {k: v for k, v in list(sorted_tokens_frequency.items())[: self.vocab_size-2]}
+            {k: v for k, v in list(sorted_tokens_frequency.items())
+            [: self.vocab_size - len(limited_tokens_frequency)]}
         )
         return limited_tokens_frequency
 
@@ -297,40 +292,15 @@ class WordTokenizer(BaseTokenizer):
 
     tokens_frequency = None
 
-    def train(self, file_path, large_file=False):
-        """
-        Train data using tokens' frequency
+    def train(self, file_path):
+        """Train using words' frequency
 
         Args:
-            large_file (bool, optional): Use memory mapping to read the datta quickly. Defaults to False.
+            file_path (str): file path for daaset
         """
+        
         print("Training WordTokenizer ...")
-        if large_file:
-            sorted_tokens_frequency = {
-                k: v
-                for k, v in sorted(
-                    self._get_tokens_frequency_quickly(file_path).items(),
-                    key=lambda x: x[1],
-                    reverse=True,
-                )
-            }
-        else:
-            sorted_tokens_frequency = {
-                k: v
-                for k, v in sorted(
-                    self._get_tokens_frequency(file_path).items(),
-                    key=lambda x: x[1],
-                    reverse=True,
-                )
-            }
-
-        limited_tokens_frequency = dict()
-        limited_tokens_frequency[self.unk_token] = -1
-        limited_tokens_frequency[self.pad_token] = -1
-        limited_tokens_frequency.update(
-            {k: v for k, v in list(sorted_tokens_frequency.items())[: self.vocab_size]}
-        )
-        self.vocab = limited_tokens_frequency
+        self.vocab = self._truncate_dict(self._get_tokens_frequency(file_path))
         self.vocab_size = len(self.vocab)
 
     def load_model(self, file_path):
@@ -430,6 +400,7 @@ class SentencePieceTokenizer(BaseTokenizer):
         """
         print("Training SentencePiece ...")
         self.model = io.BytesIO()
+        
         spm.SentencePieceTrainer.train(
             input=file_path,
             model_writer=self.model,
@@ -440,6 +411,7 @@ class SentencePieceTokenizer(BaseTokenizer):
             pad_id=1,
             bos_id=-1,
             eos_id=-1,
+            control_symbols = self.special_tokens,
             normalization_rule_name="identity",
         )
         self.save_model("m.model")
