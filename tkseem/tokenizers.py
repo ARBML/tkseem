@@ -259,29 +259,34 @@ class BaseTokenizer:
             ids = self.encode(open(f"data/raw/{file_path}", "r").read())
             np.save(f"data/encoded/{file_path[:-4]}.npy", ids)
 
-    def encode_sentences(self, sentences, max_length=None):
+    def encode_sentences(self, sentences, boundries = ('', ''), out_length=None):
         """
         Encode a list of sentences using the trained model
 
         Args:
             sentences (list): list of sentences
-            max_length (int, optional): specify the max length of encodings. Defaults to 100.
+            out_length (int, optional): specify the max length of encodings. Defaults to 100.
 
         Returns:
             [np.array]: numpy array of encodings
         """
         encodings = []
         for sent in sentences:
-            tokens = self.tokenize(sent)
-            encoded = []
-            for i in range(len(tokens)):
-                encoded.append(self._tokens_list().index(tokens[i]))
+            encoded = self.encode(boundries[0]+' '+sent+' '+boundries[1])
             encodings.append(encoded)
         
-        pad_id = self._tokens_list().index(self.pad_token)
-        #https://stackoverflow.com/a/38619333
+        pad_id = self.encode(self.pad_token)[0]
+
+        # pad to equal size from https://stackoverflow.com/a/38619333
         encodings = np.array(list(itertools.zip_longest(*encodings, fillvalue=pad_id))).T
-        encodings = encodings[..., :max_length]
+        
+        # increase pad if necessary
+        if not (out_length is None):
+            if out_length > encodings.shape[1]:
+                encodings = np.pad(encodings, [(0, 0), (0, out_length)],
+                constant_values = pad_id, mode = 'constant')
+        encodings = encodings[..., :out_length]
+        
         return encodings
 
 
@@ -479,29 +484,6 @@ class SentencePieceTokenizer(BaseTokenizer):
             str: detokenized string
         """
         return "".join(tokens).replace("▁", " ")
-
-    def encode_sentences(self, sentences, max_length=20):
-        """Encode a list of sentences using the trained model
-
-        Args:
-            sentences (list): list of sentences
-            max_length (int, optional): specify the max length of encodings. Defaults to 100.
-
-        Returns:
-            [np.array]: list of encoded sentences
-        """
-        sparse_encodings = self.sp.encode(sentences, out_type=int)
-        encodings = []
-        for encoding in sparse_encodings:
-            curr_encoding = []
-            for i in range(max_length):
-                if i >= len(encoding):
-                    curr_encoding.append(self.sp.pad_id())
-                else:
-                    curr_encoding.append(encoding[i])
-            encodings.append(curr_encoding)
-        return np.array(encodings)
-
 
 class AutoTokenizer(BaseTokenizer):
     """ Auto tokenization using a saved dictionary 
