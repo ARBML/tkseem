@@ -226,6 +226,22 @@ class BaseTokenizer:
         )
         return limited_tokens_frequency
 
+    def token_to_id(self, piece):
+        """ Get tokens list
+
+        Returns:
+            list: tokens 
+        """
+        return list(self.vocab.keys()).index(piece)
+    
+    def id_to_token(self, id):
+        """ Get tokens list
+
+        Returns:
+            list: tokens 
+        """
+        return list(self.vocab.keys())[id]
+
     def encode(self, text):
         """
         Convert text to ids 
@@ -346,15 +362,6 @@ class WordTokenizer(BaseTokenizer):
                 output_tokens.append(self.unk_token)
         return output_tokens
 
-    # Why do we have two versions of this method?
-    def _tokens_list(self):
-        """ Get tokens list
-
-        Returns:
-            list: tokens 
-        """
-        return list(self.vocab.keys())
-
     def decode(self, encoded):
         """ Decode ids
 
@@ -364,7 +371,7 @@ class WordTokenizer(BaseTokenizer):
         Returns:
             list: tokens
         """
-        decoded = [self._tokens_list()[id] for id in encoded]
+        decoded = [self.id_to_token(id) for id in encoded]
         return decoded
 
     def encode(self, text):
@@ -377,7 +384,7 @@ class WordTokenizer(BaseTokenizer):
             list: list of ids
         """
         tokens = self.tokenize(text)
-        encoded = [self._tokens_list().index(token) for token in tokens]
+        encoded = [self.token_to_id(token) for token in tokens]
         return encoded
 
     def detokenize(self, tokens):
@@ -416,7 +423,7 @@ class SentencePieceTokenizer(BaseTokenizer):
             pad_id=1,
             bos_id=-1,
             eos_id=-1,
-            control_symbols = self.special_tokens,
+            user_defined_symbols = self.special_tokens,
             normalization_rule_name="identity",
         )
         self.save_model("m.model")
@@ -451,6 +458,12 @@ class SentencePieceTokenizer(BaseTokenizer):
         """
         with open(file_path, "wb") as f:
             f.write(self.model.getvalue())
+
+    def id_to_token(self, id):
+        return self.sp.id_to_piece(int(id))
+    
+    def token_to_id(self, token):
+        return self.sp.piece_to_id(token)
 
     def encode(self, text):
         """ Convert string to a list of ids
@@ -507,14 +520,6 @@ class AutoTokenizer(BaseTokenizer):
         output_tokens = self._tokenize_from_dict(text, self.vocab, cache)
         return output_tokens
 
-    def _tokens_list(self):
-        """ Get tokens list
-
-        Returns:
-            list: list of tokens.
-        """
-        return list(self.vocab.keys())
-
     def decode(self, encoded):
         """ Decode ids
 
@@ -524,7 +529,7 @@ class AutoTokenizer(BaseTokenizer):
         Returns:
             list: tokens
         """
-        decoded = [self._tokens_list()[id] for id in encoded]
+        decoded = [self.id_to_token(id) for id in encoded]
         return decoded
 
     def encode(self, text):
@@ -537,7 +542,7 @@ class AutoTokenizer(BaseTokenizer):
             list: list of ids
         """
         tokens = self.tokenize(text)
-        encoded = [self._tokens_list().index(token) for token in tokens]
+        encoded = [self.token_to_id(token) for token in tokens]
         return encoded
 
     def detokenize(self, tokens):
@@ -627,14 +632,6 @@ class RandomTokenizer(BaseTokenizer):
             print("Saving as pickle file ...")
             pickle.dump(self.vocab, pickle_file)
 
-    def _tokens_list(self):
-        """ Get tokens list
-
-        Returns:
-            list: list of tokens.
-        """
-        return list(self.vocab.keys())
-
     def decode(self, encoded):
         """ Decode ids
 
@@ -644,7 +641,7 @@ class RandomTokenizer(BaseTokenizer):
         Returns:
             list: tokens
         """
-        decoded = [self._tokens_list()[id] for id in encoded]
+        decoded = [self.id_to_token(id) for id in encoded]
         return decoded
 
     def encode(self, text):
@@ -658,7 +655,7 @@ class RandomTokenizer(BaseTokenizer):
         """
         # TOCKECK: Why not to put this in the base tokenizer as a default behaviour?
         tokens = self.tokenize(text)
-        encoded = [self._tokens_list().index(token) for token in tokens]
+        encoded = [self.token_to_id(token) for token in tokens]
         return encoded
 
     def detokenize(self, tokens):
@@ -727,14 +724,6 @@ class DisjointLetterTokenizer(BaseTokenizer):
             print("Saving as pickle file ...")
             pickle.dump(self.vocab, pickle_file)
 
-    def _tokens_list(self):
-        """ Get tokens list
-
-        Returns:
-            list: list of tokens.
-        """
-        return list(self.vocab.keys())
-
     def decode(self, encoded):
         """ Decode ids
 
@@ -744,7 +733,7 @@ class DisjointLetterTokenizer(BaseTokenizer):
         Returns:
             list: tokens
         """
-        decoded = [self._tokens_list()[id] for id in encoded]
+        decoded = [self.id_to_token(id) for id in encoded]
         return decoded
 
     def encode(self, text):
@@ -757,7 +746,7 @@ class DisjointLetterTokenizer(BaseTokenizer):
             list: list of ids
         """
         tokens = self.tokenize(text)
-        encoded = [self._tokens_list().index(token) for token in tokens]
+        encoded = [self.token_to_id(token) for token in tokens]
         return encoded
 
     def detokenize(self, tokens):
@@ -833,14 +822,6 @@ class CharacterTokenizer(BaseTokenizer):
             print("Saving as pickle file ...")
             pickle.dump(self.vocab, pickle_file)
 
-    def _tokens_list(self):
-        """ Get tokens list
-
-        Returns:
-            list: list of tokens.
-        """
-        return list(self.vocab.keys())
-
     def decode(self, encoded):
         """ Decode ids
 
@@ -850,7 +831,7 @@ class CharacterTokenizer(BaseTokenizer):
         Returns:
             list: tokens
         """
-        decoded = [self._tokens_list()[id] for id in encoded]
+        decoded = [self.id_to_token(id) for id in encoded]
         return decoded
 
     def encode(self, text):
@@ -863,7 +844,7 @@ class CharacterTokenizer(BaseTokenizer):
             list: list of ids
         """
         tokens = self.tokenize(text)
-        encoded = [self._tokens_list().index(token) for token in tokens]
+        encoded = [self.token_to_id(token) for token in tokens]
         return encoded
 
     def detokenize(self, tokens):
