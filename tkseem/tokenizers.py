@@ -515,10 +515,13 @@ class AutoTokenizer(BaseTokenizer):
     """ Auto tokenization using a saved dictionary 
     """
 
-    def train(self, file_path):
-        """Use a default dictionary for training"""
+    def train(self, vocab_path):
+        """Train the tokenizer using the given dictionary
+
+        Args:
+            vocab_path (str): dictionary to use for training 
+        """
         print("Training AutoTokenizer ...")
-        vocab_path = os.path.join(self.rel_path, "dictionaries/vocab.pl")
         self.vocab = self._truncate_dict(pickle.load(open(vocab_path, "rb")))
 
     def tokenize(self, text, cache=False):
@@ -833,6 +836,64 @@ class CharacterTokenizer(BaseTokenizer):
         with open(f"{file_path}", "wb") as pickle_file:
             print("Saving as pickle file ...")
             pickle.dump(self.vocab, pickle_file)
+
+    def decode(self, encoded):
+        """ Decode ids
+
+        Args:
+            encoded (list): list of ids to decode
+
+        Returns:
+            list: tokens
+        """
+        decoded = [self.id_to_token(id) for id in encoded]
+        return decoded
+
+    def encode(self, text):
+        """ Convert string to a list of ids
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: list of ids
+        """
+        tokens = self.tokenize(text)
+        encoded = [self.token_to_id(token) for token in tokens]
+        return encoded
+
+    def detokenize(self, tokens):
+        """ Convert tokens to a string
+
+        Args:
+            tokens (list): list of tokens
+
+        Returns:
+            str: detokenized string
+        """
+        detokenized = "".join(tokens).replace("##", "")
+        return detokenized
+class MorphologicalTokenizer(BaseTokenizer):
+    """ Use Morphology to tokenize the text 
+    """
+
+    def train(self, file_path):
+        """Use a default dictionary for training"""
+        print("Training MorphologicalTokenizer ...")
+        vocab_path = os.path.join(self.rel_path, "dictionaries/vocab.pl")
+        self.vocab = self._truncate_dict(pickle.load(open(vocab_path, "rb")))
+
+    def tokenize(self, text, cache=False):
+        """Tokenize using the frequency dictionary 
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: generated tokens
+        """
+        output_tokens = self._tokenize_from_dict(text, self.vocab, cache)
+        return output_tokens
 
     def decode(self, encoded):
         """ Decode ids
