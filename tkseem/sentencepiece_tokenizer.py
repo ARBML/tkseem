@@ -102,14 +102,3 @@ class SentencePieceTokenizer(BaseTokenizer):
             str: detokenized string
         """
         return "".join(tokens).replace("▁", " ")
-
-    def detokenize(self, tokens):
-        """ Convert tokens to a string
-
-        Args:
-            tokens (list): list of tokens
-
-        Returns:
-            str: detokenized string
-        """
-        return "".join(tokens).replace("▁", " ")

@@ -25,7 +25,7 @@ class CharacterTokenizer(BaseTokenizer):
         self.vocab = self._truncate_dict(dict(tokens_frequency))
         self.vocab_size = len(self.vocab)
 
-    def tokenize(self, text, cache=False):
+    def tokenize(self, text):
         """Tokenize using the frequency dictionary 
 
         Args:
