@@ -1,20 +1,23 @@
+import functools
 import io
-import re
-import os
-import sys
+import itertools
 import mmap
+import operator
+import os
 import pickle
 import random
-import operator
-import functools
-import numpy as np
-from tqdm import tqdm
+import re
+import sys
+from collections import Counter, defaultdict
 from pathlib import Path
+
+import numpy as np
 import sentencepiece as spm
-from collections import defaultdict, Counter
 from farasa.segmenter import FarasaSegmenter
+from tqdm import tqdm
+
 from .util import clean_data, normalize_data, split_on_binary
-import itertools
+
 
 class BaseTokenizer:
     """
@@ -22,11 +25,7 @@ class BaseTokenizer:
     """
 
     def __init__(
-        self,
-        unk_token="<UNK>",
-        pad_token="<PAD>",
-        vocab_size=10000,
-        special_tokens = [],
+        self, unk_token="<UNK>", pad_token="<PAD>", vocab_size=10000, special_tokens=[],
     ):
         """Constructor
 
@@ -166,7 +165,7 @@ class BaseTokenizer:
         output_tokens = []
         for word in text.split():
             if len(word) >= max_size:
-                print(f'{word} is too long ...')
+                print(f"{word} is too long ...")
                 output_tokens.append(self.unk_token)
                 continue
             if word in freq_dict:
@@ -219,10 +218,14 @@ class BaseTokenizer:
         limited_tokens_frequency[self.unk_token] = -1
         limited_tokens_frequency[self.pad_token] = -1
         for token in self.special_tokens:
-            limited_tokens_frequency[token] = -1    
+            limited_tokens_frequency[token] = -1
         limited_tokens_frequency.update(
-            {k: v for k, v in list(sorted_tokens_frequency.items())
-            [: self.vocab_size - len(limited_tokens_frequency)]}
+            {
+                k: v
+                for k, v in list(sorted_tokens_frequency.items())[
+                    : self.vocab_size - len(limited_tokens_frequency)
+                ]
+            }
         )
         return limited_tokens_frequency
 
@@ -233,7 +236,7 @@ class BaseTokenizer:
             list: tokens 
         """
         return list(self.vocab.keys()).index(piece)
-    
+
     def id_to_token(self, id):
         """ Get tokens list
 
@@ -275,7 +278,7 @@ class BaseTokenizer:
             ids = self.encode(open(f"data/raw/{file_path}", "r").read())
             np.save(f"data/encoded/{file_path[:-4]}.npy", ids)
 
-    def encode_sentences(self, sentences, boundries = ('', ''), out_length=None):
+    def encode_sentences(self, sentences, boundries=("", ""), out_length=None):
         """
         Encode a list of sentences using the trained model
 
@@ -288,22 +291,31 @@ class BaseTokenizer:
         """
         encodings = []
         for sent in sentences:
-            encoded = self.encode(boundries[0]+' '+sent+' '+boundries[1])
+            encoded = self.encode(boundries[0] + " " + sent + " " + boundries[1])
             encodings.append(encoded)
-        
+
         pad_id = self.encode(self.pad_token)[0]
 
         # pad to equal size from https://stackoverflow.com/a/38619333
-        encodings = np.array(list(itertools.zip_longest(*encodings, fillvalue=pad_id))).T
-        
+        encodings = np.array(
+            list(itertools.zip_longest(*encodings, fillvalue=pad_id))
+        ).T
+
         # increase pad if necessary
         if not (out_length is None):
             if out_length > encodings.shape[1]:
-                encodings = np.pad(encodings, [(0, 0), (0, out_length)],
-                constant_values = pad_id, mode = 'constant')
+                encodings = np.pad(
+                    encodings,
+                    [(0, 0), (0, out_length)],
+                    constant_values=pad_id,
+                    mode="constant",
+                )
         encodings = encodings[..., :out_length]
-        
+
         return encodings
+
+    def __str__(self):
+        return f"{self.__class__.__name__} tokenizer"
 
 
 class WordTokenizer(BaseTokenizer):
@@ -319,7 +331,7 @@ class WordTokenizer(BaseTokenizer):
         Args:
             file_path (str): file path for daaset
         """
-        
+
         print("Training WordTokenizer ...")
         self.vocab = self._truncate_dict(self._get_tokens_frequency(file_path))
         self.vocab_size = len(self.vocab)
@@ -412,7 +424,7 @@ class SentencePieceTokenizer(BaseTokenizer):
         """
         print("Training SentencePiece ...")
         self.model = io.BytesIO()
-        
+
         spm.SentencePieceTrainer.train(
             input=file_path,
             model_writer=self.model,
@@ -423,7 +435,7 @@ class SentencePieceTokenizer(BaseTokenizer):
             pad_id=1,
             bos_id=-1,
             eos_id=-1,
-            user_defined_symbols = self.special_tokens,
+            user_defined_symbols=self.special_tokens,
             normalization_rule_name="identity",
         )
         self.save_model("m.model")
@@ -461,7 +473,7 @@ class SentencePieceTokenizer(BaseTokenizer):
 
     def id_to_token(self, id):
         return self.sp.id_to_piece(int(id))
-    
+
     def token_to_id(self, token):
         return self.sp.piece_to_id(token)
 
@@ -497,6 +509,7 @@ class SentencePieceTokenizer(BaseTokenizer):
             str: detokenized string
         """
         return "".join(tokens).replace("▁", " ")
+
 
 class AutoTokenizer(BaseTokenizer):
     """ Auto tokenization using a saved dictionary 
@@ -559,8 +572,7 @@ class AutoTokenizer(BaseTokenizer):
 
 
 class RandomTokenizer(BaseTokenizer):
-    """ Randomized based tokenization 
-    """
+    """ Randomized based tokenization"""
 
     def train(self, file_path):
         """Train data using randomly splitted subwords 

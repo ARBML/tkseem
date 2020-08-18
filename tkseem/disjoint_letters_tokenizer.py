@@ -1,6 +1,7 @@
-import re
 import pickle
+import re
 from collections import defaultdict
+
 from .__base import BaseTokenizer
 
 
@@ -8,14 +9,13 @@ class DisjointLetterTokenizer(BaseTokenizer):
     """ Disjoint Letters based tokenization 
     """
 
-    def train(self):
+    def train(self, file_path):
         """Train data using disjoint letters
         """
         print("Training DisjointLetterTokenizer ...")
-        self._check_train_data_path()
         rx = re.compile(r"([اأإآءؤﻵﻹﻷدذرزو])")
 
-        text = open("data/raw/train.txt", "r").read()
+        text = open(file_path, "r").read()
         text = rx.sub(r"\1## ", text)
         text = text.replace("## ", " ##")
 
@@ -25,4 +25,3 @@ class DisjointLetterTokenizer(BaseTokenizer):
 
         self.vocab = self._truncate_dict(dict(tokens_frequency))
         self.vocab_size = len(self.vocab)
-

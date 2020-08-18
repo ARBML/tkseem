@@ -1,19 +1,15 @@
-import io
-import re
-import os
-import sys
 import mmap
+import os
 import pickle
-import random
-import operator
-import functools
-import numpy as np
-from tqdm import tqdm
+import sys
+from collections import Counter, defaultdict
 from pathlib import Path
-import sentencepiece as spm
-from collections import defaultdict, Counter
+
+import numpy as np
 from farasa.segmenter import FarasaSegmenter
-from .util import clean_data, normalize_data, split_on_binary
+from tqdm import tqdm
+
+from .util import split_on_binary
 
 
 class BaseTokenizer:
@@ -22,93 +18,23 @@ class BaseTokenizer:
     """
 
     def __init__(
-        self,
-        unk_token="<UNK>",
-        pad_token="<PAD>",
-        segment=False,
-        vocab_size=10000,
-        segm_token="+",
-        clean=False,
-        normalize=False,
+        self, unk_token="<UNK>", pad_token="<PAD>", vocab_size=10000, special_tokens=[],
     ):
         """Constructor
 
         Args:
             unk_token (str, optional): reserved token for unknowns. Defaults to "<UNK>".
             pad_token (str, optional): reserved token for padding. Defaults to "<PAD>".
-            segment (bool, optional): segment using farasa. Defaults to False.
             max_tokens (int, optional): max number of vocabulary. Defaults to 10000.
-            segm_token (str, optional): reserved token for segmentation. Defaults to '+'.
-            clean (bool, optional): remove tashkeel, english and special chars. Defaults to False.
-            normalize (bool, optional): normalize chars. Defaults to False.
         """
-        self.segm_token = segm_token
         self.vocab_size = vocab_size
         self.unk_token = unk_token
         self.pad_token = pad_token
-        self.segment = segment
-        self.clean = clean
-        self.normalize = normalize
-        self.vocab = None  # to be filled by child classes
+        self.special_tokens = special_tokens
 
-        # relative path
         self.rel_path = os.path.dirname(__file__)
-        norm_dict_path = os.path.join(
-            self.rel_path, "dictionaries/normalization_dictionary.pl"
-        )
         cach_dict_path = os.path.join(self.rel_path, "dictionaries/cached.pl")
-        self.norm_dict = pickle.load(open(norm_dict_path, "rb"))
         self.cached = pickle.load(open(cach_dict_path, "rb"))
-
-        if self.segment:
-            print("Initializing Farasa")
-            # suppress farasa stdout
-            # WARNING: this is LINUX ONLY command!
-            old_stdout = sys.stdout
-            sys.stdout = open(os.devnull, "w")
-            self.segmenter = FarasaSegmenter(interactive=True)
-            # resume farasa stdout
-            sys.stdout = old_stdout
-
-    def process_data(self, file_path):
-        """ 
-        Read, segment, clean, normalize and split
-
-        Args:
-            file_path (str): the directory of the data to read
-        
-        """
-        with open(file_path, "r") as f:
-            print("Reading the data ...")
-            self.corpus = f.read()
-
-        if self.segment:
-            print("Segmenting the data ...")
-            self.corpus = self.segmenter.segment(self.corpus)
-            self.corpus = re.sub(r"[+]", self.segm_token, self.corpus)
-
-        if self.clean:
-            print("Cleaning the data ...")
-            self.corpus = clean_data(self.corpus)
-
-        if self.normalize:
-            print("Normalizing the data ...")
-            self.corpus = normalize_data(self.corpus, self.norm_dict)
-
-        Path(f"data/raw").mkdir(parents=True, exist_ok=True)
-        # self.train_text, self.valid_text, self.test_text = self._split_corpus()
-        self._write_data(f"data/raw/train.txt", self.corpus)
-        # self._write_data("data/raw/valid.txt", self.valid_text)
-        # self._write_data("data/raw/test.txt", self.test_text)
-        # del self.train_text, self.valid_text, self.test_text
-        del self.corpus
-
-    def _check_train_data_path(self):
-        try:
-            os.path.exists("data/raw/train.txt")
-        except Exception as e:
-            print("data file is not there. You may use train() first.")
-            raise e
 
     def _get_tokens_frequency(self, file_path):
         """
@@ -165,26 +91,6 @@ class BaseTokenizer:
         
         """
         return open(path, "w").write(data)
-
-    # NOTE: this is depricated. Maybe we should delete it?
-    def _split_corpus(self):
-        """
-        Split the data into train, valid and test
-
-        Returns:
-            Tuple: train, valid, test
-        """
-        split_length = int(len(self.corpus) * 0.8)
-        trainval_text, test_text = (
-            self.corpus[:split_length],
-            self.corpus[split_length:],
-        )
-        split_length = int(len(trainval_text) * 0.8)
-        train_text, val_text = (
-            trainval_text[:split_length],
-            trainval_text[split_length:],
-        )
-        return train_text, val_text, test_text
 
     # I think these two functions should be in the util.
     def _split_word(self, word, number_of_subwords):
@@ -301,31 +207,6 @@ class BaseTokenizer:
         )
         return limited_tokens_frequency
 
-    def tokenize(self, text):
-        """Tokenize using the frequency dictionary 
-
-        Args:
-            text (str): input string
-
-        Returns:
-            list: generated tokens
-        """
-        output_tokens = self._tokenize_from_dict(text, self.vocab)
-        return output_tokens
-
-    def detokenize(self, tokens):
-        """ Convert tokens to a string
-
-        Args:
-            tokens (list): list of tokens
-
-        Returns:
-            str: detokenized string
-        """
-        # this is the common behaviour along all tokenizers
-        detokenized = "".join(tokens).replace("##", "")
-        return detokenized
-
     def load_model(self, file_path):
         """Load a saved model as a frequency dictionary
 
@@ -346,6 +227,31 @@ class BaseTokenizer:
             print("Saving as pickle file ...")
             pickle.dump(self.vocab, pickle_file)
 
+    def tokenize(self, text, cache=False):
+        """Tokenize using the frequency dictionary 
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: generated tokens
+        """
+        output_tokens = self._tokenize_from_dict(text, self.vocab, cache)
+        return output_tokens
+
+    def detokenize(self, tokens):
+        """ Convert tokens to a string
+
+        Args:
+            tokens (list): list of tokens
+
+        Returns:
+            str: detokenized string
+        """
+        # this is the common behaviour along all tokenizers
+        detokenized = "".join(tokens).replace("##", "")
+        return detokenized
+
     @property
     def tokens_list(self):
         """
@@ -357,6 +263,22 @@ class BaseTokenizer:
         if not self.vocab:
             raise NotImplementedError("Please train first to build the vocab list")
         return list(self.vocab.keys())
+
+    def token_to_id(self, piece):
+        """ Get tokens list
+
+        Returns:
+            list: tokens 
+        """
+        return list(self.vocab.keys()).index(piece)
+
+    def id_to_token(self, id):
+        """ Get tokens list
+
+        Returns:
+            list: tokens 
+        """
+        return list(self.vocab.keys())[id]
 
     def encode(self, text):
         """ Convert string to a list of ids
@@ -423,3 +345,6 @@ class BaseTokenizer:
                 encoded.append(self.tokens_list.index(current_token))
             encodings.append(encoded)
         return np.array(encodings)
+
+    def __str__(self):
+        return f"{self.__class__.__name__} tokenizer"

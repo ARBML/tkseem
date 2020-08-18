@@ -1,21 +1,20 @@
-import pickle
-import random
-import operator
 import functools
-from .__base import BaseTokenizer
+import operator
+import random
 from collections import defaultdict
+
+from .__base import BaseTokenizer
 
 
 class RandomTokenizer(BaseTokenizer):
     """ Randomized based tokenization 
     """
 
-    def train(self):
+    def train(self, file_path):
         """Train data using randomly splitted subwords 
         """
         print("Training RandomTokenizer ...")
-        self._check_train_data_path()
-        text = open("data/raw/train.txt", "r").read()
+        text = open(file_path, "r").read()
         self.vocab = self._truncate_dict(self._random_dict(text))
         self.vocab_size = len(self.vocab)
 

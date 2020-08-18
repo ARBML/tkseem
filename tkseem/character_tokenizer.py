@@ -1,6 +1,7 @@
-import re
 import pickle
+import re
 from collections import defaultdict
+
 from .__base import BaseTokenizer
 
 
@@ -8,14 +9,13 @@ class CharacterTokenizer(BaseTokenizer):
     """ Character based tokenization 
     """
 
-    def train(self):
+    def train(self, file_path):
         """Train data using characters 
         """
         print("Training CharacterTokenizer ...")
-        self._check_train_data_path()
         rx = re.compile(r"\B(.)")
 
-        text = open("data/raw/train.txt", "r").read()
+        text = open(file_path, "r").read()
         text = rx.sub(r" ##\1", text)
 
         tokens_frequency = defaultdict(int)
@@ -25,7 +25,7 @@ class CharacterTokenizer(BaseTokenizer):
         self.vocab = self._truncate_dict(dict(tokens_frequency))
         self.vocab_size = len(self.vocab)
 
-    def tokenize(self, text):
+    def tokenize(self, text, cache=False):
         """Tokenize using the frequency dictionary 
 
         Args:
@@ -42,6 +42,5 @@ class CharacterTokenizer(BaseTokenizer):
             if token in self.vocab:
                 output_tokens.append(token)
             else:
-                output_tokens.append(self.pad_token)
+                output_tokens.append(self.unk_token)
         return output_tokens
-

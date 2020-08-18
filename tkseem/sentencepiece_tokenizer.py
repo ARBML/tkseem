@@ -1,6 +1,7 @@
 import io
-import numpy as np
+
 import sentencepiece as spm
+
 from .__base import BaseTokenizer
 
 
@@ -8,17 +9,17 @@ class SentencePieceTokenizer(BaseTokenizer):
     """ Sentencepiece based tokenization. 
     """
 
-    def train(self, model_type="bpe"):
+    def train(self, file_path, model_type="bpe"):
         """ Train using sentence piece
 
         Args:
             model_type (str, optional): train using sp. Defaults to "bpe".
         """
-        print("Training SentencePiece...")
-        self._check_train_data_path()
+        print("Training SentencePiece ...")
         self.model = io.BytesIO()
+
         spm.SentencePieceTrainer.train(
-            input="data/raw/train.txt",
+            input=file_path,
             model_writer=self.model,
             vocab_size=self.vocab_size,
             model_type=model_type,
@@ -27,6 +28,7 @@ class SentencePieceTokenizer(BaseTokenizer):
             pad_id=1,
             bos_id=-1,
             eos_id=-1,
+            user_defined_symbols=self.special_tokens,
             normalization_rule_name="identity",
         )
         self.save_model("m.model")
@@ -62,6 +64,12 @@ class SentencePieceTokenizer(BaseTokenizer):
         with open(file_path, "wb") as f:
             f.write(self.model.getvalue())
 
+    def id_to_token(self, id):
+        return self.sp.id_to_piece(int(id))
+
+    def token_to_id(self, token):
+        return self.sp.piece_to_id(token)
+
     def encode(self, text):
         """ Convert string to a list of ids
 
@@ -95,24 +103,13 @@ class SentencePieceTokenizer(BaseTokenizer):
         """
         return "".join(tokens).replace("▁", " ")
 
-    def encode_sentences(self, sentences, max_length=20):
-        """Encode a list of sentences using the trained model
+    def detokenize(self, tokens):
+        """ Convert tokens to a string
 
         Args:
-            sentences (list): list of sentences
-            max_length (int, optional): specify the max length of encodings. Defaults to 100.
+            tokens (list): list of tokens
 
         Returns:
-            [np.array]: list of encoded sentences
+            str: detokenized string
         """
-        sparse_encodings = self.sp.encode(sentences, out_type=int)
-        encodings = []
-        for encoding in sparse_encodings:
-            curr_encoding = []
-            for i in range(max_length):
-                if i >= len(encoding):
-                    curr_encoding.append(self.sp.pad_id())
-                else:
-                    curr_encoding.append(encoding[i])
-            encodings.append(curr_encoding)
-        return np.array(encodings)
+        return "".join(tokens).replace("▁", " ")
