@@ -1,14 +1,8 @@
  <p align="center"> 
- <img src = "logo.png" width = "200px"/>
+ <img src = "https://raw.githubusercontent.com/ARBML/tkseem/master/logo.png" width = "200px"/>
  </p>
  
-**tkseem (تقسيم)** is a tokenization library that encapsulates different approaches for tokenization and preprocessing of Arabic text. We provide different preprocessing, cleaning, normalization and tokenization algorithms for Arabic text. 
-
-## Features
-* Cleaning
-* Normalization
-* Segmentation
-* Tokenization
+**tkseem (تقسيم)** is a tokenization library that encapsulates different approaches for tokenization and preprocessing of Arabic text. 
 
 ## Documentation 
 Please visit [readthedocs](https://tkseem.readthedocs.io/en/latest/index.html) for the full documentation. 
@@ -20,40 +14,20 @@ pip install tkseem
 
 ## Usage 
 
-### Preprocessors
-
-```python
-import tkseem as tk
-tokenizer = tk.WordTokenizer()
-tokenizer.process_data('samples/data.txt', clean = True, segment = True, normalize = True)
-```
 
 ### Tokenization
 <p align="center"> 
- <img src = "logo_tokenizers.png"/>
+ <img src = "https://raw.githubusercontent.com/ARBML/tkseem/master/logo_tokenizers.png"/>
  </p>
 
 ```python
 import tkseem as tk
 tokenizer = tk.WordTokenizer()
-tokenizer.process_data('samples/data.txt')
-tokenizer.train()
+tokenizer.train('samples/data.txt')
 
 tokenizer.tokenize("السلام عليكم")
 tokenizer.encode("السلام عليكم")
 tokenizer.decode([536, 829])
-```
-
-### Large Files
-```python
-import tkseem as tk
-
-# initialize
-tokenizer = tk.WordTokenizer()
-tokenizer.process_data('samples/data.txt')
-
-# training 
-tokenizer.train(large_file = True)
 ```
 
 ### Caching 
@@ -67,8 +41,7 @@ tokenizer.tokenize(open('data/raw/train.txt').read(), cache = True)
 import tkseem as tk
 
 tokenizer = tk.WordTokenizer()
-tokenizer.process_data('samples/data.txt')
-tokenizer.train()
+tokenizer.train('samples/data.txt')
 
 # save the model
 tokenizer.save_model('vocab.pl')
@@ -95,7 +68,6 @@ running_times = {}
 running_times['Word'] = calc_time(tk.WordTokenizer)
 running_times['SP'] = calc_time(tk.SentencePieceTokenizer)
 running_times['Random'] = calc_time(tk.RandomTokenizer)
-running_times['Auto'] = calc_time(tk.AutoTokenizer)
 running_times['Disjoint'] = calc_time(tk.DisjointLetterTokenizer)
 running_times['Char'] = calc_time(tk.CharacterTokenizer)
 ```
