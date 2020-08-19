@@ -103,6 +103,14 @@ We show how to use `tkseem` to train some nlp models.
     <img src="https://colab.research.google.com/assets/colab-badge.svg"  >
     </a></td>
   </tr>
+
+  <tr>
+    <td class="tg-yw4l">Translation</td>
+    <td class="tg-yw4l">Seq-to-seq model with attention. </td>
+    <td class="tg-yw4l"><a href="https://colab.research.google.com/github/ARBML/tkseem/blob/master/tasks/translation/translation.ipynb">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg"  >
+    </a></td>
+  </tr>
 <table>
 
 ## Citation
