@@ -2,7 +2,7 @@ import io
 
 import sentencepiece as spm
 
-from .__base import BaseTokenizer
+from ._base import BaseTokenizer
 
 
 class SentencePieceTokenizer(BaseTokenizer):

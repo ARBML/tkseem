@@ -3,7 +3,7 @@ import operator
 import random
 from collections import defaultdict
 
-from .__base import BaseTokenizer
+from ._base import BaseTokenizer
 
 
 class RandomTokenizer(BaseTokenizer):

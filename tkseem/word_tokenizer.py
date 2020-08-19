@@ -1,4 +1,4 @@
-from .__base import BaseTokenizer
+from ._base import BaseTokenizer
 
 
 class WordTokenizer(BaseTokenizer):

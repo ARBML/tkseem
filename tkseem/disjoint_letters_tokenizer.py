@@ -2,7 +2,7 @@ import pickle
 import re
 from collections import defaultdict
 
-from .__base import BaseTokenizer
+from ._base import BaseTokenizer
 
 
 class DisjointLetterTokenizer(BaseTokenizer):

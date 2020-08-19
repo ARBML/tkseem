@@ -1,7 +1,7 @@
 import os
 import pickle
 
-from .__base import BaseTokenizer
+from ._base import BaseTokenizer
 
 
 class MorphologicalTokenizer(BaseTokenizer):
