@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="AutoTokenizer" href="api/tkseem.tokenizers.AutoTokenizer.html" />
+    <link rel="next" title="CharacterTokenizer" href="api/tkseem.CharacterTokenizer.html" />
     <link rel="prev" title="Installation" href="install.html" /> 
 </head>
 
@@ -87,15 +87,14 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tokenizers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-tkseem.tokenizers">tkseem.tokenizers Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-tkseem">tkseem Package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.AutoTokenizer.html">AutoTokenizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.BaseTokenizer.html">BaseTokenizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.CharacterTokenizer.html">CharacterTokenizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.DisjointLetterTokenizer.html">DisjointLetterTokenizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.RandomTokenizer.html">RandomTokenizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.SentencePieceTokenizer.html">SentencePieceTokenizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="api/tkseem.tokenizers.WordTokenizer.html">WordTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.CharacterTokenizer.html">CharacterTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.DisjointLetterTokenizer.html">DisjointLetterTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.MorphologicalTokenizer.html">MorphologicalTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.RandomTokenizer.html">RandomTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.SentencePieceTokenizer.html">SentencePieceTokenizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/tkseem.WordTokenizer.html">WordTokenizer</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#class-inheritance-diagram">Class Inheritance Diagram</a></li>
@@ -197,8 +196,8 @@
 </style>
 <div class="section" id="tokenizers">
 <h1>tokenizers<a class="headerlink" href="#tokenizers" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-tkseem.tokenizers">
-<span id="tkseem-tokenizers-module"></span><h2>tkseem.tokenizers Module<a class="headerlink" href="#module-tkseem.tokenizers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-tkseem">
+<span id="tkseem-package"></span><h2>tkseem Package<a class="headerlink" href="#module-tkseem" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="classes">
 <h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
 <table class="longtable docutils align-default">
@@ -207,25 +206,22 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.tokenizers.AutoTokenizer.html#tkseem.tokenizers.AutoTokenizer" title="tkseem.tokenizers.AutoTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AutoTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
-<td><p>Auto tokenization using a saved dictionary</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/tkseem.tokenizers.BaseTokenizer.html#tkseem.tokenizers.BaseTokenizer" title="tkseem.tokenizers.BaseTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
-<td><p>Base Tokenizer that implements the basic functionalities of a tokenizer</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.tokenizers.CharacterTokenizer.html#tkseem.tokenizers.CharacterTokenizer" title="tkseem.tokenizers.CharacterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CharacterTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.CharacterTokenizer.html#tkseem.CharacterTokenizer" title="tkseem.CharacterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CharacterTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
 <td><p>Character based tokenization</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/tkseem.tokenizers.DisjointLetterTokenizer.html#tkseem.tokenizers.DisjointLetterTokenizer" title="tkseem.tokenizers.DisjointLetterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DisjointLetterTokenizer</span></code></a>([unk_token, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tkseem.DisjointLetterTokenizer.html#tkseem.DisjointLetterTokenizer" title="tkseem.DisjointLetterTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DisjointLetterTokenizer</span></code></a>([unk_token, …])</p></td>
 <td><p>Disjoint Letters based tokenization</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.tokenizers.RandomTokenizer.html#tkseem.tokenizers.RandomTokenizer" title="tkseem.tokenizers.RandomTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.MorphologicalTokenizer.html#tkseem.MorphologicalTokenizer" title="tkseem.MorphologicalTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MorphologicalTokenizer</span></code></a>([unk_token, …])</p></td>
+<td><p>Auto tokenization using a saved dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tkseem.RandomTokenizer.html#tkseem.RandomTokenizer" title="tkseem.RandomTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RandomTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
 <td><p>Randomized based tokenization</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/tkseem.tokenizers.SentencePieceTokenizer.html#tkseem.tokenizers.SentencePieceTokenizer" title="tkseem.tokenizers.SentencePieceTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SentencePieceTokenizer</span></code></a>([unk_token, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.SentencePieceTokenizer.html#tkseem.SentencePieceTokenizer" title="tkseem.SentencePieceTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SentencePieceTokenizer</span></code></a>([unk_token, …])</p></td>
 <td><p>Sentencepiece based tokenization.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/tkseem.tokenizers.WordTokenizer.html#tkseem.tokenizers.WordTokenizer" title="tkseem.tokenizers.WordTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WordTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/tkseem.WordTokenizer.html#tkseem.WordTokenizer" title="tkseem.WordTokenizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WordTokenizer</span></code></a>([unk_token, pad_token, …])</p></td>
 <td><p>White space based tokenization</p></td>
 </tr>
 </tbody>
@@ -233,16 +229,8 @@
 </div>
 <div class="section" id="class-inheritance-diagram">
 <h3>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this headline">¶</a></h3>
-<div class="graphviz"><img src="_images/inheritance-f0c661184a79f0c41de5891328e75e197286894b.png" alt="Inheritance diagram of tkseem.tokenizers.AutoTokenizer, tkseem.tokenizers.BaseTokenizer, tkseem.tokenizers.CharacterTokenizer, tkseem.tokenizers.DisjointLetterTokenizer, tkseem.tokenizers.RandomTokenizer, tkseem.tokenizers.SentencePieceTokenizer, tkseem.tokenizers.WordTokenizer" usemap="#inheritancef45b840721" class="inheritance graphviz" /></div>
-<map id="inheritancef45b840721" name="inheritancef45b840721">
-<area shape="rect" id="node1" href="api/tkseem.tokenizers.AutoTokenizer.html#tkseem.tokenizers.AutoTokenizer" target="_top" title="Auto tokenization using a saved dictionary" alt="" coords="201,5,314,31"/>
-<area shape="rect" id="node2" href="api/tkseem.tokenizers.BaseTokenizer.html#tkseem.tokenizers.BaseTokenizer" target="_top" title="Base Tokenizer that implements the basic functionalities of a tokenizer" alt="" coords="5,129,120,155"/>
-<area shape="rect" id="node3" href="api/tkseem.tokenizers.CharacterTokenizer.html#tkseem.tokenizers.CharacterTokenizer" target="_top" title="Character based tokenization" alt="" coords="184,55,331,80"/>
-<area shape="rect" id="node4" href="api/tkseem.tokenizers.DisjointLetterTokenizer.html#tkseem.tokenizers.DisjointLetterTokenizer" target="_top" title="Disjoint Letters based tokenization" alt="" coords="172,104,343,129"/>
-<area shape="rect" id="node5" href="api/tkseem.tokenizers.RandomTokenizer.html#tkseem.tokenizers.RandomTokenizer" target="_top" title="Randomized based tokenization" alt="" coords="189,153,326,179"/>
-<area shape="rect" id="node6" href="api/tkseem.tokenizers.SentencePieceTokenizer.html#tkseem.tokenizers.SentencePieceTokenizer" target="_top" title="Sentencepiece based tokenization." alt="" coords="168,203,347,228"/>
-<area shape="rect" id="node7" href="api/tkseem.tokenizers.WordTokenizer.html#tkseem.tokenizers.WordTokenizer" target="_top" title="White space based tokenization" alt="" coords="199,252,315,277"/>
-</map></div>
+<div class="graphviz"><img src="_images/inheritance-ec6b39e40bfc32b0c7c07f2a1cfd8eb1eccdccd4.png" alt="Inheritance diagram of tkseem.character_tokenizer.CharacterTokenizer, tkseem.disjoint_letters_tokenizer.DisjointLetterTokenizer, tkseem.morphological_tokenizer.MorphologicalTokenizer, tkseem.random_tokenizder.RandomTokenizer, tkseem.sentencepiece_tokenizer.SentencePieceTokenizer, tkseem.word_tokenizer.WordTokenizer" class="inheritance graphviz" /></div>
+</div>
 </div>
 </div>
 
@@ -254,7 +242,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="api/tkseem.tokenizers.AutoTokenizer.html" class="btn btn-neutral float-right" title="AutoTokenizer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="api/tkseem.CharacterTokenizer.html" class="btn btn-neutral float-right" title="CharacterTokenizer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

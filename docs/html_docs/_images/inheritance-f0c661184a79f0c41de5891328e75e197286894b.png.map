@@ -1,9 +1,0 @@
-<map id="inheritancef45b840721" name="inheritancef45b840721">
-<area shape="rect" id="node1" href="api/tkseem.tokenizers.AutoTokenizer.html#tkseem.tokenizers.AutoTokenizer" target="_top" title="Auto tokenization using a saved dictionary" alt="" coords="201,5,314,31"/>
-<area shape="rect" id="node2" href="api/tkseem.tokenizers.BaseTokenizer.html#tkseem.tokenizers.BaseTokenizer" target="_top" title="Base Tokenizer that implements the basic functionalities of a tokenizer" alt="" coords="5,129,120,155"/>
-<area shape="rect" id="node3" href="api/tkseem.tokenizers.CharacterTokenizer.html#tkseem.tokenizers.CharacterTokenizer" target="_top" title="Character based tokenization" alt="" coords="184,55,331,80"/>
-<area shape="rect" id="node4" href="api/tkseem.tokenizers.DisjointLetterTokenizer.html#tkseem.tokenizers.DisjointLetterTokenizer" target="_top" title="Disjoint Letters based tokenization" alt="" coords="172,104,343,129"/>
-<area shape="rect" id="node5" href="api/tkseem.tokenizers.RandomTokenizer.html#tkseem.tokenizers.RandomTokenizer" target="_top" title="Randomized based tokenization" alt="" coords="189,153,326,179"/>
-<area shape="rect" id="node6" href="api/tkseem.tokenizers.SentencePieceTokenizer.html#tkseem.tokenizers.SentencePieceTokenizer" target="_top" title="Sentencepiece based tokenization." alt="" coords="168,203,347,228"/>
-<area shape="rect" id="node7" href="api/tkseem.tokenizers.WordTokenizer.html#tkseem.tokenizers.WordTokenizer" target="_top" title="White space based tokenization" alt="" coords="199,252,315,277"/>
-</map>

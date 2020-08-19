@@ -1,0 +1,9 @@
+<map id="inheritance7a8300ccbd" name="inheritance7a8300ccbd">
+<area shape="rect" id="node1" title="Base Tokenizer that implements the basic functionalities of a tokenizer" alt="" coords="5,129,120,155"/>
+<area shape="rect" id="node2" title="Character based tokenization" alt="" coords="184,5,331,31"/>
+<area shape="rect" id="node3" title="Disjoint Letters based tokenization" alt="" coords="172,55,343,80"/>
+<area shape="rect" id="node4" title="Auto tokenization using a saved dictionary" alt="" coords="170,104,345,129"/>
+<area shape="rect" id="node5" title="Randomized based tokenization" alt="" coords="189,153,326,179"/>
+<area shape="rect" id="node6" title="Sentencepiece based tokenization." alt="" coords="168,203,347,228"/>
+<area shape="rect" id="node7" title="White space based tokenization" alt="" coords="199,252,315,277"/>
+</map>

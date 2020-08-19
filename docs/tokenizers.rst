@@ -1,4 +1,5 @@
 tokenizers
 ===========
-.. automodapi:: tkseem.tokenizers
-    :skip: Counter, Path, FarasaSegmenter, tqdm, defaultdict
+.. automodapi:: tkseem
+    :skip: Counter, Path, FarasaSegmenter, tqdm, defaultdict, tokenizers
+    :inherited-members:
