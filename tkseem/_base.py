@@ -198,6 +198,16 @@ class BaseTokenizer:
     #https://github.com/google-research/bert/blob/eedf5716ce1268e56f0a50264a88cafad334ac61/tokenization.py#L308
     def _tokenize_from_dict(self, text, freq_dict, use_cache, max_cache_size, max_word_size=20):
         """Tokenize using frequency based approach given a dictionary
+
+        Args:
+            text (str): text to tokenize
+            freq_dict (dict): a frequency dictionary
+            use_cache (bool): whether to use caching 
+            max_cache_size (int): max size for the caching dictionary
+            max_word_size (int, optional): max word size. Defaults to 20.
+
+        Returns:
+            [type]: [description]
         """
 
         output_tokens = []

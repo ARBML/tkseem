@@ -12,7 +12,11 @@ class RandomTokenizer(BaseTokenizer):
 
     def train(self, file_path):
         """Train data using randomly splitted subwords 
+
+        Args:
+            file_path (str): file to train 
         """
+        
         print("Training RandomTokenizer ...")
         text = open(file_path, "r").read()
         self.vocab = self._truncate_dict(self._random_dict(text))

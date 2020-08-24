@@ -10,7 +10,10 @@ class CharacterTokenizer(BaseTokenizer):
     """
 
     def train(self, file_path):
-        """Train data using characters 
+        """Train data using characters
+
+        Args:
+            file_path (str): file to train
         """
         print("Training CharacterTokenizer ...")
         rx = re.compile(r"\B(.)")
