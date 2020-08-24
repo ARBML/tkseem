@@ -196,29 +196,30 @@ class BaseTokenizer:
         return output_tokens
 
     #https://github.com/google-research/bert/blob/eedf5716ce1268e56f0a50264a88cafad334ac61/tokenization.py#L308
-    def _tokenize_from_dict(self, text, freq_dict, max_size=20):
+    def _tokenize_from_dict(self, text, freq_dict, use_cache, max_cache_size, max_word_size=20):
         """Tokenize using frequency based approach given a dictionary
-
-        Args:
-            text (str): input string
-            freq_dict (dict): frequency dictionary
-            cache (bool, optional): faster approach. Defaults to False.
-            max_size (int, optional): maximum word size. Defaults to 20.
-
-        Returns:
-            [type]: [description]
         """
 
         output_tokens = []
+        cache = {}
+        num_tokens = 0 
+        num_found_tokens = 0 
         for token in text.split():
+            num_tokens += 1
             chars = list(token)
-            if len(chars) > max_size:
+            if len(chars) > max_word_size:
                 output_tokens.append(self.unk_token)
                 continue
 
             is_bad = False
             start = 0
             sub_tokens = []
+
+            if use_cache:
+                if token in cache:
+                    output_tokens.extend(cache[token])
+                    num_found_tokens += 1
+                    continue
             while start < len(chars):
                 end = len(chars)
                 cur_substr = None
@@ -236,9 +237,12 @@ class BaseTokenizer:
                 sub_tokens.append(cur_substr)
                 start = end
             if is_bad:
-                output_tokens.append(self.unk_token)
-            else:
-                output_tokens.extend(sub_tokens)
+                sub_tokens = [self.unk_token]
+            output_tokens.extend(sub_tokens)           
+            if use_cache:
+                if len(cache) < max_cache_size:
+                    cache[token] = sub_tokens
+        # print('Percentage of cached tokens  = ', num_found_tokens/num_tokens)
         return output_tokens
 
     def _truncate_dict(self, freq_dict):
@@ -285,7 +289,7 @@ class BaseTokenizer:
         """
         return list(self.vocab.keys())[id]
 
-    def tokenize(self, text):
+    def tokenize(self, text, use_cache = False, max_cache_size = 1000):
         """Tokenize using the frequency dictionary 
 
         Args:
@@ -294,7 +298,7 @@ class BaseTokenizer:
         Returns:
             list: generated tokens
         """
-        output_tokens = self._tokenize_from_dict(text, self.vocab)
+        output_tokens = self._tokenize_from_dict(text, self.vocab, use_cache, max_cache_size = max_cache_size)
         return output_tokens
 
     def detokenize(self, tokens):
