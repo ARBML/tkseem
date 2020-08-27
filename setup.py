@@ -8,7 +8,7 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 setup(name='tkseem',
-      version='0.0.2',
+      version='0.0.3',
       url='https://github.com/MagedSaeed/tkseem',
       discription="Arabic Tokenization Library",
       long_description=readme,
