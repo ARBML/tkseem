@@ -1,17 +1,13 @@
-import mmap
 import os
+import sys
+import mmap
 import pickle
 import itertools
-import sys
-from collections import Counter, defaultdict
-from pathlib import Path
-
 import numpy as np
-from farasa.segmenter import FarasaSegmenter
 from tqdm import tqdm
-
+from pathlib import Path
 from .util import split_on_binary
-
+from collections import Counter, defaultdict
 
 class BaseTokenizer:
     """
@@ -24,15 +20,15 @@ class BaseTokenizer:
         """Constructor
 
         Args:
-            unk_token (str, optional): reserved token for unknowns. Defaults to "<UNK>".
-            pad_token (str, optional): reserved token for padding. Defaults to "<PAD>".
-            max_tokens (int, optional): max number of vocabulary. Defaults to 10000.
+            unk_token (str, optional): unkown symbol. Defaults to "<UNK>".
+            pad_token (str, optional): pad symbol. Defaults to "<PAD>".
+            vocab_size (int, optional): max vocab size. Defaults to 10000.
+            special_tokens (list, optional): user defined special tokens. Defaults to [].
         """
         self.vocab_size = vocab_size
         self.unk_token = unk_token
         self.pad_token = pad_token
         self.special_tokens = special_tokens
-
         self.rel_path = os.path.dirname(__file__)
         cach_dict_path = os.path.join(self.rel_path, "dictionaries/cached.pl")
         self.cached = pickle.load(open(cach_dict_path, "rb"))
@@ -67,17 +63,6 @@ class BaseTokenizer:
                     freq.update(cur_txt.split(" "))
                     pbar.update(1)
         return freq
-
-    def _write_data(self, path, data):
-        """
-        Write the string data to a path
-
-        Args:
-            file_path (str): the directory of the data to read
-        
-        """
-        # TOCHECK: I think this code will break if the path does not exist.
-        open(path, "w").write(data)
 
     def _get_tokens_frequency(self, file_path):
         """
@@ -292,21 +277,26 @@ class BaseTokenizer:
         return list(self.vocab.keys()).index(piece)
 
     def id_to_token(self, id):
-        """ Get tokens list
+        """convert id to token
+
+        Args:
+            id (int): input id
 
         Returns:
-            list: tokens 
+            str: token
         """
         return list(self.vocab.keys())[id]
 
     def tokenize(self, text, use_cache = False, max_cache_size = 1000):
-        """Tokenize using the frequency dictionary 
+        """tokenize
 
         Args:
-            text (str): input string
+            text (str): input text
+            use_cache (bool, optional): speed up using caching. Defaults to False.
+            max_cache_size (int, optional): max cacne size. Defaults to 1000.
 
         Returns:
-            list: generated tokens
+            list: output list of tokens
         """
         output_tokens = self._tokenize_from_dict(text, self.vocab, use_cache, max_cache_size = max_cache_size)
         return output_tokens
@@ -348,21 +338,13 @@ class BaseTokenizer:
         encoded = [self.token_to_id(token) for token in tokens]
         return encoded
 
-    def encode_and_save(self):
-        """
-        Encode all the files then save as numpy
-        """
-        Path("data/encoded").mkdir(parents=True, exist_ok=True)
-        for file_path in os.listdir("data/raw/"):
-            ids = self.encode(open(f"data/raw/{file_path}", "r").read())
-            np.save(f"data/encoded/{file_path[:-4]}.npy", ids)
-
     def encode_sentences(self, sentences, boundries=("", ""), out_length=None):
         """
         Encode a list of sentences using the trained model
 
         Args:
             sentences (list): list of sentences
+            boundries (tuple): boundries for each sentence. 
             out_length (int, optional): specify the max length of encodings. Defaults to 100.
 
         Returns:
