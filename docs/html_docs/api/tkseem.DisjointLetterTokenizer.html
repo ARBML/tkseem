@@ -237,7 +237,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#tkseem.DisjointLetterTokenizer.token_to_id" title="tkseem.DisjointLetterTokenizer.token_to_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">token_to_id</span></code></a>(piece)</p></td>
 <td><p>Get tokens list</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tkseem.DisjointLetterTokenizer.tokenize" title="tkseem.DisjointLetterTokenizer.tokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokenize</span></code></a>(text)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tkseem.DisjointLetterTokenizer.tokenize" title="tkseem.DisjointLetterTokenizer.tokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokenize</span></code></a>(text[, use_cache, max_cache_size])</p></td>
 <td><p>Tokenize using the frequency dictionary</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#tkseem.DisjointLetterTokenizer.train" title="tkseem.DisjointLetterTokenizer.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a>(file_path)</p></td>
@@ -343,7 +343,7 @@ out_length (int, optional): specify the max length of encodings. Defaults to 100
 
 <dl class="py method">
 <dt id="tkseem.DisjointLetterTokenizer.tokenize">
-<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tkseem.DisjointLetterTokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">use_cache</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_cache_size</span><span class="o">=</span><span class="default_value">1000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tkseem.DisjointLetterTokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tokenize using the frequency dictionary</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>text (str): input string</p>
@@ -357,6 +357,10 @@ out_length (int, optional): specify the max length of encodings. Defaults to 100
 <dt id="tkseem.DisjointLetterTokenizer.train">
 <code class="sig-name descname">train</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">file_path</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tkseem/disjoint_letters_tokenizer.html#DisjointLetterTokenizer.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tkseem.DisjointLetterTokenizer.train" title="Permalink to this definition">¶</a></dt>
 <dd><p>Train data using disjoint letters</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>file_path (str): file to train</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

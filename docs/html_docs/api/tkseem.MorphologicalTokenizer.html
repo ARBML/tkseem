@@ -237,7 +237,7 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#tkseem.MorphologicalTokenizer.token_to_id" title="tkseem.MorphologicalTokenizer.token_to_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">token_to_id</span></code></a>(piece)</p></td>
 <td><p>Get tokens list</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#tkseem.MorphologicalTokenizer.tokenize" title="tkseem.MorphologicalTokenizer.tokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokenize</span></code></a>(text)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#tkseem.MorphologicalTokenizer.tokenize" title="tkseem.MorphologicalTokenizer.tokenize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tokenize</span></code></a>(text[, use_cache, max_cache_size])</p></td>
 <td><p>Tokenize using the frequency dictionary</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#tkseem.MorphologicalTokenizer.train" title="tkseem.MorphologicalTokenizer.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a>()</p></td>
@@ -343,7 +343,7 @@ out_length (int, optional): specify the max length of encodings. Defaults to 100
 
 <dl class="py method">
 <dt id="tkseem.MorphologicalTokenizer.tokenize">
-<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tkseem.MorphologicalTokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">tokenize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">use_cache</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">max_cache_size</span><span class="o">=</span><span class="default_value">1000</span></em><span class="sig-paren">)</span><a class="headerlink" href="#tkseem.MorphologicalTokenizer.tokenize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tokenize using the frequency dictionary</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>text (str): input string</p>
