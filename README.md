@@ -32,7 +32,7 @@ tokenizer.decode([536, 829])
 
 ### Caching 
 ```python
-tokenizer.tokenize(open('data/raw/train.txt').read(), cache = True)
+tokenizer.tokenize(open('data/raw/train.txt').read(), use_cache = True)
 ```
 
 ### Save and Load
