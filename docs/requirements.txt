@@ -5,3 +5,4 @@ sentencepiece
 farasapy
 tqdm
 numpy
+sphinx>=3.1.2
