@@ -99,6 +99,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="meter classification.html">Poetry Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">Tranlsation</a></li>
 </ul>
 
             
@@ -422,7 +423,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Sentiment-Analysis">
 <h1>Sentiment Analysis<a class="headerlink" href="#Sentiment-Analysis" title="Permalink to this headline">¶</a></h1>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -431,8 +432,8 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -441,39 +442,10 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
---2020-08-01 18:09:58--  https://raw.githubusercontent.com/ARBML/tkseem/master/tasks/sentiment_analysis/sentiment/data.txt
-Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.36.133
-Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.36.133|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 122098 (119K) [text/plain]
-Saving to: ‘data.txt.1’
-
-data.txt.1          100%[===================&gt;] 119.24K   380KB/s    in 0.3s
-
-2020-08-01 18:10:00 (380 KB/s) - ‘data.txt.1’ saved [122098/122098]
-
---2020-08-01 18:10:00--  https://raw.githubusercontent.com/ARBML/tkseem/master/tasks/sentiment_analysis/sentiment/labels.txt
-Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.36.133
-Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.36.133|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 3999 (3.9K) [text/plain]
-Saving to: ‘labels.txt.1’
-
-labels.txt.1        100%[===================&gt;]   3.91K  --.-KB/s    in 0.009s
-
-2020-08-01 18:10:01 (417 KB/s) - ‘labels.txt.1’ saved [3999/3999]
-
-</pre></div></div>
-</div>
 <div class="section" id="Imports">
 <h2>Imports<a class="headerlink" href="#Imports" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -490,7 +462,7 @@ labels.txt.1        100%[===================&gt;]   3.91K  --.-KB/s    in 0.009s
 <div class="section" id="Process-data">
 <h2>Process data<a class="headerlink" href="#Process-data" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -515,7 +487,7 @@ Read data  [&#39;test_data.txt&#39;, &#39;test_lbls.txt&#39;, &#39;train_data.tx
 </pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -527,7 +499,7 @@ Read data  [&#39;test_data.txt&#39;, &#39;test_lbls.txt&#39;, &#39;train_data.tx
 <div class="section" id="Tokenize">
 <h2>Tokenize<a class="headerlink" href="#Tokenize" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -548,7 +520,7 @@ Training SentencePiece ...
 <div class="section" id="Tokenize-data">
 <h2>Tokenize data<a class="headerlink" href="#Tokenize-data" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -560,7 +532,7 @@ Training SentencePiece ...
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -576,7 +548,7 @@ Training SentencePiece ...
 <div class="section" id="Model">
 <h2>Model<a class="headerlink" href="#Model" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -594,7 +566,7 @@ Training SentencePiece ...
 <div class="section" id="Train">
 <h2>Train<a class="headerlink" href="#Train" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -608,36 +580,36 @@ Training SentencePiece ...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Epoch 1/12
-6/6 [==============================] - 1s 143ms/step - loss: 0.6928 - accuracy: 0.5111 - val_loss: 0.7008 - val_accuracy: 0.3625
+6/6 [==============================] - 3s 445ms/step - loss: 0.6936 - accuracy: 0.4986 - val_loss: 0.6990 - val_accuracy: 0.3625
 Epoch 2/12
-6/6 [==============================] - 0s 60ms/step - loss: 0.6867 - accuracy: 0.5611 - val_loss: 0.6947 - val_accuracy: 0.4250
+6/6 [==============================] - 2s 324ms/step - loss: 0.6883 - accuracy: 0.5097 - val_loss: 0.6986 - val_accuracy: 0.3625
 Epoch 3/12
-6/6 [==============================] - 0s 62ms/step - loss: 0.6788 - accuracy: 0.7153 - val_loss: 0.6863 - val_accuracy: 0.6375
+6/6 [==============================] - 1s 193ms/step - loss: 0.6827 - accuracy: 0.6139 - val_loss: 0.6890 - val_accuracy: 0.5875
 Epoch 4/12
-6/6 [==============================] - 0s 64ms/step - loss: 0.6631 - accuracy: 0.8361 - val_loss: 0.6758 - val_accuracy: 0.6625
+6/6 [==============================] - 2s 254ms/step - loss: 0.6706 - accuracy: 0.8222 - val_loss: 0.6814 - val_accuracy: 0.6625
 Epoch 5/12
-6/6 [==============================] - 0s 60ms/step - loss: 0.6355 - accuracy: 0.8944 - val_loss: 0.6683 - val_accuracy: 0.7000
+6/6 [==============================] - 1s 238ms/step - loss: 0.6473 - accuracy: 0.8861 - val_loss: 0.6730 - val_accuracy: 0.6875
 Epoch 6/12
-6/6 [==============================] - 0s 61ms/step - loss: 0.5879 - accuracy: 0.9153 - val_loss: 0.6526 - val_accuracy: 0.7000
+6/6 [==============================] - 1s 214ms/step - loss: 0.6117 - accuracy: 0.9014 - val_loss: 0.6543 - val_accuracy: 0.7125
 Epoch 7/12
-6/6 [==============================] - 0s 59ms/step - loss: 0.5109 - accuracy: 0.9250 - val_loss: 0.6102 - val_accuracy: 0.7250
+6/6 [==============================] - 2s 266ms/step - loss: 0.5536 - accuracy: 0.9167 - val_loss: 0.6210 - val_accuracy: 0.7500
 Epoch 8/12
-6/6 [==============================] - 0s 59ms/step - loss: 0.3984 - accuracy: 0.9361 - val_loss: 0.5761 - val_accuracy: 0.7500
+6/6 [==============================] - 1s 237ms/step - loss: 0.4579 - accuracy: 0.9347 - val_loss: 0.5906 - val_accuracy: 0.7500
 Epoch 9/12
-6/6 [==============================] - 0s 59ms/step - loss: 0.2610 - accuracy: 0.9597 - val_loss: 0.5285 - val_accuracy: 0.7500
+6/6 [==============================] - 1s 197ms/step - loss: 0.3353 - accuracy: 0.9500 - val_loss: 0.5605 - val_accuracy: 0.7375
 Epoch 10/12
-6/6 [==============================] - 0s 60ms/step - loss: 0.1533 - accuracy: 0.9653 - val_loss: 0.4715 - val_accuracy: 0.7875
+6/6 [==============================] - 1s 219ms/step - loss: 0.2050 - accuracy: 0.9639 - val_loss: 0.5069 - val_accuracy: 0.7625
 Epoch 11/12
-6/6 [==============================] - 0s 62ms/step - loss: 0.1143 - accuracy: 0.9639 - val_loss: 0.6957 - val_accuracy: 0.6875
+6/6 [==============================] - 1s 216ms/step - loss: 0.1315 - accuracy: 0.9694 - val_loss: 0.5215 - val_accuracy: 0.7250
 Epoch 12/12
-6/6 [==============================] - 0s 60ms/step - loss: 0.0767 - accuracy: 0.9819 - val_loss: 0.5714 - val_accuracy: 0.7500
+6/6 [==============================] - 1s 166ms/step - loss: 0.1063 - accuracy: 0.9625 - val_loss: 0.5699 - val_accuracy: 0.7125
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Test">
 <h2>Test<a class="headerlink" href="#Test" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -649,7 +621,7 @@ Epoch 12/12
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -663,8 +635,8 @@ Epoch 12/12
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-0.08256233
-0.88681066
+0.06951779
+0.89656436
 </pre></div></div>
 </div>
 </div>

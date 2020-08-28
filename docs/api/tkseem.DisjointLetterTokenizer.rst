@@ -13,7 +13,6 @@ DisjointLetterTokenizer
       ~DisjointLetterTokenizer.decode
       ~DisjointLetterTokenizer.detokenize
       ~DisjointLetterTokenizer.encode
-      ~DisjointLetterTokenizer.encode_and_save
       ~DisjointLetterTokenizer.encode_sentences
       ~DisjointLetterTokenizer.id_to_token
       ~DisjointLetterTokenizer.load_model
@@ -27,7 +26,6 @@ DisjointLetterTokenizer
    .. automethod:: decode
    .. automethod:: detokenize
    .. automethod:: encode
-   .. automethod:: encode_and_save
    .. automethod:: encode_sentences
    .. automethod:: id_to_token
    .. automethod:: load_model
