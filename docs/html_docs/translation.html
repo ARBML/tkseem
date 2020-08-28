@@ -766,7 +766,7 @@ Training SentencePiece ...
 </div>
 <p>Start training</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -799,13 +799,73 @@ Epoch 3 Batch 0 Loss 1.2111
 Epoch 3 Batch 100 Loss 1.4820
 Epoch 3 Batch 200 Loss 1.3912
 Epoch 3 Batch 300 Loss 1.4882
+Epoch 3 Batch 400 Loss 1.2942
+Epoch 3 Loss 1.3888
+Time taken for 1 epoch 1441.213187456131 sec
+
+Epoch 4 Batch 0 Loss 1.2663
+Epoch 4 Batch 100 Loss 1.3889
+Epoch 4 Batch 200 Loss 1.1667
+Epoch 4 Batch 300 Loss 1.2853
+Epoch 4 Batch 400 Loss 1.2746
+Epoch 4 Loss 1.2559
+Time taken for 1 epoch 1422.2563009262085 sec
+
+Epoch 5 Batch 0 Loss 1.1258
+Epoch 5 Batch 100 Loss 1.1021
+Epoch 5 Batch 200 Loss 1.1365
+Epoch 5 Batch 300 Loss 1.1450
+Epoch 5 Batch 400 Loss 1.3664
+Epoch 5 Loss 1.1176
+Time taken for 1 epoch 1378.149689912796 sec
+
+Epoch 6 Batch 0 Loss 0.9396
+Epoch 6 Batch 100 Loss 1.0216
+Epoch 6 Batch 200 Loss 1.1066
+Epoch 6 Batch 300 Loss 1.0084
+Epoch 6 Batch 400 Loss 1.1767
+Epoch 6 Loss 0.9732
+Time taken for 1 epoch 1328.8411734104156 sec
+
+Epoch 7 Batch 0 Loss 0.9608
+Epoch 7 Batch 100 Loss 0.8912
+Epoch 7 Batch 200 Loss 0.8274
+Epoch 7 Batch 300 Loss 0.8302
+Epoch 7 Batch 400 Loss 0.7896
+Epoch 7 Loss 0.8303
+Time taken for 1 epoch 1294.177453994751 sec
+
+Epoch 8 Batch 0 Loss 0.6882
+Epoch 8 Batch 100 Loss 0.6465
+Epoch 8 Batch 200 Loss 0.7108
+Epoch 8 Batch 300 Loss 0.7176
+Epoch 8 Batch 400 Loss 0.7323
+Epoch 8 Loss 0.7000
+Time taken for 1 epoch 1367.661788702011 sec
+
+Epoch 9 Batch 0 Loss 0.5313
+Epoch 9 Batch 100 Loss 0.4794
+Epoch 9 Batch 200 Loss 0.6126
+Epoch 9 Batch 300 Loss 0.6033
+Epoch 9 Batch 400 Loss 0.5891
+Epoch 9 Loss 0.5853
+Time taken for 1 epoch 1372.0978388786316 sec
+
+Epoch 10 Batch 0 Loss 0.5009
+Epoch 10 Batch 100 Loss 0.5200
+Epoch 10 Batch 200 Loss 0.4687
+Epoch 10 Batch 300 Loss 0.4556
+Epoch 10 Batch 400 Loss 0.4321
+Epoch 10 Loss 0.4802
+Time taken for 1 epoch 1334.807544708252 sec
+
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Test">
 <h2>Test<a class="headerlink" href="#Test" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -862,14 +922,171 @@ Epoch 3 Batch 300 Loss 1.4882
 </pre></div>
 </div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">translate</span><span class="p">(</span><span class="n">test_inp_text</span><span class="p">[:</span><span class="mi">50</span><span class="p">],</span> <span class="n">test_tar_text</span><span class="p">[:</span><span class="mi">50</span><span class="p">],</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+inpt:  حسنا هناك بنك لك
+pred:  Well there &#39; s the name for you
+true: Well there &#39; s a bank for you
+inpt:  ماذا حدث يا أبي
+pred:  What happened Dad
+true: What happened Father
+inpt:  حسنا لقد مرت أربع سنوات تقريبا
+pred:  Well I &#39; ll be years since
+true: Well it &#39; s almost four years now
+inpt:  هذا صحيح أليس كذلك ما
+pred:  That &#39; s right isn &#39; t it
+true: That &#39; s right ain &#39; t it Ma
+inpt:  أربع سنوات أربع سنوات 5 يونيو بنسلفانيا
+pred:  Four months years of the floor
+true: Four years Four years 5th June Pa
+inpt:  لم أستطع مواكبة المدفوعات
+pred:  I couldn &#39; t steal up for the prisoner &#39; s jewels
+true: I couldn &#39; t keep up the payments
+inpt:  تتذكره
+pred:  You remember him
+true: You remember him
+inpt:  راندي دنلاب
+pred:  The Potem oin the toxic ms
+true: Randy Dunlap
+inpt:  لحاء الشجر
+pred:  l journey less
+true: Bark
+inpt:  لذلك دخلت وطلب مني أن أجلس
+pred:  So he died and keep me to stop
+true: So I dropped in and he asked me to sit down
+inpt:  جورج هل تعرف ماذا كان يرتدي
+pred:  George do you know what was
+true: George do you know what he was wearing
+inpt:  كيمونو
+pred:  Kim was
+true: A kimono
+inpt:  لا
+pred:  No
+true: No
+inpt:  بلى
+pred:  Yeah
+true: Yeah
+inpt:  أوه الآن اللحاء
+pred:  Oh now &#39; s silly
+true: Oh now Bark
+inpt:  يجب أن يكون ثوب خلع الملابس
+pred:  The ve got a big room
+true: It must have been a dressing gown
+inpt:  أنا أعرف ثوب خلع الملابس عندما أراه
+pred:  I know the whole bedroom
+true: I know a dressing gown when I see it
+inpt:  كان كيمونو جورج
+pred:  He was amazing mom
+true: It was a kimono George
+inpt:  هل لفساتين الملابس الزهور على م
+pred:  Are you a rooster with the prisoner glasses
+true: Do dressing gowns have flowers on &#39; em
+inpt:  أوه اللحاء
+pred:  Oh Merna
+true: Oh Bark
+inpt:  لا مانع من ذلك يا أبي
+pred:  Don &#39; t mind who is my father
+true: Never mind that Father
+inpt:  ماذا قال
+pred:  What did he say
+true: What did he say
+inpt:  أوه لقد كان لطيفا بما فيه الكفاية
+pred:  Oh he &#39; s my mom enough
+true: Oh he was nice enough
+inpt:  أوه الآن اللحاء
+pred:  Oh now &#39; s silly
+true: Oh now Bark
+inpt:  نعم لقد فعل
+pred:  Yes he &#39; s done
+true: Yeah he did
+inpt:  كم من الوقت أعطاك يا أبي
+pred:  How long time is still Dad
+true: How much time did he give you Father
+inpt:  ستة أشهر
+pred:  Nine months
+true: Six months
+inpt:  يا حسنا إذن لا يوجد اندفاع فوري
+pred:  Oh Well uh we &#39; s no coffin
+true: Oh Oh well then there &#39; s no immediate rush
+inpt:  متى تصل الشهور الستة
+pred:  When did you a pot s I inquire
+true: When are the six months up
+inpt:  الثلاثاء
+pred:  Paper
+true: Tuesday
+inpt:  لكن ولكن لماذا لم تخبرنا عاجلا
+pred:  But but why didn &#39; t you stop them
+true: But but why didn &#39; t you tell us sooner
+inpt:  الثلاثاء
+pred:  Paper
+true: Tuesday
+inpt:  لا يعطينا الكثير من الوقت أليس كذلك
+pred:  Don &#39; t give them a lot of time is it
+true: Doesn &#39; t give us much time does it
+inpt:  أو
+pred:  Or
+true: Or
+inpt:  هذا صحيح
+pred:  That &#39; s right
+true: That &#39; s right
+inpt:  بالطبع
+pred:  Of course
+true: Oh sure
+inpt:  الذي أعطاك هذا اللباس جيش الخلاص
+pred:  The d put this place is a few weeks
+true: Who gave you that dress the Salvation Army
+inpt:  و
+pred:  And
+true: And uh
+inpt:  بلى
+pred:  Yeah
+true: Yeah
+inpt:  حسنا لا أستطيع فعل ذلك بمفردي
+pred:  Well I can &#39; t do it on your own
+true: Well I can &#39; t do it alone
+inpt:  لا إنها لم ترسل لنا البرتقالي
+pred:  No she &#39; s not your delicate ed and the Israelites
+true: No she &#39; s never even sent us an orange
+inpt:  نعم ولكن ماذا عن هارفي
+pred:  Yes but what brings about
+true: Yes but what about Harvey
+inpt:  أوه نحن لا نريد أن نسأل هارفي
+pred:  Oh we don &#39; t want to remember my mom
+true: Oh we wouldn &#39; t want to ask Harvey
+inpt:  أوه لا لن نسأل هارفي
+pred:  Oh no I wouldn &#39; t die
+true: Oh no we wouldn &#39; t ask Harvey
+inpt:  لا طلبنا من هارفي الزواج من نيلي
+pred:  Don &#39; t you caught my mom did you Rachel
+true: No we asked Harvey to marry Nellie
+inpt:  لا يمكننا أن نتوقع من الرجل أن يفعل أكثر من ذلك
+pred:  We can &#39; t we &#39; ve got a man can do that
+true: We can &#39; t expect the guy to do more than that
+inpt:  روبرت توقف عن الحديث بهذه الطريقة
+pred:  Elizabeth stop talking to the way
+true: Robert stop talking that way
+inpt:  قصها يا روبرت
+pred:  A spear it Robert
+true: Cut it out Robert
+inpt:  ليس لدي مجال لكلا منكما
+pred:  I haven &#39; t the whole world I &#39; re in
+true: I haven &#39; t room for both of you
+inpt:  لا يوجد سوى أريكة صغيرة في غرفة المعيشة
+pred:  There &#39; s nothing for a big tree in the street
+true: There &#39; s only a small couch in the living room
+</pre></div></div>
 </div>
 </div>
 </div>
