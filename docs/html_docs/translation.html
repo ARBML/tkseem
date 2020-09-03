@@ -1,0 +1,1148 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tranlsation &mdash; tkseem  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Poetry Classification" href="meter classification.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> tkseem
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tokenizers.html">Tokenizers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sentiment analysis.html">Sentiment Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meter classification.html">Poetry Classification</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tranlsation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Data-Preprocessing">Data Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Tokenization">Tokenization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Create-Dataset">Create Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Encoder,-Decoder">Encoder, Decoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Training-Procedure">Training Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Test">Test</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">tkseem</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Tranlsation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/translation.nblink.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="c1"># modified version from https://www.tensorflow.org/tutorials/text/nmt_with_attention</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Tranlsation">
+<h1>Tranlsation<a class="headerlink" href="#Tranlsation" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>wget https://raw.githubusercontent.com/ARBML/tkseem/master/tasks/translation/data/ar_data.txt
+<span class="o">!</span>wget https://raw.githubusercontent.com/ARBML/tkseem/master/tasks/translation/data/en_data.txt
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Will not apply HSTS. The HSTS database must be a regular and non-world-writable file.
+ERROR: could not open HSTS store at &#39;/home/zaid/.wget-hsts&#39;. HSTS will be disabled.
+--2020-08-28 14:49:14--  https://raw.githubusercontent.com/ARBML/tkseem/master/tasks/translation/data/ar_data.txt
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.112.133
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.112.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3705050 (3.5M) [text/plain]
+Saving to: ‘ar_data.txt’
+
+ar_data.txt         100%[===================&gt;]   3.53M   719KB/s    in 5.1s
+
+2020-08-28 14:49:21 (708 KB/s) - ‘ar_data.txt’ saved [3705050/3705050]
+
+Will not apply HSTS. The HSTS database must be a regular and non-world-writable file.
+ERROR: could not open HSTS store at &#39;/home/zaid/.wget-hsts&#39;. HSTS will be disabled.
+--2020-08-28 14:49:21--  https://raw.githubusercontent.com/ARBML/tkseem/master/tasks/translation/data/en_data.txt
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.112.133
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.112.133|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 2510593 (2.4M) [text/plain]
+Saving to: ‘en_data.txt’
+
+en_data.txt         100%[===================&gt;]   2.39M   588KB/s    in 4.2s
+
+2020-08-28 14:49:26 (588 KB/s) - ‘en_data.txt’ saved [2510593/2510593]
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">!</span>pip install tkseem
+<span class="o">!</span>pip install tnkeeh
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tkseem</span> <span class="k">as</span> <span class="nn">tk</span>
+<span class="kn">import</span> <span class="nn">tnkeeh</span> <span class="k">as</span> <span class="nn">tn</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="Data-Preprocessing">
+<h2>Data Preprocessing<a class="headerlink" href="#Data-Preprocessing" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">tn</span><span class="o">.</span><span class="n">clean_data</span><span class="p">(</span><span class="s1">&#39;ar_data.txt&#39;</span><span class="p">,</span><span class="s1">&#39;ar_clean_data.txt&#39;</span><span class="p">,</span> <span class="n">remove_diacritics</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tn</span><span class="o">.</span><span class="n">clean_data</span><span class="p">(</span><span class="s1">&#39;en_data.txt&#39;</span><span class="p">,</span><span class="s1">&#39;en_clean_data.txt&#39;</span><span class="p">)</span>
+
+<span class="n">tn</span><span class="o">.</span><span class="n">split_parallel_data</span><span class="p">(</span><span class="s1">&#39;ar_clean_data.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;en_clean_data.txt&#39;</span><span class="p">,</span> <span class="n">split_ratio</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">train_inp_text</span><span class="p">,</span> <span class="n">train_tar_text</span><span class="p">,</span> <span class="n">test_inp_text</span><span class="p">,</span> <span class="n">test_tar_text</span> <span class="o">=</span> <span class="n">tn</span><span class="o">.</span><span class="n">read_data</span><span class="p">(</span><span class="n">mode</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Remove diacritics
+Remove Tatweel
+Saving to ar_clean_data.txt
+Remove Tatweel
+Saving to en_clean_data.txt
+Split data
+Save to data
+Read data  [&#39;ar_data.txt&#39;, &#39;en_data.txt&#39;, &#39;test_inp_data.txt&#39;, &#39;test_tar_data.txt&#39;, &#39;train_inp_data.txt&#39;, &#39;train_tar_data.txt&#39;]
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Tokenization">
+<h2>Tokenization<a class="headerlink" href="#Tokenization" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">ar_tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">SentencePieceTokenizer</span><span class="p">(</span><span class="n">special_tokens</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;&lt;s&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;/s&gt;&#39;</span><span class="p">])</span>
+<span class="n">ar_tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="s1">&#39;data/train_inp_data.txt&#39;</span><span class="p">)</span>
+
+<span class="n">en_tokenizer</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">SentencePieceTokenizer</span><span class="p">(</span><span class="n">special_tokens</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;&lt;s&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;/s&gt;&#39;</span><span class="p">])</span>
+<span class="n">en_tokenizer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="s1">&#39;data/train_tar_data.txt&#39;</span><span class="p">)</span>
+
+<span class="n">train_inp_data</span> <span class="o">=</span> <span class="n">ar_tokenizer</span><span class="o">.</span><span class="n">encode_sentences</span><span class="p">(</span><span class="n">train_inp_text</span><span class="p">,</span> <span class="n">boundries</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&lt;s&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;/s&gt;&#39;</span><span class="p">))</span>
+<span class="n">train_tar_data</span> <span class="o">=</span> <span class="n">en_tokenizer</span><span class="o">.</span><span class="n">encode_sentences</span><span class="p">(</span><span class="n">train_tar_text</span><span class="p">,</span> <span class="n">boundries</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&lt;s&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;/s&gt;&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Training SentencePiece ...
+Training SentencePiece ...
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Create-Dataset">
+<h2>Create Dataset<a class="headerlink" href="#Create-Dataset" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">BATCH_SIZE</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">BUFFER_SIZE</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_inp_data</span><span class="p">)</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_tensor_slices</span><span class="p">((</span><span class="n">train_inp_data</span><span class="p">,</span> <span class="n">train_tar_data</span><span class="p">))</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">BUFFER_SIZE</span><span class="p">)</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">batch</span><span class="p">(</span><span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="n">drop_remainder</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Encoder,-Decoder">
+<h2>Encoder, Decoder<a class="headerlink" href="#Encoder,-Decoder" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">class</span> <span class="nc">Encoder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span> <span class="n">enc_units</span><span class="p">,</span> <span class="n">batch_sz</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Encoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_sz</span> <span class="o">=</span> <span class="n">batch_sz</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enc_units</span> <span class="o">=</span> <span class="n">enc_units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gru</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">GRU</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enc_units</span><span class="p">,</span>
+                                       <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                       <span class="n">return_state</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                       <span class="n">recurrent_initializer</span><span class="o">=</span><span class="s1">&#39;glorot_uniform&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">hidden</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">output</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">initial_state</span> <span class="o">=</span> <span class="n">hidden</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">initialize_hidden_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_sz</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">enc_units</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">BahdanauAttention</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">units</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BahdanauAttention</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">W2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="c1"># query hidden state shape == (batch_size, hidden size)</span>
+        <span class="c1"># query_with_time_axis shape == (batch_size, 1, hidden size)</span>
+        <span class="c1"># values shape == (batch_size, max_len, hidden size)</span>
+        <span class="c1"># we are doing this to broadcast addition along the time axis to calculate the score</span>
+        <span class="n">query_with_time_axis</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># score shape == (batch_size, max_length, 1)</span>
+        <span class="c1"># we get 1 at the last axis because we are applying score to self.V</span>
+        <span class="c1"># the shape of the tensor before applying self.V is (batch_size, max_length, units)</span>
+        <span class="n">score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">W1</span><span class="p">(</span><span class="n">query_with_time_axis</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">W2</span><span class="p">(</span><span class="n">values</span><span class="p">)))</span>
+
+        <span class="c1"># attention_weights shape == (batch_size, max_length, 1)</span>
+        <span class="n">attention_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># context_vector shape after sum == (batch_size, hidden_size)</span>
+        <span class="n">context_vector</span> <span class="o">=</span> <span class="n">attention_weights</span> <span class="o">*</span> <span class="n">values</span>
+        <span class="n">context_vector</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">context_vector</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">context_vector</span><span class="p">,</span> <span class="n">attention_weights</span>
+
+<span class="k">class</span> <span class="nc">Decoder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span> <span class="n">dec_units</span><span class="p">,</span> <span class="n">batch_sz</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Decoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_sz</span> <span class="o">=</span> <span class="n">batch_sz</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dec_units</span> <span class="o">=</span> <span class="n">dec_units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gru</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">GRU</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dec_units</span><span class="p">,</span>
+                                       <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                       <span class="n">return_state</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                       <span class="n">recurrent_initializer</span><span class="o">=</span><span class="s1">&#39;glorot_uniform&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">)</span>
+
+        <span class="c1"># used for attention</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention</span> <span class="o">=</span> <span class="n">BahdanauAttention</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dec_units</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">hidden</span><span class="p">,</span> <span class="n">enc_output</span><span class="p">):</span>
+        <span class="c1"># enc_output shape == (batch_size, max_length, hidden_size)</span>
+        <span class="n">context_vector</span><span class="p">,</span> <span class="n">attention_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">enc_output</span><span class="p">)</span>
+
+        <span class="c1"># x shape after passing through embedding == (batch_size, 1, embedding_dim)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># x shape after concatenation == (batch_size, 1, embedding_dim + hidden_size)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">context_vector</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">x</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># passing the concatenated vector to the GRU</span>
+        <span class="n">output</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gru</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1"># output shape == (batch_size * 1, hidden_size)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+
+        <span class="c1"># output shape == (batch_size, vocab)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">attention_weights</span>
+
+
+
+<span class="k">def</span> <span class="nf">get_loss_object</span><span class="p">():</span>
+    <span class="k">return</span>  <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">losses</span><span class="o">.</span><span class="n">SparseCategoricalCrossentropy</span><span class="p">(</span><span class="n">from_logits</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">loss_function</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">math</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">loss_</span> <span class="o">=</span> <span class="n">get_loss_object</span><span class="p">()(</span><span class="n">real</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">loss_</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">loss_</span> <span class="o">*=</span> <span class="n">mask</span>
+
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">loss_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>Initialize models</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">units</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">embedding_dim</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">max_length_inp</span> <span class="o">=</span> <span class="n">train_inp_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">max_length_tar</span> <span class="o">=</span> <span class="n">train_tar_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">steps_per_epoch</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_inp_data</span><span class="p">)</span><span class="o">//</span><span class="n">BATCH_SIZE</span>
+<span class="n">vocab_inp_size</span> <span class="o">=</span> <span class="n">ar_tokenizer</span><span class="o">.</span><span class="n">vocab_size</span>
+<span class="n">vocab_tar_size</span> <span class="o">=</span> <span class="n">en_tokenizer</span><span class="o">.</span><span class="n">vocab_size</span>
+
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">Encoder</span><span class="p">(</span><span class="n">vocab_inp_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">)</span>
+<span class="n">decoder</span> <span class="o">=</span> <span class="n">Decoder</span><span class="p">(</span><span class="n">vocab_tar_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">,</span> <span class="n">units</span><span class="p">,</span> <span class="n">BATCH_SIZE</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="Training-Procedure">
+<h2>Training Procedure<a class="headerlink" href="#Training-Procedure" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
+<span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">targ</span><span class="p">,</span> <span class="n">enc_hidden</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">en_tokenizer</span><span class="p">):</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">tape</span><span class="p">:</span>
+        <span class="n">enc_output</span><span class="p">,</span> <span class="n">enc_hidden</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">enc_hidden</span><span class="p">)</span>
+
+        <span class="n">dec_hidden</span> <span class="o">=</span> <span class="n">enc_hidden</span>
+
+        <span class="n">dec_input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">([</span><span class="n">en_tokenizer</span><span class="o">.</span><span class="n">token_to_id</span><span class="p">(</span><span class="s1">&#39;&lt;s&gt;&#39;</span><span class="p">)]</span> <span class="o">*</span> <span class="n">BATCH_SIZE</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Teacher forcing - feeding the target as the next input</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">targ</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="c1"># passing enc_output to the decoder</span>
+            <span class="n">predictions</span><span class="p">,</span> <span class="n">dec_hidden</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">dec_input</span><span class="p">,</span> <span class="n">dec_hidden</span><span class="p">,</span> <span class="n">enc_output</span><span class="p">)</span>
+
+            <span class="n">loss</span> <span class="o">+=</span> <span class="n">loss_function</span><span class="p">(</span><span class="n">targ</span><span class="p">[:,</span> <span class="n">t</span><span class="p">],</span> <span class="n">predictions</span><span class="p">)</span>
+
+            <span class="c1"># using teacher forcing</span>
+            <span class="n">dec_input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">targ</span><span class="p">[:,</span> <span class="n">t</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">batch_loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">loss</span> <span class="o">/</span> <span class="nb">int</span><span class="p">(</span><span class="n">targ</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="n">variables</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">trainable_variables</span> <span class="o">+</span> <span class="n">decoder</span><span class="o">.</span><span class="n">trainable_variables</span>
+
+    <span class="n">gradients</span> <span class="o">=</span> <span class="n">tape</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">variables</span><span class="p">)</span>
+
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">gradients</span><span class="p">,</span> <span class="n">variables</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">batch_loss</span>
+
+<span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">epochs</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">):</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">Adam</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+        <span class="n">enc_hidden</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">initialize_hidden_state</span><span class="p">()</span>
+        <span class="n">total_loss</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">targ</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">steps_per_epoch</span><span class="p">)):</span>
+            <span class="n">batch_loss</span> <span class="o">=</span> <span class="n">train_step</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">targ</span><span class="p">,</span> <span class="n">enc_hidden</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">en_tokenizer</span><span class="p">)</span>
+            <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">batch_loss</span>
+
+            <span class="k">if</span> <span class="n">batch</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Epoch </span><span class="si">{}</span><span class="s1"> Batch </span><span class="si">{}</span><span class="s1"> Loss </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                                           <span class="n">batch</span><span class="p">,</span>
+                                                           <span class="n">batch_loss</span><span class="o">.</span><span class="n">numpy</span><span class="p">()))</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Epoch </span><span class="si">{}</span><span class="s1"> Loss </span><span class="si">{:.4f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                              <span class="n">total_loss</span> <span class="o">/</span> <span class="n">steps_per_epoch</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time taken for 1 epoch </span><span class="si">{}</span><span class="s1"> sec</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<p>Start training</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">train</span><span class="p">(</span><span class="n">epochs</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Epoch 1 Batch 0 Loss 8.7736
+Epoch 1 Batch 100 Loss 2.1184
+Epoch 1 Batch 200 Loss 1.7768
+Epoch 1 Batch 300 Loss 1.7248
+Epoch 1 Batch 400 Loss 1.6401
+Epoch 1 Loss 2.0055
+Time taken for 1 epoch 1444.5116345882416 sec
+
+Epoch 2 Batch 0 Loss 1.6100
+Epoch 2 Batch 100 Loss 1.5598
+Epoch 2 Batch 200 Loss 1.5922
+Epoch 2 Batch 300 Loss 1.5228
+Epoch 2 Batch 400 Loss 1.4033
+Epoch 2 Loss 1.5530
+Time taken for 1 epoch 1424.0314059257507 sec
+
+Epoch 3 Batch 0 Loss 1.2111
+Epoch 3 Batch 100 Loss 1.4820
+Epoch 3 Batch 200 Loss 1.3912
+Epoch 3 Batch 300 Loss 1.4882
+Epoch 3 Batch 400 Loss 1.2942
+Epoch 3 Loss 1.3888
+Time taken for 1 epoch 1441.213187456131 sec
+
+Epoch 4 Batch 0 Loss 1.2663
+Epoch 4 Batch 100 Loss 1.3889
+Epoch 4 Batch 200 Loss 1.1667
+Epoch 4 Batch 300 Loss 1.2853
+Epoch 4 Batch 400 Loss 1.2746
+Epoch 4 Loss 1.2559
+Time taken for 1 epoch 1422.2563009262085 sec
+
+Epoch 5 Batch 0 Loss 1.1258
+Epoch 5 Batch 100 Loss 1.1021
+Epoch 5 Batch 200 Loss 1.1365
+Epoch 5 Batch 300 Loss 1.1450
+Epoch 5 Batch 400 Loss 1.3664
+Epoch 5 Loss 1.1176
+Time taken for 1 epoch 1378.149689912796 sec
+
+Epoch 6 Batch 0 Loss 0.9396
+Epoch 6 Batch 100 Loss 1.0216
+Epoch 6 Batch 200 Loss 1.1066
+Epoch 6 Batch 300 Loss 1.0084
+Epoch 6 Batch 400 Loss 1.1767
+Epoch 6 Loss 0.9732
+Time taken for 1 epoch 1328.8411734104156 sec
+
+Epoch 7 Batch 0 Loss 0.9608
+Epoch 7 Batch 100 Loss 0.8912
+Epoch 7 Batch 200 Loss 0.8274
+Epoch 7 Batch 300 Loss 0.8302
+Epoch 7 Batch 400 Loss 0.7896
+Epoch 7 Loss 0.8303
+Time taken for 1 epoch 1294.177453994751 sec
+
+Epoch 8 Batch 0 Loss 0.6882
+Epoch 8 Batch 100 Loss 0.6465
+Epoch 8 Batch 200 Loss 0.7108
+Epoch 8 Batch 300 Loss 0.7176
+Epoch 8 Batch 400 Loss 0.7323
+Epoch 8 Loss 0.7000
+Time taken for 1 epoch 1367.661788702011 sec
+
+Epoch 9 Batch 0 Loss 0.5313
+Epoch 9 Batch 100 Loss 0.4794
+Epoch 9 Batch 200 Loss 0.6126
+Epoch 9 Batch 300 Loss 0.6033
+Epoch 9 Batch 400 Loss 0.5891
+Epoch 9 Loss 0.5853
+Time taken for 1 epoch 1372.0978388786316 sec
+
+Epoch 10 Batch 0 Loss 0.5009
+Epoch 10 Batch 100 Loss 0.5200
+Epoch 10 Batch 200 Loss 0.4687
+Epoch 10 Batch 300 Loss 0.4556
+Epoch 10 Batch 400 Loss 0.4321
+Epoch 10 Loss 0.4802
+Time taken for 1 epoch 1334.807544708252 sec
+
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Test">
+<h2>Test<a class="headerlink" href="#Test" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="n">sentence</span><span class="p">):</span>
+    <span class="n">attention_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">max_length_tar</span><span class="p">,</span> <span class="n">max_length_inp</span><span class="p">))</span>
+
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">ar_tokenizer</span><span class="o">.</span><span class="n">encode_sentences</span><span class="p">([</span><span class="n">sentence</span><span class="p">],</span> <span class="n">boundries</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;&lt;s&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;/s&gt;&#39;</span><span class="p">),</span>
+                                  <span class="n">out_length</span> <span class="o">=</span> <span class="n">max_length_inp</span><span class="p">)</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">convert_to_tensor</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="n">hidden</span> <span class="o">=</span> <span class="p">[</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">units</span><span class="p">))]</span>
+    <span class="n">enc_out</span><span class="p">,</span> <span class="n">enc_hidden</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">hidden</span><span class="p">)</span>
+
+    <span class="n">dec_hidden</span> <span class="o">=</span> <span class="n">enc_hidden</span>
+    <span class="n">dec_input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">([</span><span class="n">en_tokenizer</span><span class="o">.</span><span class="n">token_to_id</span><span class="p">(</span><span class="s1">&#39;&lt;s&gt;&#39;</span><span class="p">)],</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_length_tar</span><span class="p">):</span>
+        <span class="n">predictions</span><span class="p">,</span> <span class="n">dec_hidden</span><span class="p">,</span> <span class="n">attention_weights</span> <span class="o">=</span> <span class="n">decoder</span><span class="p">(</span><span class="n">dec_input</span><span class="p">,</span>
+                                                             <span class="n">dec_hidden</span><span class="p">,</span>
+                                                             <span class="n">enc_out</span><span class="p">)</span>
+
+        <span class="c1"># storing the attention weights to plot later on</span>
+        <span class="n">attention_weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">attention_weights</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">))</span>
+        <span class="n">attention_plot</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">attention_weights</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+        <span class="n">predicted_id</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">+=</span> <span class="n">en_tokenizer</span><span class="o">.</span><span class="n">id_to_token</span><span class="p">(</span><span class="n">predicted_id</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span>
+
+        <span class="k">if</span> <span class="n">en_tokenizer</span><span class="o">.</span><span class="n">id_to_token</span><span class="p">(</span><span class="n">predicted_id</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;&lt;/s&gt;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">sentence</span>
+
+        <span class="c1"># the predicted ID is fed back into the model</span>
+        <span class="n">dec_input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">([</span><span class="n">predicted_id</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">sentence</span>
+
+<span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="n">sentences</span><span class="p">,</span> <span class="n">translations</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">sentences</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sentences</span><span class="p">):</span>
+        <span class="n">result</span><span class="p">,</span> <span class="n">sentence</span> <span class="o">=</span> <span class="n">evaluate</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">ar_tokenizer</span><span class="o">.</span><span class="n">detokenize</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;s&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;/s&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; +&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;inpt: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sentence</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pred: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;true: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">translations</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">translate</span><span class="p">(</span><span class="n">test_inp_text</span><span class="p">[:</span><span class="mi">50</span><span class="p">],</span> <span class="n">test_tar_text</span><span class="p">[:</span><span class="mi">50</span><span class="p">],</span> <span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+inpt:  حسنا هناك بنك لك
+pred:  Well there &#39; s the name for you
+true: Well there &#39; s a bank for you
+inpt:  ماذا حدث يا أبي
+pred:  What happened Dad
+true: What happened Father
+inpt:  حسنا لقد مرت أربع سنوات تقريبا
+pred:  Well I &#39; ll be years since
+true: Well it &#39; s almost four years now
+inpt:  هذا صحيح أليس كذلك ما
+pred:  That &#39; s right isn &#39; t it
+true: That &#39; s right ain &#39; t it Ma
+inpt:  أربع سنوات أربع سنوات 5 يونيو بنسلفانيا
+pred:  Four months years of the floor
+true: Four years Four years 5th June Pa
+inpt:  لم أستطع مواكبة المدفوعات
+pred:  I couldn &#39; t steal up for the prisoner &#39; s jewels
+true: I couldn &#39; t keep up the payments
+inpt:  تتذكره
+pred:  You remember him
+true: You remember him
+inpt:  راندي دنلاب
+pred:  The Potem oin the toxic ms
+true: Randy Dunlap
+inpt:  لحاء الشجر
+pred:  l journey less
+true: Bark
+inpt:  لذلك دخلت وطلب مني أن أجلس
+pred:  So he died and keep me to stop
+true: So I dropped in and he asked me to sit down
+inpt:  جورج هل تعرف ماذا كان يرتدي
+pred:  George do you know what was
+true: George do you know what he was wearing
+inpt:  كيمونو
+pred:  Kim was
+true: A kimono
+inpt:  لا
+pred:  No
+true: No
+inpt:  بلى
+pred:  Yeah
+true: Yeah
+inpt:  أوه الآن اللحاء
+pred:  Oh now &#39; s silly
+true: Oh now Bark
+inpt:  يجب أن يكون ثوب خلع الملابس
+pred:  The ve got a big room
+true: It must have been a dressing gown
+inpt:  أنا أعرف ثوب خلع الملابس عندما أراه
+pred:  I know the whole bedroom
+true: I know a dressing gown when I see it
+inpt:  كان كيمونو جورج
+pred:  He was amazing mom
+true: It was a kimono George
+inpt:  هل لفساتين الملابس الزهور على م
+pred:  Are you a rooster with the prisoner glasses
+true: Do dressing gowns have flowers on &#39; em
+inpt:  أوه اللحاء
+pred:  Oh Merna
+true: Oh Bark
+inpt:  لا مانع من ذلك يا أبي
+pred:  Don &#39; t mind who is my father
+true: Never mind that Father
+inpt:  ماذا قال
+pred:  What did he say
+true: What did he say
+inpt:  أوه لقد كان لطيفا بما فيه الكفاية
+pred:  Oh he &#39; s my mom enough
+true: Oh he was nice enough
+inpt:  أوه الآن اللحاء
+pred:  Oh now &#39; s silly
+true: Oh now Bark
+inpt:  نعم لقد فعل
+pred:  Yes he &#39; s done
+true: Yeah he did
+inpt:  كم من الوقت أعطاك يا أبي
+pred:  How long time is still Dad
+true: How much time did he give you Father
+inpt:  ستة أشهر
+pred:  Nine months
+true: Six months
+inpt:  يا حسنا إذن لا يوجد اندفاع فوري
+pred:  Oh Well uh we &#39; s no coffin
+true: Oh Oh well then there &#39; s no immediate rush
+inpt:  متى تصل الشهور الستة
+pred:  When did you a pot s I inquire
+true: When are the six months up
+inpt:  الثلاثاء
+pred:  Paper
+true: Tuesday
+inpt:  لكن ولكن لماذا لم تخبرنا عاجلا
+pred:  But but why didn &#39; t you stop them
+true: But but why didn &#39; t you tell us sooner
+inpt:  الثلاثاء
+pred:  Paper
+true: Tuesday
+inpt:  لا يعطينا الكثير من الوقت أليس كذلك
+pred:  Don &#39; t give them a lot of time is it
+true: Doesn &#39; t give us much time does it
+inpt:  أو
+pred:  Or
+true: Or
+inpt:  هذا صحيح
+pred:  That &#39; s right
+true: That &#39; s right
+inpt:  بالطبع
+pred:  Of course
+true: Oh sure
+inpt:  الذي أعطاك هذا اللباس جيش الخلاص
+pred:  The d put this place is a few weeks
+true: Who gave you that dress the Salvation Army
+inpt:  و
+pred:  And
+true: And uh
+inpt:  بلى
+pred:  Yeah
+true: Yeah
+inpt:  حسنا لا أستطيع فعل ذلك بمفردي
+pred:  Well I can &#39; t do it on your own
+true: Well I can &#39; t do it alone
+inpt:  لا إنها لم ترسل لنا البرتقالي
+pred:  No she &#39; s not your delicate ed and the Israelites
+true: No she &#39; s never even sent us an orange
+inpt:  نعم ولكن ماذا عن هارفي
+pred:  Yes but what brings about
+true: Yes but what about Harvey
+inpt:  أوه نحن لا نريد أن نسأل هارفي
+pred:  Oh we don &#39; t want to remember my mom
+true: Oh we wouldn &#39; t want to ask Harvey
+inpt:  أوه لا لن نسأل هارفي
+pred:  Oh no I wouldn &#39; t die
+true: Oh no we wouldn &#39; t ask Harvey
+inpt:  لا طلبنا من هارفي الزواج من نيلي
+pred:  Don &#39; t you caught my mom did you Rachel
+true: No we asked Harvey to marry Nellie
+inpt:  لا يمكننا أن نتوقع من الرجل أن يفعل أكثر من ذلك
+pred:  We can &#39; t we &#39; ve got a man can do that
+true: We can &#39; t expect the guy to do more than that
+inpt:  روبرت توقف عن الحديث بهذه الطريقة
+pred:  Elizabeth stop talking to the way
+true: Robert stop talking that way
+inpt:  قصها يا روبرت
+pred:  A spear it Robert
+true: Cut it out Robert
+inpt:  ليس لدي مجال لكلا منكما
+pred:  I haven &#39; t the whole world I &#39; re in
+true: I haven &#39; t room for both of you
+inpt:  لا يوجد سوى أريكة صغيرة في غرفة المعيشة
+pred:  There &#39; s nothing for a big tree in the street
+true: There &#39; s only a small couch in the living room
+</pre></div></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="meter classification.html" class="btn btn-neutral float-left" title="Poetry Classification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Zaid Alyafeai, Maged Saeed
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

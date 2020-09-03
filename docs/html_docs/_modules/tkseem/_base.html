@@ -88,6 +88,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../demo.html">Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../sentiment analysis.html">Sentiment Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../meter classification.html">Poetry Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../translation.html">Tranlsation</a></li>
 </ul>
 
             
@@ -152,20 +153,16 @@
            <div itemprop="articleBody">
             
   <h1>Source code for tkseem._base</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">mmap</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">mmap</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">farasa.segmenter</span> <span class="kn">import</span> <span class="n">FarasaSegmenter</span>
 <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">split_on_binary</span>
-
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">defaultdict</span>
 
 <span class="k">class</span> <span class="nc">BaseTokenizer</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -178,15 +175,15 @@
         <span class="sd">&quot;&quot;&quot;Constructor</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            unk_token (str, optional): reserved token for unknowns. Defaults to &quot;&lt;UNK&gt;&quot;.</span>
-<span class="sd">            pad_token (str, optional): reserved token for padding. Defaults to &quot;&lt;PAD&gt;&quot;.</span>
-<span class="sd">            max_tokens (int, optional): max number of vocabulary. Defaults to 10000.</span>
+<span class="sd">            unk_token (str, optional): unkown symbol. Defaults to &quot;&lt;UNK&gt;&quot;.</span>
+<span class="sd">            pad_token (str, optional): pad symbol. Defaults to &quot;&lt;PAD&gt;&quot;.</span>
+<span class="sd">            vocab_size (int, optional): max vocab size. Defaults to 10000.</span>
+<span class="sd">            special_tokens (list, optional): user defined special tokens. Defaults to [].</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="n">vocab_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unk_token</span> <span class="o">=</span> <span class="n">unk_token</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pad_token</span> <span class="o">=</span> <span class="n">pad_token</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">special_tokens</span> <span class="o">=</span> <span class="n">special_tokens</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">rel_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
         <span class="n">cach_dict_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rel_path</span><span class="p">,</span> <span class="s2">&quot;dictionaries/cached.pl&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cached</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">cach_dict_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
@@ -221,17 +218,6 @@
                     <span class="n">freq</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cur_txt</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span>
                     <span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">freq</span>
-
-    <span class="k">def</span> <span class="nf">_write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Write the string data to a path</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            file_path (str): the directory of the data to read</span>
-<span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TOCHECK: I think this code will break if the path does not exist.</span>
-        <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_get_tokens_frequency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -296,7 +282,7 @@
         <span class="n">all_binaries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cached</span><span class="p">[</span><span class="n">n</span><span class="p">,</span> <span class="n">number_of_subwords</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">split_on_binary</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">binary</span><span class="p">)</span> <span class="k">for</span> <span class="n">binary</span> <span class="ow">in</span> <span class="n">all_binaries</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_tokenize_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">freq_dict</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_tokenize_from_dict_deprecated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">freq_dict</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_size</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Tokenize using frequency based approach given a dictionary</span>
 
 <span class="sd">        Args:</span>
@@ -349,6 +335,66 @@
                         <span class="n">output_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">token</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">output_tokens</span>
 
+    <span class="c1">#https://github.com/google-research/bert/blob/eedf5716ce1268e56f0a50264a88cafad334ac61/tokenization.py#L308</span>
+    <span class="k">def</span> <span class="nf">_tokenize_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">freq_dict</span><span class="p">,</span> <span class="n">use_cache</span><span class="p">,</span> <span class="n">max_cache_size</span><span class="p">,</span> <span class="n">max_word_size</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Tokenize using frequency based approach given a dictionary</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str): text to tokenize</span>
+<span class="sd">            freq_dict (dict): a frequency dictionary</span>
+<span class="sd">            use_cache (bool): whether to use caching </span>
+<span class="sd">            max_cache_size (int): max size for the caching dictionary</span>
+<span class="sd">            max_word_size (int, optional): max word size. Defaults to 20.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            [type]: [description]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">output_tokens</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">num_tokens</span> <span class="o">=</span> <span class="mi">0</span> 
+        <span class="n">num_found_tokens</span> <span class="o">=</span> <span class="mi">0</span> 
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+            <span class="n">num_tokens</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">chars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_word_size</span><span class="p">:</span>
+                <span class="n">output_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unk_token</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="n">is_bad</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">sub_tokens</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">if</span> <span class="n">use_cache</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span>
+                    <span class="n">output_tokens</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cache</span><span class="p">[</span><span class="n">token</span><span class="p">])</span>
+                    <span class="n">num_found_tokens</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">continue</span>
+            <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">):</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span>
+                <span class="n">cur_substr</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">while</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
+                    <span class="n">substr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chars</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">substr</span> <span class="o">=</span> <span class="s2">&quot;##&quot;</span> <span class="o">+</span> <span class="n">substr</span>
+                    <span class="k">if</span> <span class="n">substr</span> <span class="ow">in</span> <span class="n">freq_dict</span><span class="p">:</span>
+                        <span class="n">cur_substr</span> <span class="o">=</span> <span class="n">substr</span>
+                        <span class="k">break</span>
+                    <span class="n">end</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">cur_substr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">is_bad</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+                <span class="n">sub_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_substr</span><span class="p">)</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+            <span class="k">if</span> <span class="n">is_bad</span><span class="p">:</span>
+                <span class="n">sub_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">unk_token</span><span class="p">]</span>
+            <span class="n">output_tokens</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sub_tokens</span><span class="p">)</span>           
+            <span class="k">if</span> <span class="n">use_cache</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cache</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">max_cache_size</span><span class="p">:</span>
+                    <span class="n">cache</span><span class="p">[</span><span class="n">token</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub_tokens</span>
+        <span class="c1"># print(&#39;Percentage of cached tokens  = &#39;, num_found_tokens/num_tokens)</span>
+        <span class="k">return</span> <span class="n">output_tokens</span>
+
     <span class="k">def</span> <span class="nf">_truncate_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">freq_dict</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Truncate a frequency dictionary and add reserved tokens</span>
 
@@ -386,23 +432,28 @@
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">piece</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">id_to_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Get tokens list</span>
+        <span class="sd">&quot;&quot;&quot;convert id to token</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (int): input id</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: tokens </span>
+<span class="sd">            str: token</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="nb">id</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Tokenize using the frequency dictionary </span>
+    <span class="k">def</span> <span class="nf">tokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">use_cache</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_cache_size</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;tokenize</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            text (str): input string</span>
+<span class="sd">            text (str): input text</span>
+<span class="sd">            use_cache (bool, optional): speed up using caching. Defaults to False.</span>
+<span class="sd">            max_cache_size (int, optional): max cacne size. Defaults to 1000.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            list: generated tokens</span>
+<span class="sd">            list: output list of tokens</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">output_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_from_dict</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">)</span>
+        <span class="n">output_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tokenize_from_dict</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">,</span> <span class="n">use_cache</span><span class="p">,</span> <span class="n">max_cache_size</span> <span class="o">=</span> <span class="n">max_cache_size</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">output_tokens</span>
 
     <span class="k">def</span> <span class="nf">detokenize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
@@ -442,21 +493,13 @@
         <span class="n">encoded</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">token_to_id</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">encoded</span>
 
-    <span class="k">def</span> <span class="nf">encode_and_save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Encode all the files then save as numpy</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data/encoded&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="s2">&quot;data/raw/&quot;</span><span class="p">):</span>
-            <span class="n">ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data/raw/</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data/encoded/</span><span class="si">{</span><span class="n">file_path</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span><span class="si">}</span><span class="s2">.npy&quot;</span><span class="p">,</span> <span class="n">ids</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">encode_sentences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sentences</span><span class="p">,</span> <span class="n">boundries</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="n">out_length</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Encode a list of sentences using the trained model</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            sentences (list): list of sentences</span>
+<span class="sd">            boundries (tuple): boundries for each sentence. </span>
 <span class="sd">            out_length (int, optional): specify the max length of encodings. Defaults to 100.</span>
 
 <span class="sd">        Returns:</span>

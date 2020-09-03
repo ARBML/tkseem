@@ -13,7 +13,6 @@ RandomTokenizer
       ~RandomTokenizer.decode
       ~RandomTokenizer.detokenize
       ~RandomTokenizer.encode
-      ~RandomTokenizer.encode_and_save
       ~RandomTokenizer.encode_sentences
       ~RandomTokenizer.id_to_token
       ~RandomTokenizer.load_model
@@ -27,7 +26,6 @@ RandomTokenizer
    .. automethod:: decode
    .. automethod:: detokenize
    .. automethod:: encode
-   .. automethod:: encode_and_save
    .. automethod:: encode_sentences
    .. automethod:: id_to_token
    .. automethod:: load_model

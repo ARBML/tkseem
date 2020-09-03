@@ -13,6 +13,7 @@ class SentencePieceTokenizer(BaseTokenizer):
         """ Train using sentence piece
 
         Args:
+            file_path (str): file to train 
             model_type (str, optional): train using sp. Defaults to "bpe".
         """
         print("Training SentencePiece ...")

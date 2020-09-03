@@ -19,7 +19,6 @@ WordTokenizer
       ~WordTokenizer.decode
       ~WordTokenizer.detokenize
       ~WordTokenizer.encode
-      ~WordTokenizer.encode_and_save
       ~WordTokenizer.encode_sentences
       ~WordTokenizer.id_to_token
       ~WordTokenizer.load_model
@@ -37,7 +36,6 @@ WordTokenizer
    .. automethod:: decode
    .. automethod:: detokenize
    .. automethod:: encode
-   .. automethod:: encode_and_save
    .. automethod:: encode_sentences
    .. automethod:: id_to_token
    .. automethod:: load_model

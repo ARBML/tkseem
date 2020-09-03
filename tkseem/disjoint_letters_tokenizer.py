@@ -11,6 +11,9 @@ class DisjointLetterTokenizer(BaseTokenizer):
 
     def train(self, file_path):
         """Train data using disjoint letters
+
+        Args:
+            file_path (str): file to train
         """
         print("Training DisjointLetterTokenizer ...")
         rx = re.compile(r"([اأإآءؤﻵﻹﻷدذرزو])")

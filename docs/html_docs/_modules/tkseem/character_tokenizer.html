@@ -88,6 +88,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../demo.html">Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../sentiment analysis.html">Sentiment Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../meter classification.html">Poetry Classification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../translation.html">Tranlsation</a></li>
 </ul>
 
             
@@ -164,7 +165,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CharacterTokenizer.train"><a class="viewcode-back" href="../../api/tkseem.CharacterTokenizer.html#tkseem.CharacterTokenizer.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Train data using characters </span>
+        <span class="sd">&quot;&quot;&quot;Train data using characters</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (str): file to train</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training CharacterTokenizer ...&quot;</span><span class="p">)</span>
         <span class="n">rx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\B(.)&quot;</span><span class="p">)</span>

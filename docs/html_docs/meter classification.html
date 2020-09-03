@@ -38,6 +38,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Tranlsation" href="translation.html" />
     <link rel="prev" title="Sentiment Analysis" href="sentiment analysis.html" /> 
 </head>
 
@@ -97,6 +98,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#Test">Test</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="translation.html">Tranlsation</a></li>
 </ul>
 
             
@@ -419,8 +421,8 @@ div.rendered_html tbody tr:hover {
 </style>
 <div class="section" id="Poetry-Classification">
 <h1>Poetry Classification<a class="headerlink" href="#Poetry-Classification" title="Permalink to this headline">¶</a></h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -428,6 +430,15 @@ div.rendered_html tbody tr:hover {
 <span class="o">!</span>pip install tnkeeh
 </pre></div>
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+/bin/bash: pip: command not found
+/bin/bash: pip: command not found
+</pre></div></div>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
@@ -460,7 +471,7 @@ div.rendered_html tbody tr:hover {
 <div class="section" id="Process-data">
 <h2>Process data<a class="headerlink" href="#Process-data" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -484,20 +495,11 @@ Save to data
 Read data  [&#39;test_data.txt&#39;, &#39;test_lbls.txt&#39;, &#39;train_data.txt&#39;, &#39;train_lbls.txt&#39;]
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">max_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">train_data</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
 </div>
 <div class="section" id="Tokenization">
 <h2>Tokenization<a class="headerlink" href="#Tokenization" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -518,7 +520,7 @@ Training CharacterTokenizer ...
 <div class="section" id="Tokenize-data">
 <h2>Tokenize data<a class="headerlink" href="#Tokenize-data" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -530,7 +532,7 @@ Training CharacterTokenizer ...
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -542,16 +544,25 @@ Training CharacterTokenizer ...
 </pre></div>
 </div>
 </div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">max_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sent</span><span class="p">)</span> <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">X_train</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 <div class="section" id="Model">
 <h2>Model<a class="headerlink" href="#Model" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
-<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Input</span><span class="p">((</span><span class="mi">100</span><span class="p">,)))</span>
+<span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Input</span><span class="p">((</span><span class="n">max_length</span><span class="p">,)))</span>
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Embedding</span><span class="p">(</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span> <span class="mi">256</span><span class="p">))</span>
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Bidirectional</span><span class="p">(</span><span class="n">GRU</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
 <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Bidirectional</span><span class="p">(</span><span class="n">GRU</span><span class="p">(</span><span class="n">units</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
@@ -564,7 +575,7 @@ Training CharacterTokenizer ...
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -578,44 +589,41 @@ Training CharacterTokenizer ...
 <div class="output_area docutils container">
 <div class="highlight"><pre>
 Epoch 1/10
-WARNING:tensorflow:Model was constructed with shape (None, 100) for input Tensor(&#34;input_1:0&#34;, shape=(None, 100), dtype=float32), but it was called on an input with incompatible shape (None, 86).
-WARNING:tensorflow:Model was constructed with shape (None, 100) for input Tensor(&#34;input_1:0&#34;, shape=(None, 100), dtype=float32), but it was called on an input with incompatible shape (None, 86).
-133/133 [==============================] - ETA: 0s - loss: 2.2590 - accuracy: 0.1899WARNING:tensorflow:Model was constructed with shape (None, 100) for input Tensor(&#34;input_1:0&#34;, shape=(None, 100), dtype=float32), but it was called on an input with incompatible shape (None, 86).
-133/133 [==============================] - 435s 3s/step - loss: 2.2590 - accuracy: 0.1899 - val_loss: 1.9318 - val_accuracy: 0.2881
+133/133 [==============================] - 465s 3s/step - loss: 2.3899 - accuracy: 0.1572 - val_loss: 1.9431 - val_accuracy: 0.2902
 Epoch 2/10
-133/133 [==============================] - 399s 3s/step - loss: 1.7722 - accuracy: 0.3391 - val_loss: 1.6506 - val_accuracy: 0.3907
+133/133 [==============================] - 452s 3s/step - loss: 1.8384 - accuracy: 0.3214 - val_loss: 1.6722 - val_accuracy: 0.3905
 Epoch 3/10
-133/133 [==============================] - 383s 3s/step - loss: 1.5203 - accuracy: 0.4517 - val_loss: 1.2544 - val_accuracy: 0.5645
+133/133 [==============================] - 436s 3s/step - loss: 1.5614 - accuracy: 0.4314 - val_loss: 1.5018 - val_accuracy: 0.4581
 Epoch 4/10
-133/133 [==============================] - 385s 3s/step - loss: 1.0520 - accuracy: 0.6415 - val_loss: 0.7986 - val_accuracy: 0.7440
+133/133 [==============================] - 381s 3s/step - loss: 1.1860 - accuracy: 0.5879 - val_loss: 0.8718 - val_accuracy: 0.7109
 Epoch 5/10
-133/133 [==============================] - 382s 3s/step - loss: 0.7140 - accuracy: 0.7734 - val_loss: 0.6061 - val_accuracy: 0.7997
+133/133 [==============================] - 370s 3s/step - loss: 0.7501 - accuracy: 0.7595 - val_loss: 0.5991 - val_accuracy: 0.8085
 Epoch 6/10
-133/133 [==============================] - 381s 3s/step - loss: 0.5413 - accuracy: 0.8353 - val_loss: 0.5232 - val_accuracy: 0.8395
+133/133 [==============================] - 360s 3s/step - loss: 0.5233 - accuracy: 0.8410 - val_loss: 0.5352 - val_accuracy: 0.8332
 Epoch 7/10
-133/133 [==============================] - 386s 3s/step - loss: 0.4214 - accuracy: 0.8757 - val_loss: 0.4718 - val_accuracy: 0.8589
+133/133 [==============================] - 361s 3s/step - loss: 0.4070 - accuracy: 0.8807 - val_loss: 0.4281 - val_accuracy: 0.8708
 Epoch 8/10
-133/133 [==============================] - 391s 3s/step - loss: 0.3355 - accuracy: 0.9024 - val_loss: 0.4334 - val_accuracy: 0.8721
+133/133 [==============================] - 355s 3s/step - loss: 0.3229 - accuracy: 0.9074 - val_loss: 0.3947 - val_accuracy: 0.8841
 Epoch 9/10
-133/133 [==============================] - 395s 3s/step - loss: 0.2834 - accuracy: 0.9203 - val_loss: 0.3768 - val_accuracy: 0.8926
+133/133 [==============================] - 356s 3s/step - loss: 0.2724 - accuracy: 0.9241 - val_loss: 0.3725 - val_accuracy: 0.8926
 Epoch 10/10
-133/133 [==============================] - 377s 3s/step - loss: 0.2359 - accuracy: 0.9349 - val_loss: 0.3805 - val_accuracy: 0.8955
+133/133 [==============================] - 355s 3s/step - loss: 0.2301 - accuracy: 0.9352 - val_loss: 0.3540 - val_accuracy: 0.8989
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&lt;tensorflow.python.keras.callbacks.History at 0x7f514f53dca0&gt;
+&lt;tensorflow.python.keras.callbacks.History at 0x7ff3a7692160&gt;
 </pre></div></div>
 </div>
 </div>
 <div class="section" id="Test">
 <h2>Test<a class="headerlink" href="#Test" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -659,16 +667,16 @@ Epoch 10/10
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-الرمل 0.99450964
-الكامل 0.98207366
-الكامل 0.98850816
-الطويل 0.99465215
-المجتث 0.8951646
-الرجز 0.52775544
-الهزج 0.9974232
-السريع 0.5369099
-الرمل 0.39229932
-المتدارك 0.9749605
+الرمل 0.9957462
+الكامل 0.98703927
+الكامل 0.9792284
+الطويل 0.99692947
+الهزج 0.94578993
+المديد 0.3755584
+الهزج 0.981885
+الرجز 0.8000305
+المتدارك 0.7176092
+المتدارك 0.99850094
 </pre></div></div>
 </div>
 </div>
@@ -681,6 +689,8 @@ Epoch 10/10
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="translation.html" class="btn btn-neutral float-right" title="Tranlsation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="sentiment analysis.html" class="btn btn-neutral float-left" title="Sentiment Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

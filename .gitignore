@@ -140,3 +140,5 @@ cython_debug/
 
 # data files 
 tasks/**/**/*.txt
+tasks/freq.pl
+tasks/m.model

@@ -13,7 +13,6 @@ MorphologicalTokenizer
       ~MorphologicalTokenizer.decode
       ~MorphologicalTokenizer.detokenize
       ~MorphologicalTokenizer.encode
-      ~MorphologicalTokenizer.encode_and_save
       ~MorphologicalTokenizer.encode_sentences
       ~MorphologicalTokenizer.id_to_token
       ~MorphologicalTokenizer.load_model
@@ -27,7 +26,6 @@ MorphologicalTokenizer
    .. automethod:: decode
    .. automethod:: detokenize
    .. automethod:: encode
-   .. automethod:: encode_and_save
    .. automethod:: encode_sentences
    .. automethod:: id_to_token
    .. automethod:: load_model

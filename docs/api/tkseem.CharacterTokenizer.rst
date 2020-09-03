@@ -13,7 +13,6 @@ CharacterTokenizer
       ~CharacterTokenizer.decode
       ~CharacterTokenizer.detokenize
       ~CharacterTokenizer.encode
-      ~CharacterTokenizer.encode_and_save
       ~CharacterTokenizer.encode_sentences
       ~CharacterTokenizer.id_to_token
       ~CharacterTokenizer.load_model
@@ -27,7 +26,6 @@ CharacterTokenizer
    .. automethod:: decode
    .. automethod:: detokenize
    .. automethod:: encode
-   .. automethod:: encode_and_save
    .. automethod:: encode_sentences
    .. automethod:: id_to_token
    .. automethod:: load_model

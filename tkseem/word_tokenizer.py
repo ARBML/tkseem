@@ -12,7 +12,7 @@ class WordTokenizer(BaseTokenizer):
         """Train using words' frequency
 
         Args:
-            file_path (str): file path for daaset
+            file_path (str): file to train
         """
 
         print("Training WordTokenizer ...")

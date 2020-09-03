@@ -11,4 +11,5 @@ Welcome to tkseem's documentation!
    Tokenizers <tokenizers>
    Demo <demo>
    sentiment analysis
-   meter classification
+   meter classification 
+   translation
