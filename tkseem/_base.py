@@ -403,13 +403,19 @@ class BaseTokenizer:
     def __str__(self):
         return f"{self.__class__.__name__}"
 
-    def calculate_compression_factor(self, text):
+    def calculate_compression_factor(self, text, normalized=True):
         factor = 0
-        for word in text.split():
+        words = text.split()
+        for word in word in words:
             factor += (
                 len(word) + 1
                 if self.unk_token in ((tokenized := self.tokenize(word)))
                 else len(tokenized)
             )
+        if normalized:
+            normalized_factor = factor / (
+                len(words) * sum(len(word) + 1 for word in words)
+            )
+            return normalized_factor
         return factor
 
