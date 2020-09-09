@@ -111,6 +111,14 @@ We show how to use `tkseem` to train some nlp models.
     <img src="https://colab.research.google.com/assets/colab-badge.svg"  >
     </a></td>
   </tr>
+
+  <tr>
+    <td class="tg-yw4l">Question Answering</td>
+    <td class="tg-yw4l">Sequence to Sequence Model </td>
+    <td class="tg-yw4l"><a href="https://colab.research.google.com/github/ARBML/tkseem/blob/master/tasks/question_answering/Question_Answering.ipynb">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg"  >
+    </a></td>
+  </tr>
 <table>
 
 ## Citation
