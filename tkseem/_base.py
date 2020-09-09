@@ -9,6 +9,7 @@ from pathlib import Path
 from .util import split_on_binary
 from collections import Counter, defaultdict
 
+
 class BaseTokenizer:
     """
     Base Tokenizer that implements the basic functionalities of a tokenizer
@@ -180,8 +181,10 @@ class BaseTokenizer:
                         output_tokens.append(str(token))
         return output_tokens
 
-    #https://github.com/google-research/bert/blob/eedf5716ce1268e56f0a50264a88cafad334ac61/tokenization.py#L308
-    def _tokenize_from_dict(self, text, freq_dict, use_cache, max_cache_size, max_word_size=20):
+    # https://github.com/google-research/bert/blob/eedf5716ce1268e56f0a50264a88cafad334ac61/tokenization.py#L308
+    def _tokenize_from_dict(
+        self, text, freq_dict, use_cache, max_cache_size, max_word_size=20
+    ):
         """Tokenize using frequency based approach given a dictionary
 
         Args:
@@ -197,8 +200,8 @@ class BaseTokenizer:
 
         output_tokens = []
         cache = {}
-        num_tokens = 0 
-        num_found_tokens = 0 
+        num_tokens = 0
+        num_found_tokens = 0
         for token in text.split():
             num_tokens += 1
             chars = list(token)
@@ -233,7 +236,7 @@ class BaseTokenizer:
                 start = end
             if is_bad:
                 sub_tokens = [self.unk_token]
-            output_tokens.extend(sub_tokens)           
+            output_tokens.extend(sub_tokens)
             if use_cache:
                 if len(cache) < max_cache_size:
                     cache[token] = sub_tokens
@@ -287,7 +290,7 @@ class BaseTokenizer:
         """
         return list(self.vocab.keys())[id]
 
-    def tokenize(self, text, use_cache = False, max_cache_size = 1000):
+    def tokenize(self, text, use_cache=False, max_cache_size=1000):
         """tokenize
 
         Args:
@@ -298,7 +301,9 @@ class BaseTokenizer:
         Returns:
             list: output list of tokens
         """
-        output_tokens = self._tokenize_from_dict(text, self.vocab, use_cache, max_cache_size = max_cache_size)
+        output_tokens = self._tokenize_from_dict(
+            text, self.vocab, use_cache, max_cache_size=max_cache_size
+        )
         return output_tokens
 
     def detokenize(self, tokens):
@@ -394,6 +399,23 @@ class BaseTokenizer:
         with open(f"{file_path}", "wb") as pickle_file:
             print("Saving as pickle file ...")
             pickle.dump(self.vocab, pickle_file)
-            
+
     def __str__(self):
         return f"{self.__class__.__name__}"
+
+    def calculate_compression_factor(self, text, normalized=True):
+        factor = 0
+        words = text.split()
+        for word in word in words:
+            factor += (
+                len(word) + 1
+                if self.unk_token in ((tokenized := self.tokenize(word)))
+                else len(tokenized)
+            )
+        if normalized:
+            normalized_factor = factor / (
+                len(words) * sum(len(word) + 1 for word in words)
+            )
+            return normalized_factor
+        return factor
+
