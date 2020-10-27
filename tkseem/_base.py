@@ -343,7 +343,25 @@ class BaseTokenizer:
         encoded = [self.token_to_id(token) for token in tokens]
         return encoded
 
-    def encode_sentences(self, sentences, boundries=("", ""), out_length=None):
+    def pad(self, ids, length = 0):
+        """pad a set of ids to a specific length
+
+        Args:
+            ids (list): list of ids
+            length (int, optional): Size to pad to. Defaults to 0.
+
+        Returns:
+            list: padded ids.
+        """
+        pad_id = self.token_to_id(self.pad_token)
+        if length <= len(ids):
+            return ids
+        else:
+            while len(ids) <= length:
+                ids.append(pad_id)
+        return ids
+
+    def encode_sentences(self, sentences, boundries=None, out_length=None):
         """
         Encode a list of sentences using the trained model
 
@@ -356,29 +374,22 @@ class BaseTokenizer:
             [np.array]: numpy array of encodings
         """
         encodings = []
+        max_length = 0
         for sent in sentences:
-            encoded = self.encode(boundries[0] + " " + sent + " " + boundries[1])
+            encoded = self.encode(sent)
+            if boundries:
+                encoded = [self.token_to_id(boundries[0])] + encoded + [self.token_to_id(boundries[1])]
+            if len(encoded) > max_length:
+                max_length = len(encoded)
             encodings.append(encoded)
 
-        pad_id = self.encode(self.pad_token)[0]
+        if out_length:
+            max_length = max(max_length, out_length)
 
-        # pad to equal size from https://stackoverflow.com/a/38619333
-        encodings = np.array(
-            list(itertools.zip_longest(*encodings, fillvalue=pad_id))
-        ).T
-
-        # increase pad if necessary
-        if not (out_length is None):
-            if out_length > encodings.shape[1]:
-                encodings = np.pad(
-                    encodings,
-                    [(0, 0), (0, out_length)],
-                    constant_values=pad_id,
-                    mode="constant",
-                )
-        encodings = encodings[..., :out_length]
-
-        return encodings
+        for i in range(len(encodings)):
+            encodings[i] = self.pad(encodings[i], max_length)[:out_length]
+        
+        return np.array(encodings)
 
     def load_model(self, file_path):
         """Load a saved model as a frequency dictionary
