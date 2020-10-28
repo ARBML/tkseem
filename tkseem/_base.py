@@ -418,9 +418,10 @@ class BaseTokenizer:
         factor = 0
         words = text.split()
         for word in words:
+            tokenized = self.tokenize(word)
             factor += (
                 len(word) + 1
-                if self.unk_token in ((tokenized := self.tokenize(word)))
+                if self.unk_token in tokenized
                 else len(tokenized)
             )
         if normalized:
