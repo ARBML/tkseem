@@ -315,7 +315,7 @@ class BaseTokenizer:
         Returns:
             str: detokenized string
         """
-        detokenized = "".join(tokens).replace("##", "")
+        detokenized = " ".join(tokens).replace(" ##", "")
         return detokenized
 
     def decode(self, encoded):
