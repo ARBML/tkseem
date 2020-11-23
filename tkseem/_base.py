@@ -386,8 +386,11 @@ class BaseTokenizer:
         if out_length:
             max_length = max(max_length, out_length)
 
+        pad_id = self.token_to_id(self.pad_token)
         for i in range(len(encodings)):
             encodings[i] = self.pad(encodings[i], max_length)[:out_length]
+            if encodings[i][-1] == pad_id:
+                encodings[i][-1] = self.token_to_id(boundries[1])
         
         return np.array(encodings)
 
