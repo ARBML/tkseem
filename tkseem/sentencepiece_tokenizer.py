@@ -53,8 +53,8 @@ class SentencePieceTokenizer(BaseTokenizer):
         Args:
             file_path (str): file path of the trained model
         """
-        sp = spm.SentencePieceProcessor()
-        self.sp = sp.Load(file_path)
+        self.sp = spm.SentencePieceProcessor()
+        self.sp.Load(file_path)
 
     def save_model(self, file_path):
         """Save a model as a freqency dictionary
