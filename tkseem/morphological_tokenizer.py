@@ -7,6 +7,12 @@ from ._base import BaseTokenizer
 class MorphologicalTokenizer(BaseTokenizer):
     """ Auto tokenization using a saved dictionary"""
 
+    def __init__(
+        self, vocab_size=10000,
+    ):
+        super(MorphologicalTokenizer, self).__init__(vocab_size=vocab_size)
+        self.name = "MorphologicalTokenizer"
+        
     def train(self):
         """Use a default dictionary for training"""
         print("Training MorphologicalTokenizer ...")

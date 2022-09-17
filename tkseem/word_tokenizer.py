@@ -8,6 +8,12 @@ class WordTokenizer(BaseTokenizer):
 
     tokens_frequency = None
 
+    def __init__(
+        self, vocab_size=10000,
+    ):
+        super(WordTokenizer, self).__init__(vocab_size=vocab_size)
+        self.name = "WordTokenizer"
+
     def train(self, file_path):
         """Train using words' frequency
 
@@ -34,7 +40,7 @@ class WordTokenizer(BaseTokenizer):
             if word in self.vocab.keys():
                 output_tokens.append(word)
             else:
-                output_tokens.append(self.unk_token)
+                output_tokens.append(self.unk)
         return output_tokens
 
     def detokenize(self, tokens):

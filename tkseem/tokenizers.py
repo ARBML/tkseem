@@ -25,18 +25,18 @@ class BaseTokenizer:
     """
 
     def __init__(
-        self, unk_token="<UNK>", pad_token="<PAD>", vocab_size=10000, special_tokens=[],
+        self, unk_token="<UNK>", pad="<PAD>", vocab_size=10000, special_tokens=[],
     ):
         """Constructor
 
         Args:
             unk_token (str, optional): reserved token for unknowns. Defaults to "<UNK>".
-            pad_token (str, optional): reserved token for padding. Defaults to "<PAD>".
+            pad (str, optional): reserved token for padding. Defaults to "<PAD>".
             max_tokens (int, optional): max number of vocabulary. Defaults to 10000.
         """
         self.vocab_size = vocab_size
         self.unk_token = unk_token
-        self.pad_token = pad_token
+        self.pad = pad
         self.special_tokens = special_tokens
 
         self.rel_path = os.path.dirname(__file__)
@@ -216,7 +216,7 @@ class BaseTokenizer:
 
         limited_tokens_frequency = dict()
         limited_tokens_frequency[self.unk_token] = -1
-        limited_tokens_frequency[self.pad_token] = -1
+        limited_tokens_frequency[self.pad] = -1
         for token in self.special_tokens:
             limited_tokens_frequency[token] = -1
         limited_tokens_frequency.update(
@@ -294,7 +294,7 @@ class BaseTokenizer:
             encoded = self.encode(boundries[0] + " " + sent + " " + boundries[1])
             encodings.append(encoded)
 
-        pad_id = self.encode(self.pad_token)[0]
+        pad_id = self.encode(self.pad)[0]
 
         # pad to equal size from https://stackoverflow.com/a/38619333
         encodings = np.array(
