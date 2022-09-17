@@ -1,13 +1,19 @@
 import io
-
+import os
 import sentencepiece as spm
-
 from ._base import BaseTokenizer
 
 
 class SentencePieceTokenizer(BaseTokenizer):
     """ Sentencepiece based tokenization. 
     """
+
+    def __init__(
+        self, vocab_size=10000,
+    ):
+        super(SentencePieceTokenizer, self).__init__(vocab_size=vocab_size)
+        self.name = "SentencePieceTokenizer"
+        self.sow = '▁'        
 
     def train(self, file_path, model_type="bpe"):
         """ Train using sentence piece
@@ -25,15 +31,13 @@ class SentencePieceTokenizer(BaseTokenizer):
             vocab_size=self.vocab_size,
             model_type=model_type,
             character_coverage=1.0,
-            unk_id=0,
-            pad_id=1,
-            bos_id=-1,
-            eos_id=-1,
-            user_defined_symbols=self.special_tokens,
+            unk_id=self.unk_idx,
+            pad_id=self.pad_idx,
+            bos_id=self.sos_idx,
+            eos_id=self.eos_idx,
             normalization_rule_name="identity",
         )
-        self.save_model("m.model")
-        self.sp = spm.SentencePieceProcessor(model_file="m.model")
+        self.sp = spm.SentencePieceProcessor(model_proto=self.model.getvalue())
         self.vocab_size = self.sp.vocab_size()
 
     def tokenize(self, text):
@@ -47,22 +51,23 @@ class SentencePieceTokenizer(BaseTokenizer):
         """
         return self.sp.encode(text, out_type=str)
 
-    def load_model(self, file_path):
+    def load(self, file_path, name = 'tok'):
         """Load a saved sp model
 
         Args:
             file_path (str): file path of the trained model
         """
         self.sp = spm.SentencePieceProcessor()
-        self.sp.Load(file_path)
+        self.sp.Load(f'{file_path}/{name}.model')
 
-    def save_model(self, file_path):
+    def save(self, file_path, name = 'tok'):
         """Save a model as a freqency dictionary
 
         Args:
             file_path (str): file path to save the model
         """
-        with open(file_path, "wb") as f:
+        os.makedirs(file_path, exist_ok=True)
+        with open(f'{file_path}/{name}.model', "wb") as f:
             f.write(self.model.getvalue())
 
     def id_to_token(self, id):
@@ -102,4 +107,4 @@ class SentencePieceTokenizer(BaseTokenizer):
         Returns:
             str: detokenized string
         """
-        return "".join(tokens).replace("▁", " ")
+        return "".join(tokens).replace(f"{self.sow}", " ").strip()

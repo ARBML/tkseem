@@ -8,6 +8,11 @@ from ._base import BaseTokenizer
 class CharacterTokenizer(BaseTokenizer):
     """ Character based tokenization 
     """
+    def __init__(
+        self, vocab_size=10000,
+    ):
+        super(CharacterTokenizer, self).__init__(vocab_size=vocab_size)
+        self.name = "CharacterTokenizer"
 
     def train(self, file_path):
         """Train data using characters
@@ -45,5 +50,5 @@ class CharacterTokenizer(BaseTokenizer):
             if token in self.vocab:
                 output_tokens.append(token)
             else:
-                output_tokens.append(self.unk_token)
+                output_tokens.append(self.unk)
         return output_tokens

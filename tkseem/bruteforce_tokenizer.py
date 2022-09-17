@@ -7,8 +7,13 @@ from ._base import BaseTokenizer
 
 
 class BruteForceTokenizer(BaseTokenizer):
-    """ Randomized based tokenization 
+    """ BruteForceTokenizer tokenization 
     """
+    def __init__(
+        self, vocab_size=10000,
+    ):
+        super(BruteForceTokenizer, self).__init__(vocab_size=vocab_size)
+        self.name = "BruteForceTokenizer"
 
     def train(self, file_path):
         """Train data using randomly splitted subwords 

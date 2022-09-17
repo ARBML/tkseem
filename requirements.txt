@@ -3,3 +3,4 @@ farasapy
 tqdm
 numpy
 black
+pandas

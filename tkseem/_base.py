@@ -4,11 +4,11 @@ import mmap
 import pickle
 import itertools
 import numpy as np
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 from pathlib import Path
 from .util import split_on_binary
 from collections import Counter, defaultdict
-
+from .const import *
 
 class BaseTokenizer:
     """
@@ -16,20 +16,26 @@ class BaseTokenizer:
     """
 
     def __init__(
-        self, unk_token="<UNK>", pad_token="<PAD>", vocab_size=10000, special_tokens=[],
+        self, vocab_size=10000,
     ):
         """Constructor
 
         Args:
-            unk_token (str, optional): unkown symbol. Defaults to "<UNK>".
-            pad_token (str, optional): pad symbol. Defaults to "<PAD>".
             vocab_size (int, optional): max vocab size. Defaults to 10000.
-            special_tokens (list, optional): user defined special tokens. Defaults to [].
         """
         self.vocab_size = vocab_size
-        self.unk_token = unk_token
-        self.pad_token = pad_token
-        self.special_tokens = special_tokens
+        self.pad_idx = 0
+        self.unk_idx = 1
+        self.sow_idx = 2
+        self.sos_idx = 3
+        self.eos_idx = 4
+        self.special_tokens = [PAD, UNK, SOW, SOS, EOS]
+        self.vocab = [PAD, UNK, SOW, SOS, EOS]
+        self.sow = SOW
+        self.sos = SOS
+        self.eos = EOS
+        self.pad = PAD
+        self.unk = UNK
         self.rel_path = os.path.dirname(__file__)
         cach_dict_path = os.path.join(self.rel_path, "dictionaries/cached.pl")
         self.cached = pickle.load(open(cach_dict_path, "rb"))
@@ -76,8 +82,12 @@ class BaseTokenizer:
         """
         text = open(file_path, "r").read()
         tokens_frequency = defaultdict(int)
-        for word in text.split(" "):
+        words = text.split(" ")
+        pbar = tqdm(total=len(words)) 
+        for word in words:
             tokens_frequency[word] += 1
+            pbar.update(1)
+        pbar.close()
         return dict(tokens_frequency)
 
     def _split_word(self, word, number_of_subwords):
@@ -146,7 +156,7 @@ class BaseTokenizer:
         for word in text.split():
             if len(word) >= max_size:
                 print(f"{word} is too long ...")
-                output_tokens.append(self.unk_token)
+                output_tokens.append(self.unk)
                 continue
             if word in freq_dict:
                 output_tokens.append(word)
@@ -170,7 +180,7 @@ class BaseTokenizer:
                     if groups_of_valid_subwords:
                         break
                 if len(groups_of_valid_subwords) == 0:
-                    output_tokens.append(self.unk_token)
+                    output_tokens.append(self.unk)
                 else:
                     sorted_groups_of_valid_subwords = sorted(
                         groups_of_valid_subwords,
@@ -206,7 +216,7 @@ class BaseTokenizer:
             num_tokens += 1
             chars = list(token)
             if len(chars) > max_word_size:
-                output_tokens.append(self.unk_token)
+                output_tokens.append(self.unk)
                 continue
 
             is_bad = False
@@ -235,7 +245,7 @@ class BaseTokenizer:
                 sub_tokens.append(cur_substr)
                 start = end
             if is_bad:
-                sub_tokens = [self.unk_token]
+                sub_tokens = [self.unk]
             output_tokens.extend(sub_tokens)
             if use_cache:
                 if len(cache) < max_cache_size:
@@ -257,8 +267,6 @@ class BaseTokenizer:
         }
 
         limited_tokens_frequency = dict()
-        limited_tokens_frequency[self.unk_token] = -1
-        limited_tokens_frequency[self.pad_token] = -1
         for token in self.special_tokens:
             limited_tokens_frequency[token] = -1
         limited_tokens_frequency.update(
@@ -306,6 +314,23 @@ class BaseTokenizer:
         )
         return output_tokens
 
+    def _tokenize_word(self, text, remove_sow = True):
+        """tokenize a single word
+
+        Args:
+            text (str): input text
+            use_cache (bool, optional): speed up using caching. Defaults to False.
+            max_cache_size (int, optional): max cacne size. Defaults to 1000.
+
+        Returns:
+            list: output list of tokens
+        """
+        output_tokens = self.tokenize(text)
+        if remove_sow:
+            return [token.replace(self.sow, "") for token in output_tokens]
+        else:
+            return output_tokens
+
     def detokenize(self, tokens):
         """ Convert tokens to a string
 
@@ -315,7 +340,7 @@ class BaseTokenizer:
         Returns:
             str: detokenized string
         """
-        detokenized = " ".join(tokens).replace(" ##", "")
+        detokenized = " ".join(tokens).replace(f" {self.sow}", "")
         return detokenized
 
     def decode(self, encoded):
@@ -328,6 +353,19 @@ class BaseTokenizer:
             list: tokens
         """
         decoded = [self.id_to_token(id) for id in encoded]
+        return decoded
+    
+    def decode_sentences(self, encoded):
+        """ Decode list of lists of ids
+
+        Args:
+            encoded (list of list): list of list of ids to decode
+
+        Returns:
+            list: sentences
+        """
+        decoded = [[self.id_to_token(id) for id in ids if id not in [0, 3, 4]] for ids in encoded]
+        decoded = [self.detokenize(tokens) for tokens in decoded]
         return decoded
 
     def encode(self, text):
@@ -343,7 +381,20 @@ class BaseTokenizer:
         encoded = [self.token_to_id(token) for token in tokens]
         return encoded
 
-    def pad(self, ids, length = 0):
+    def _encode_word(self, word, remove_sow = False):
+        """ convert a word to ids
+
+        Args:
+            text (str): input string
+
+        Returns:
+            list: list of ids
+        """
+        tokens = self._tokenize_word(word, remove_sow=remove_sow)
+        encoded = [self.token_to_id(token) for token in tokens]
+        return encoded
+
+    def pad_ids(self, ids, length = 0):
         """pad a set of ids to a specific length
 
         Args:
@@ -353,7 +404,7 @@ class BaseTokenizer:
         Returns:
             list: padded ids.
         """
-        pad_id = self.token_to_id(self.pad_token)
+        pad_id = self.token_to_id(self.pad)
         if length <= len(ids):
             return ids
         else:
@@ -361,58 +412,66 @@ class BaseTokenizer:
                 ids.append(pad_id)
         return ids
 
-    def encode_sentences(self, sentences, boundries=None, out_length=None):
+    def encode_sentences(self, sentences, add_boundry = False, out_length=None):
         """
         Encode a list of sentences using the trained model
 
         Args:
             sentences (list): list of sentences
-            boundries (tuple): boundries for each sentence. 
+            add_boundry (boolean): whether to add sos and eos. 
             out_length (int, optional): specify the max length of encodings. Defaults to 100.
 
         Returns:
-            [np.array]: numpy array of encodings
+            [list]: array of encodings
         """
         encodings = []
+        if add_boundry:
+            boundries = [SOS, EOS]
+
         max_length = 0
+        pbar = tqdm(total=len(sentences)*2) 
         for sent in sentences:
             encoded = self.encode(sent)
-            if boundries:
+            if add_boundry:
                 encoded = [self.token_to_id(boundries[0])] + encoded + [self.token_to_id(boundries[1])]
             if len(encoded) > max_length:
                 max_length = len(encoded)
             encodings.append(encoded)
+            pbar.update(1)
 
         if out_length:
             max_length = max(max_length, out_length)
 
-        pad_id = self.token_to_id(self.pad_token)
+        pad_id = self.token_to_id(self.pad)
         for i in range(len(encodings)):
-            encodings[i] = self.pad(encodings[i], max_length)[:out_length]
-            if encodings[i][-1] != pad_id and boundries:
+            encodings[i] = self.pad_ids(encodings[i], max_length)[:out_length]
+            if encodings[i][-1] != pad_id and add_boundry:
                 encodings[i][-1] = self.token_to_id(boundries[1])
-        
-        return np.array(encodings)
+            pbar.update(1)
+        pbar.close()
+        return encodings
 
-    def load_model(self, file_path):
+    def load(self, file_path, name = 'tok'):
         """Load a saved model as a frequency dictionary
 
         Args:
             file_path (str): file path of the dictionary
         """
-        print("Loading as pickle file ...")
-        self.vocab = pickle.load(open(file_path, "rb"))
+        with open(f'{file_path}/{name}.model', 'rb') as handle:
+            self.vocab = pickle.load(handle)
 
-    def save_model(self, file_path):
+    def save(self, file_path, name = 'tok'):
         """Save a model as a freqency dictionary
 
         Args:
             file_path (str): file path to save the model
+            name (str): name of the file 
         """
         assert self.vocab
-        with open(f"{file_path}", "wb") as pickle_file:
-            print("Saving as pickle file ...")
-            pickle.dump(self.vocab, pickle_file)
+        os.makedirs(file_path, exist_ok=True)
+
+        with open(f'{file_path}/{name}.model', 'wb') as handle:
+            pickle.dump(self.vocab, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
     def __str__(self):
         return f"{self.__class__.__name__}"
@@ -424,7 +483,7 @@ class BaseTokenizer:
             tokenized = self.tokenize(word)
             factor += (
                 len(word) + 1
-                if self.unk_token in tokenized
+                if self.unk in tokenized
                 else len(tokenized)
             )
         if normalized:

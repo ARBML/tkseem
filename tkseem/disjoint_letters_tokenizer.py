@@ -8,6 +8,11 @@ from ._base import BaseTokenizer
 class DisjointLetterTokenizer(BaseTokenizer):
     """ Disjoint Letters based tokenization 
     """
+    def __init__(
+        self, vocab_size=10000,
+    ):
+        super(DisjointLetterTokenizer, self).__init__(vocab_size=vocab_size)
+        self.name = "DisjointLetterTokenizer"
 
     def train(self, file_path):
         """Train data using disjoint letters

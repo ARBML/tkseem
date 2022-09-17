@@ -9,7 +9,12 @@ from ._base import BaseTokenizer
 class RandomTokenizer(BaseTokenizer):
     """ Randomized based tokenization 
     """
-
+    def __init__(
+        self, vocab_size=10000,
+    ):
+        super(RandomTokenizer, self).__init__(vocab_size=vocab_size)
+        self.name = "RandomTokenizer"
+        
     def train(self, file_path):
         """Train data using randomly splitted subwords 
 
