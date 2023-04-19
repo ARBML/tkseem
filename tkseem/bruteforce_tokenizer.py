@@ -16,9 +16,9 @@ class BruteForceTokenizer(BaseTokenizer):
         Args:
             file_path (str): file to train 
         """
-        
+
         print("Training RandomTokenizer ...")
-        text = open(file_path, "r").read()
+        text = open(file_path, "r", encoding=self.encoding).read()
         self.vocab = self._truncate_dict(self._bruteforce_dict(text))
         self.vocab_size = len(self.vocab)
 

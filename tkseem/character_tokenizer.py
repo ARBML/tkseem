@@ -18,7 +18,7 @@ class CharacterTokenizer(BaseTokenizer):
         print("Training CharacterTokenizer ...")
         rx = re.compile(r"\B(.)")
 
-        text = open(file_path, "r").read()
+        text = open(file_path, "r", encoding=self.encoding).read()
         text = rx.sub(r" ##\1", text)
 
         tokens_frequency = defaultdict(int)

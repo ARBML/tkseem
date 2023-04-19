@@ -18,7 +18,7 @@ class DisjointLetterTokenizer(BaseTokenizer):
         print("Training DisjointLetterTokenizer ...")
         rx = re.compile(r"([اأإآءؤﻵﻹﻷدذرزو])")
 
-        text = open(file_path, "r").read()
+        text = open(file_path, "r", encoding=self.encoding).read()
         text = rx.sub(r"\1## ", text)
         text = text.replace("## ", " ##")
 
