@@ -18,7 +18,7 @@ class RandomTokenizer(BaseTokenizer):
         """
         
         print("Training RandomTokenizer ...")
-        text = open(file_path, "r").read()
+        text = open(file_path, "r", encoding=self.encoding).read()
         self.vocab = self._truncate_dict(self._random_dict(text))
         self.vocab_size = len(self.vocab)
 

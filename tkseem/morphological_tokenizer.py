@@ -11,4 +11,4 @@ class MorphologicalTokenizer(BaseTokenizer):
         """Use a default dictionary for training"""
         print("Training MorphologicalTokenizer ...")
         vocab_path = os.path.join(self.rel_path, "dictionaries/vocab.pl")
-        self.vocab = self._truncate_dict(pickle.load(open(vocab_path, "rb")))
+        self.vocab = self._truncate_dict(pickle.load(open(vocab_path, "rb", encoding=self.encoding)))

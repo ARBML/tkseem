@@ -16,7 +16,7 @@ class BaseTokenizer:
     """
 
     def __init__(
-        self, unk_token="<UNK>", pad_token="<PAD>", vocab_size=10000, special_tokens=[],
+        self, unk_token="<UNK>", pad_token="<PAD>", vocab_size=10000, special_tokens=[], encoding=None,
     ):
         """Constructor
 
@@ -30,6 +30,7 @@ class BaseTokenizer:
         self.unk_token = unk_token
         self.pad_token = pad_token
         self.special_tokens = special_tokens
+        self.encoding = encoding
         self.rel_path = os.path.dirname(__file__)
         cach_dict_path = os.path.join(self.rel_path, "dictionaries/cached.pl")
         self.cached = pickle.load(open(cach_dict_path, "rb"))
@@ -74,7 +75,7 @@ class BaseTokenizer:
         Returns:
             dict : dict containing frequency
         """
-        text = open(file_path, "r").read()
+        text = open(file_path, "r", encoding=self.encoding).read()
         tokens_frequency = defaultdict(int)
         for word in text.split(" "):
             tokens_frequency[word] += 1
@@ -391,7 +392,7 @@ class BaseTokenizer:
             encodings[i] = self.pad(encodings[i], max_length)[:out_length]
             if encodings[i][-1] != pad_id and boundries:
                 encodings[i][-1] = self.token_to_id(boundries[1])
-        
+
         return np.array(encodings)
 
     def load_model(self, file_path):
