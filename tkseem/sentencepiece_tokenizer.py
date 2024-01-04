@@ -6,14 +6,14 @@ from ._base import BaseTokenizer
 
 
 class SentencePieceTokenizer(BaseTokenizer):
-    """ Sentencepiece based tokenization. 
+    """ Sentencepiece based tokenization.
     """
 
     def train(self, file_path, model_type="bpe"):
         """ Train using sentence piece
 
         Args:
-            file_path (str): file to train 
+            file_path (str): file to train
             model_type (str, optional): train using sp. Defaults to "bpe".
         """
         print("Training SentencePiece ...")
@@ -32,12 +32,11 @@ class SentencePieceTokenizer(BaseTokenizer):
             user_defined_symbols=self.special_tokens,
             normalization_rule_name="identity",
         )
-        self.save_model("m.model")
-        self.sp = spm.SentencePieceProcessor(model_file="m.model")
+        self.sp = spm.SentencePieceProcessor(model_proto=self.model.getvalue())
         self.vocab_size = self.sp.vocab_size()
 
     def tokenize(self, text):
-        """Tokenize using the frequency dictionary 
+        """Tokenize using the frequency dictionary
 
         Args:
             text (str): input string
