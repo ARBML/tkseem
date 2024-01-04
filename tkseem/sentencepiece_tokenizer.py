@@ -8,12 +8,11 @@ from ._base import BaseTokenizer
 class SentencePieceTokenizer(BaseTokenizer):
     """Sentencepiece based tokenization."""
 
-    def train(self, file_path, model_type="bpe", **kwargs):
+    def train(self, file_path, **kwargs):
         """Train using sentence piece
 
         Args:
             file_path (str): file to train
-            model_type (str, optional): train using sp. Defaults to "bpe".
             kwargs: additional arguments to pass to the SentencePieceTrainer. See https://github.com/google/sentencepiece/blob/master/doc/options.md
         """
         print("Training SentencePiece ...")
@@ -24,29 +23,44 @@ class SentencePieceTokenizer(BaseTokenizer):
                 f"WARNING: Vocab size is being overwritten to {kwargs.get('vocab_size')}"
             )
             self.vocab_size = kwargs.get("vocab_size")
+            kwargs.pop("vocab_size")
 
         if kwargs.get("special_tokens"):
             print(
                 f"WARNING: Special tokens are being overwritten to {kwargs.get('special_tokens')}"
             )
             self.special_tokens = kwargs.get("special_tokens")
+            kwargs.pop("special_tokens")
+
+        # Preserve default values from previous versions
+        model_type = kwargs.get("model_type", "bpe")
+        kwargs.pop("model_type")
+        character_coverage = kwargs.get("character_coverage", 1.0)
+        kwargs.pop("character_coverage")
+        unk_id = kwargs.get("unk_id", 0)
+        kwargs.pop("unk_id")
+        pad_id = kwargs.get("pad_id", 1)
+        kwargs.pop("pad_id")
+        bos_id = kwargs.get("bos_id", -1)
+        kwargs.pop("bos_id")
+        eos_id = kwargs.get("eos_id", -1)
+        kwargs.pop("eos_id")
+        normalization_rule_name = kwargs.get("normalization_rule_name", "identity")
+        kwargs.pop("normalization_rule_name")
 
         spm.SentencePieceTrainer.train(
             input=file_path,
             model_writer=self.model,
             vocab_size=self.vocab_size,
             model_type=model_type,
-            character_coverage=kwargs.get("character_coverage", 1.0),
-            max_sentencepiece_length=kwargs.get("max_sentencepiece_length", 16),
-            unk_id=0,
-            pad_id=1,
-            bos_id=-1,
-            eos_id=-1,
+            character_coverage=character_coverage,
+            unk_id=unk_id,
+            pad_id=pad_id,
+            bos_id=bos_id,
+            eos_id=eos_id,
             user_defined_symbols=self.special_tokens,
-            train_extremely_large_corpus=kwargs.get(
-                "train_extremely_large_corpus", False
-            ),
-            normalization_rule_name=kwargs.get("normalization_rule_name", "identity"),
+            normalization_rule_name=normalization_rule_name,
+            **kwargs,
         )
         self.sp = spm.SentencePieceProcessor(model_proto=self.model.getvalue())
         self.vocab_size = self.sp.vocab_size()
